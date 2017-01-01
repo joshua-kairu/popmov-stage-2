@@ -1,0 +1,83 @@
+<!--
+
+ PopMov
+
+ An Android app to show the latest movies from https://www.themoviedb.org.
+
+ Copyright (C) 2016 Kairu Joshua Wambugu
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see http://www.gnu.org/licenses/.
+
+ -->
+
+<!-- strings. -->
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="app_name">PopMov</string>
+
+    <!-- Activity titles -->
+
+    <!-- The title for the detail activity [CHAR LIMIT = 25] -->
+    <string name="detail_activity_title">Movie Detail</string>
+
+    <!-- The title for the settings activity [CHAR LIMIT = 15] -->
+    <string name="settings_activity_title">Settings</string>
+
+    <!-- A11y -->
+
+    <string name="a11y_grid_poster">
+        Poster: <xliff:g id = "movie_title">%1$s</xliff:g>
+    </string>
+
+    <!-- Formatting strings -->
+
+    <!-- formatter for the user rating so that a rating 5.92 becomes 5.9/10 -->
+    <string name="user_rating_format"><xliff:g id="user_rating">%1$.1f</xliff:g>/10</string>
+
+    <!-- Menus -->
+
+    <string name="action_settings">Settings</string>
+
+    <!-- Messages -->
+
+    <!-- Message to show there is no movies information. [CHAR LIMIT = 20] -->
+    <string name="message_error_no_movie_info">No movie information available.</string>
+
+    <!-- Message to show the device cannot connect to the internet to fetch movies. [CHAR LIMIT = 35] -->
+    <string name="message_error_no_movie_info_no_connectivity">
+        No movie information available. No Internet connection.
+    </string>
+
+    <!-- Preferences -->
+
+    <!-- title for the sort order preference [CHAR LIMIT = 20] -->
+    <string name="pref_sort_order_title">Sort Order</string>
+
+    <!-- key for the sort order preference -->
+    <string name="pref_sort_order_key" translatable="false">sort order</string>
+
+    <!-- label, or entry, for displaying the most popular sort order preference [CHAR LIMIT = 25] -->
+    <string name="pref_sort_order_most_popular_entry">Most Popular</string>
+
+    <!-- label, or entry, for displaying the highest rated sort order preference [CHAR LIMIT = 25] -->
+    <string name="pref_sort_order_highest_rated_entry">Highest Rated</string>
+
+    <!-- key, or entry value, for storing the most popular sort order preference [CHAR LIMIT = NONE] -->
+    <string name="pref_sort_order_most_popular_entry_value" translatable="false">popular</string>
+
+    <!-- key, or entry value, for storing the highest rated sort order preference [CHAR LIMIT = NONE] -->
+    <string name="pref_sort_order_highest_rated_entry_value" translatable="false">top_rated</string>
+
+</resources>

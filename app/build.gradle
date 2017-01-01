@@ -1,0 +1,35 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.1"
+    dataBinding.enabled = true
+
+    defaultConfig {
+        applicationId "com.jlt.popmov"
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    buildTypes.each {
+        it.buildConfigField 'String', 'THE_MOVIE_DB_API_KEY', MyTheMovieDBApiKey
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:preference-v7:25.0.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'net.simonvt.schematic:schematic:0.7.0'
+    debugCompile 'com.facebook.stetho:stetho:1.4.2'
+}

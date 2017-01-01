@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+ PopMov
+
+ An Android app to show the latest movies from https://www.themoviedb.org.
+ 
+ Copyright (C) 2016 Kairu Joshua Wambugu
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see http://www.gnu.org/licenses/.
+
+ -->
+
+<!-- The dimensions -->
+
+<resources>
+
+    <!-- MATERIAL DESIGN DIMENSIONS -->
+
+    <!-- Phone -->
+
+    <!-- Buttons -->
+
+    <dimen name="material_button_height">36dp</dimen>
+
+    <dimen name="material_button_margin">12dp</dimen>
+
+    <dimen name="material_button_padding">16dp</dimen>
+
+    <dimen name="material_button_content_padding">8dp</dimen>
+
+    <dimen name="material_button_dialog_margin_top">24dp</dimen>
+
+    <dimen name="material_button_raised_width_minimum">88dp</dimen>
+
+    <!-- Content margins -->
+
+    <dimen name="content_start_margin">72dp</dimen>
+
+    <!-- FABs -->
+
+    <dimen name="fab_elevation">6dp</dimen>
+    <dimen name="fab_pressed_translation_z">12dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Layouts -->
+
+    <dimen name="layout_margin_top">16dp</dimen>
+    <dimen name="layout_margin_bottom">16dp</dimen>
+    <dimen name="layout_margin_start">16dp</dimen>
+    <dimen name="layout_margin_end">16dp</dimen>
+
+    <dimen name="layout_padding">16dp</dimen>
+
+    <dimen name="space_between_content_areas">8dp</dimen>
+
+    <!-- ListViews -->
+
+    <dimen name="listview_item_height">72dp</dimen>
+
+    <!-- Navigation Drawer -->
+
+    <dimen name="navigation_drawer_left_margin">16dp</dimen>
+    <dimen name="navigation_drawer_right_margin">16dp</dimen>
+    <dimen name="navigation_drawer_content_with_icon_left_margin">72dp</dimen>
+
+    <dimen name="navigation_drawer_item_height">48dp</dimen>
+    <dimen name="navigation_drawer_space_between_content_areas">8dp</dimen>
+
+    <!-- Spinner -->
+
+    <dimen name="spinner_height">48dp</dimen>
+
+    <!-- Text -->
+
+    <dimen name="text_baseline">4dp</dimen>
+
+    <dimen name="text_display2_size">45sp</dimen>
+    <dimen name="text_display2_leading">48dp</dimen>
+
+    <dimen name="text_display1_size">34sp</dimen>
+    <dimen name="text_display1_leading">40dp</dimen>
+
+    <dimen name="text_headline_size">24sp</dimen>
+    <dimen name="text_headline_leading">32dp</dimen>
+
+    <dimen name="text_subheading2_size">16sp</dimen> <!-- or 15sp -->
+    <dimen name="text_subheading2_leading">28dp</dimen>
+
+    <dimen name="text_subheading1_size">16sp</dimen> <!-- or 15sp -->
+    <dimen name="text_subheading1_leading">24dp</dimen>
+
+    <dimen name="text_body2_size">14sp</dimen> <!-- or 13sp -->
+    <dimen name="text_body2_leading">24dp</dimen>
+
+    <dimen name="text_body1_size">14sp</dimen> <!-- or 13sp -->
+    <dimen name="text_body1_leading">20dp</dimen>
+
+    <!-- OTHERS -->
+
+    <!-- Grid -->
+
+    <dimen name="grid_item_spacing">1dp</dimen>
+
+    <dimen name="title_height">112dp</dimen>
+
+    <!-- Detail -->
+
+    <!-- the layout size of the detail poster -->
+    
+    <dimen name="detail_poster_width">100dp</dimen>
+
+    <dimen name="detail_poster_height">200dp</dimen>
+
+    <!-- the start margin of the detail poster  -->
+    <dimen name="detail_poster_start_margin">32dp</dimen>
+
+    <!-- the elevation of the movie title section, should be 4dp here -->
+    <dimen name="detail_title_elevation">4dp</dimen>
+
+</resources>    
