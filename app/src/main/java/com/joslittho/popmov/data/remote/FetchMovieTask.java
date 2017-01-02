@@ -21,15 +21,15 @@
  *
  */
 
-package com.jlt.popmov.data.remote;
+package com.joslittho.popmov.data.remote;
 
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.jlt.popmov.BuildConfig;
-import com.jlt.popmov.adapter.PosterAdapter;
-import com.jlt.popmov.data.model.Movie;
+import com.joslittho.popmov.BuildConfig;
+import com.joslittho.popmov.adapter.PosterAdapter;
+import com.joslittho.popmov.data.model.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;

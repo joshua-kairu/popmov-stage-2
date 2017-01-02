@@ -21,13 +21,13 @@
  *
  */
 
-package com.jlt.popmov.activity;
+package com.joslittho.popmov.activity;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.jlt.popmov.R;
+import com.joslittho.popmov.R;
 
 /**
  * The settings activity. This is supposed to show up only in phones

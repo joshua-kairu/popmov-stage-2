@@ -45,13 +45,13 @@
 
             android:id="@+id/am_f_posters"
 
-            android:name="com.jlt.popmov.fragment.PostersFragment"
+            android:name="com.joslittho.popmov.fragment.PostersFragment"
 
             android:layout_width="match_parent"
 
             android:layout_height="match_parent"
 
-            tools:context="com.jlt.popmov.fragment.PostersFragment"
+            tools:context="com.joslittho.popmov.fragment.PostersFragment"
 
             tools:layout="@android:layout/list_content"
 

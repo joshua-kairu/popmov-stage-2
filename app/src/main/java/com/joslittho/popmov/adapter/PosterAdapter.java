@@ -21,7 +21,7 @@
  *
  */
 
-package com.jlt.popmov.adapter;
+package com.joslittho.popmov.adapter;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -32,10 +32,10 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.jlt.popmov.R;
-import com.jlt.popmov.data.Utility;
-import com.jlt.popmov.data.model.Movie;
-import com.jlt.popmov.databinding.GridItemPosterBinding;
+import com.joslittho.popmov.R;
+import com.joslittho.popmov.data.Utility;
+import com.joslittho.popmov.data.model.Movie;
+import com.joslittho.popmov.databinding.GridItemPosterBinding;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

@@ -21,13 +21,12 @@
  *
  */
 
-package com.jlt.popmov.fragment;
+package com.joslittho.popmov.fragment;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,15 +34,15 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.jlt.popmov.R;
-import com.jlt.popmov.activity.DetailActivity;
-import com.jlt.popmov.adapter.PosterAdapter;
-import com.jlt.popmov.data.Utility;
-import com.jlt.popmov.data.model.Movie;
-import com.jlt.popmov.data.remote.CheckConnectivityAsyncTask;
-import com.jlt.popmov.data.remote.FetchMovieTask;
-import com.jlt.popmov.databinding.FragmentPostersBinding;
-import com.jlt.popmov.event.ConnectivityEvent;
+import com.joslittho.popmov.R;
+import com.joslittho.popmov.activity.DetailActivity;
+import com.joslittho.popmov.adapter.PosterAdapter;
+import com.joslittho.popmov.data.Utility;
+import com.joslittho.popmov.data.model.Movie;
+import com.joslittho.popmov.data.remote.CheckConnectivityAsyncTask;
+import com.joslittho.popmov.data.remote.FetchMovieTask;
+import com.joslittho.popmov.databinding.FragmentPostersBinding;
+import com.joslittho.popmov.event.ConnectivityEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -278,7 +277,7 @@ public class PostersFragment extends Fragment {
     } // end method updateEmptyView
 
     /**
-     * Responds to receiving a {@link com.jlt.popmov.event.ConnectivityEvent}.
+     * Responds to receiving a {@link com.joslittho.popmov.event.ConnectivityEvent}.
      *
      * @param connectivityEvent The received {@link ConnectivityEvent}
      * */

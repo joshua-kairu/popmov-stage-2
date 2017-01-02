@@ -21,7 +21,7 @@
  *
  */
 
-package com.jlt.popmov.fragment;
+package com.joslittho.popmov.fragment;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -30,10 +30,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jlt.popmov.R;
-import com.jlt.popmov.data.Utility;
-import com.jlt.popmov.data.model.Movie;
-import com.jlt.popmov.databinding.FragmentDetailBinding;
+import com.joslittho.popmov.R;
+import com.joslittho.popmov.data.Utility;
+import com.joslittho.popmov.data.model.Movie;
+import com.joslittho.popmov.databinding.FragmentDetailBinding;
 import com.squareup.picasso.Picasso;
 
 /**

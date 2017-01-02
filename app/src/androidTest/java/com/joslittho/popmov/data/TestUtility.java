@@ -21,7 +21,7 @@
  *
  */
 
-package com.jlt.popmov.data;
+package com.joslittho.popmov.data;
 
 import android.net.Uri;
 import android.test.AndroidTestCase;

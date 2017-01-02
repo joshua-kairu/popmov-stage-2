@@ -1,9 +1,9 @@
-package com.jlt.popmov.data.remote;
+package com.joslittho.popmov.data.remote;
 
 import android.os.AsyncTask;
 
-import com.jlt.popmov.data.Utility;
-import com.jlt.popmov.event.ConnectivityEvent;
+import com.joslittho.popmov.data.Utility;
+import com.joslittho.popmov.event.ConnectivityEvent;
 
 import org.greenrobot.eventbus.EventBus;
 

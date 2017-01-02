@@ -1,4 +1,4 @@
-package com.jlt.popmov.event;
+package com.joslittho.popmov.event;
 
 /**
  * Event to check for connectivity. Will be used with {@link org.greenrobot.eventbus.EventBus}.

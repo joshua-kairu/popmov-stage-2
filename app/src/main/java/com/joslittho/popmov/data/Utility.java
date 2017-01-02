@@ -21,7 +21,7 @@
  *
  */
 
-package com.jlt.popmov.data;
+package com.joslittho.popmov.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -29,7 +29,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.jlt.popmov.R;
+import com.joslittho.popmov.R;
 
 import java.io.IOException;
 import java.text.ParseException;

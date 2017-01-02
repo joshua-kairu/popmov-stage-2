@@ -33,7 +33,7 @@
 
     android:id="@+id/as_f_settings"
 
-    android:name="com.jlt.popmov.fragment.SettingsFragment"
+    android:name="com.joslittho.popmov.fragment.SettingsFragment"
 
     android:layout_width="match_parent"
 

@@ -21,7 +21,7 @@
  *
  */
 
-package com.jlt.popmov.data.model;
+package com.joslittho.popmov.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

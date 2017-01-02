@@ -1,4 +1,4 @@
-package com.jlt.popmov;
+package com.joslittho.popmov;
 
 import org.junit.Test;
 
