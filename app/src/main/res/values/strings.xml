@@ -60,6 +60,9 @@
         No movie information available. No Internet connection.
     </string>
 
+    <!-- Message to show we are fetching movies [CHAR LIMIT = 25] -->
+    <string name="message_info_fetching_movies">Fetching movies. . .</string>
+
     <!-- Preferences -->
 
     <!-- title for the sort order preference [CHAR LIMIT = 20] -->
