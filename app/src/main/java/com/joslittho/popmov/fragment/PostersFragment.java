@@ -43,6 +43,7 @@ import com.joslittho.popmov.data.remote.CheckConnectivityAsyncTask;
 import com.joslittho.popmov.data.remote.FetchMovieTask;
 import com.joslittho.popmov.databinding.FragmentPostersBinding;
 import com.joslittho.popmov.event.ConnectivityEvent;
+import com.joslittho.popmov.event.FetchedMoviesEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -281,7 +282,7 @@ public class PostersFragment extends Fragment {
      *
      * @param connectivityEvent The received {@link ConnectivityEvent}
      * */
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe( threadMode = ThreadMode.MAIN )
     // begin method onConnectivityEvent
     public void onConnectivityEvent( ConnectivityEvent connectivityEvent ) {
 
@@ -315,6 +316,28 @@ public class PostersFragment extends Fragment {
         }
 
     } // end method onConnectivityEvent
+
+    /**
+     * Receives a {@link com.joslittho.popmov.event.FetchedMoviesEvent}
+     *
+     * @param fetchedMoviesEvent The received {@link FetchedMoviesEvent}
+     * */
+    @Subscribe( threadMode = ThreadMode.MAIN )
+    // begin method onFetchedMoviesEvent
+    public void onFetchedMoviesEvent( FetchedMoviesEvent fetchedMoviesEvent ) {
+
+        // 0. remove old movies from adapter
+        // 1. put fetched movies into adapter
+
+        // 0. remove old movies from adapter
+
+        mPosterAdapter.clear();
+
+        // 1. put fetched movies into adapter
+
+        mPosterAdapter.addAll( fetchedMoviesEvent.getFetchedMovies() );
+
+    } // end method onFetchedMoviesEvent
 
     /* INNER CLASSES */
 

@@ -30,7 +30,9 @@ import android.util.Log;
 import com.joslittho.popmov.BuildConfig;
 import com.joslittho.popmov.adapter.PosterAdapter;
 import com.joslittho.popmov.data.model.Movie;
+import com.joslittho.popmov.event.FetchedMoviesEvent;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -254,21 +256,11 @@ public class FetchMovieTask extends AsyncTask< String, Void, List< Movie > > {
     // begin onPostExecute
     protected void onPostExecute( List< Movie > fetchedMovies ) {
 
-        // 0. super stuff
-        // 1. remove old movies from adapter
-        // 2. put fetched movies into adapter
+        // 0. post an event with the fetched movies
 
-        // 0. super stuff
+        // 0. post an event with the fetched movies
 
-        super.onPostExecute( fetchedMovies );
-
-        // 1. remove old movies from adapter
-
-        mPosterAdapter.clear();
-
-        // 2. put fetched movies into adapter
-
-        mPosterAdapter.addAll( fetchedMovies );
+        EventBus.getDefault().post( new FetchedMoviesEvent( fetchedMovies ) );
 
     } // end onPostExecute
 
