@@ -97,6 +97,17 @@
 
             />
 
+        <!-- the movies provider -->
+        <provider
+
+            android:authorities="com.joslittho.popmov.data.database.MoviesProvider"
+
+            android:name=".data.database.generated.MoviesProvider"
+
+            android:exported="false"
+
+            />
+
     </application>
 
 </manifest>

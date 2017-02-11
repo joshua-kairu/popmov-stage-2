@@ -314,6 +314,7 @@ public class FetchMovieTask extends AsyncTask< String, Void, List< Movie > > {
         // 0e. id
         // 0f. title
         // 0g. vote average
+        // 0h. popularity
         // 1. extract data from JSON
         // 1a. get the list of movies from the JSON
         // 1b. have an array list of movies matching the JSON list
@@ -331,6 +332,7 @@ public class FetchMovieTask extends AsyncTask< String, Void, List< Movie > > {
         // 0e. id
         // 0f. title
         // 0g. vote average
+        // 0h. popularity
 
         final String MOVIE_LIST = "results";
         final String MOVIE_POSTER_PATH = "poster_path";
@@ -339,6 +341,7 @@ public class FetchMovieTask extends AsyncTask< String, Void, List< Movie > > {
         final String MOVIE_ID = "id";
         final String MOVIE_TITLE = "original_title";
         final String MOVIE_VOTE_AVERAGE = "vote_average";
+        final String MOVIE_POPULARITY = "popularity";
 
         // 1. extract data from JSON
 
@@ -370,6 +373,7 @@ public class FetchMovieTask extends AsyncTask< String, Void, List< Movie > > {
             // 0e. id
             // 0f. title
             // 0g. vote average
+            // 0h. popularity
 
             String moviePosterPath = currentMovieJsonObject.getString( MOVIE_POSTER_PATH );
 
@@ -383,8 +387,10 @@ public class FetchMovieTask extends AsyncTask< String, Void, List< Movie > > {
 
             double movieUserRating = currentMovieJsonObject.getDouble( MOVIE_VOTE_AVERAGE );
 
+            double moviePopularity = currentMovieJsonObject.getDouble( MOVIE_POPULARITY );
+
             Movie aMovie = new Movie( movieId, movieTitle, movieReleaseDate, movieSynopsis,
-                    movieUserRating, moviePosterPath );
+                    movieUserRating, moviePopularity, moviePosterPath );
 
             // 1b3. add that object to the movie array
 

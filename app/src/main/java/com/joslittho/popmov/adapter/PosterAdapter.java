@@ -24,27 +24,25 @@
 package com.joslittho.popmov.adapter;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
+import android.widget.CursorAdapter;
 import android.widget.ImageView;
 
 import com.joslittho.popmov.R;
 import com.joslittho.popmov.data.Utility;
-import com.joslittho.popmov.data.model.Movie;
+import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.databinding.GridItemPosterBinding;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 /**
- * A {@link android.widget.BaseAdapter} to populate the posters.
+ * A {@link android.widget.CursorAdapter} to populate the posters.
  * */
 // begin class PosterAdapter
-public class PosterAdapter extends BaseAdapter {
+public class PosterAdapter extends CursorAdapter {
 
     /* CONSTANTS */
 
@@ -58,24 +56,23 @@ public class PosterAdapter extends BaseAdapter {
 
     private Context mContext; // ditto
 
-    /* Lists */
-
-    private List< Movie > mMovies; // ditto
-
     /* CONSTRUCTOR */
 
-    // begin constructor
-    public PosterAdapter( Context context, List< Movie > movies ) {
+    // begin default recommended constructor
+    public PosterAdapter( Context context, Cursor c, int flags ) {
 
-        // 0. initialize members
+        // 0. super stuff
+        // 1. initialize context
 
-        // 0. initialize members
+        // 0. super stuff
 
-        mMovies = movies;
+        super( context, c, flags );
+
+        // 1. initialize context
 
         mContext = context;
 
-    } // end constructor
+    } // end default recommended constructor
 
     /* METHODS */
     
@@ -83,130 +80,81 @@ public class PosterAdapter extends BaseAdapter {
     
     /* Overrides */
 
-    @Override
-    public int getCount() { return mMovies.size(); }
+
 
     @Override
-    public Object getItem( int position ) {
-        return mMovies.get( position );
-    }
+    /** Makes a new view to hold the data pointed to by cursor. */
+    // begin newView
+    public View newView( Context context, Cursor cursor, ViewGroup parent ) {
 
-    @Override
-    public long getItemId( int position ) {
-        return 0;
-    }
-
-    @Override
-    /**
-     * Get a View that displays the data at the specified position in the data set.
-     * You can either create a View manually or inflate it from an XML layout file.
-     * When the View is inflated, the parent View (GridView, ListView...) will apply
-     * default layout parameters unless you use
-     * android.view.LayoutInflater.inflate(int, ViewGroup, boolean) to specify a root view and
-     * to prevent attachment to the root.
-     * */
-    // begin getView
-    public View getView( int position, View convertView, ViewGroup parent ) {
-
-        // 0. have an image view
-        // 1. if the image view is not recycled
-        // 1a. inflate it from XML
-        // 2. otherwise it is recycled
-        // 2a. so the converted view is an image view
-        // 3. put the correct image into the image view
-        // 4. put the correct content description
+        // 0. inflate the image view from XML
+        // 1. get the poster path from the cursor
+        // 2. put the correct image into the image view
+        // 3. put the correct content description
+        // 4. put the inflated image view inside a view holder
         // last. return the image view
 
-        // 0. have an image view
+        // 0. inflate the image view from XML
 
-        ImageView imageView;
+        GridItemPosterBinding binding = DataBindingUtil.inflate( LayoutInflater.from( mContext ),
+                R.layout.grid_item_poster, parent, false );
 
-        // 1. if the image view is not recycled
+        ImageView imageView = binding.gridIvPoster;
 
-        // the image view is not recycled if the converted view is null
+        // 1. get the poster path from the cursor
 
-        // begin if the converted view is null
-        if ( convertView == null ) {
+        String posterPath = cursor.getString( MovieTableColumns.COLUMN_POSTER_PATH );
 
-            // 1a. inflate it from XML
-
-            GridItemPosterBinding binding = DataBindingUtil.inflate( LayoutInflater.from( mContext ),
-                    R.layout.grid_item_poster, parent, false );
-
-            imageView = binding.gridIvPoster;
-
-        } // end if the converted view is null
-
-        // 2. otherwise it is recycled
-        // 2a. so the converted view is an image view
-
-        else {
-            imageView = ( ImageView ) convertView;
-        }
-
-        // 3. put the correct image into the image view
+        // 2. put the correct image into the image view
 
         Picasso.with( mContext )
-                .load( Utility.getPosterUri( mMovies.get(  position ).getPosterPath() ) )
+                .load( Utility.getPosterUri( posterPath ) )
                 .placeholder( R.color.primary_dark )
                 .into( imageView );
 
-        // 4. put the correct content description
+        // 3. put the correct content description
 
-        imageView.setContentDescription(
-                mContext.getString( R.string.a11y_grid_poster, mMovies.get( position ).getTitle() )
-        );
+        String title = cursor.getString( MovieTableColumns.COLUMN_TITLE );
+
+        imageView.setContentDescription( mContext.getString( R.string.a11y_grid_poster, title ) );
+
+        // 4. put the inflated image view inside a view holder
+
+        imageView.setTag( R.id.view_holder_tag, new PosterViewHolder( imageView ) ); // rather pointless, eh?
 
         // last. return the image view
 
         return imageView;
 
-    } // end getView
+    } // end newView
+
+    @Override
+    /** Bind an existing view to the data pointed to by cursor. */
+    // begin bindView
+    public void bindView( View view, Context context, Cursor cursor ) {
+
+        // 0. get the view holder from the tag
+        // 1. read the poster path from the cursor
+        // 2. display the poster on the image view gotten from the view holder
+
+        // 0. get the view holder from the tag
+
+        PosterViewHolder posterViewHolder = ( PosterViewHolder ) view.getTag( R.id.view_holder_tag );
+
+        // 1. read the poster path from the cursor
+
+        String posterPath = cursor.getString( MovieTableColumns.COLUMN_POSTER_PATH );
+
+        // 2. display the poster on the image view gotten from the view holder
+
+        Picasso.with( mContext )
+                .load( Utility.getPosterUri( posterPath ) )
+                .placeholder( R.color.primary_dark )
+                .into( posterViewHolder.posterImageView );
+
+    } // end bindView
 
     /* Other Methods */
-
-    /**
-     * (Comment copied from {@link android.widget.ArrayAdapter#addAll(Object[])})
-     * Adds the specified movies at the end of the movies array.
-     *
-     * @param movies The movies to add at the end of the movies array.
-     */
-    // begin method addAll
-    public void addAll( List< Movie > movies ) {
-
-        // 0. add the parameter movies to the array
-        // 1. notify that the data has changed
-
-        // 0. add the parameter movies to the array
-
-        mMovies.addAll( movies );
-
-        // 1. notify that the data has changed
-
-        notifyDataSetChanged();
-
-    } // end method addAll
-
-    /**
-     * (Copied from {@link ArrayAdapter#clear()}).
-     *
-     * Remove all elements from the list.
-     * */
-    // begin method clear
-    public void clear() {
-
-        // 0. empty the movies list
-        // 1. notify of data change
-
-        // 0. empty the movies list
-
-        mMovies.clear();
-
-        // 1. notify of data change
-
-        notifyDataSetChanged();
-
-    } // end method clear
 
     /* INNER CLASSES */
 

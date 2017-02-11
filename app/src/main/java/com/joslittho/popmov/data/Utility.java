@@ -30,6 +30,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.joslittho.popmov.R;
+import com.joslittho.popmov.data.database.MovieTableColumns;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -125,6 +126,42 @@ public class Utility {
                 context.getString( R.string.pref_sort_order_most_popular_entry_value ) );
 
     } // end method getPreferredSortOrder
+
+
+    /**
+     * Helper method to determine the sort order for database querying.
+     *
+     * This sort order is based on the user's preferred sort order and sorts items from highest to
+     * lowest, that is, in descending order.
+     * */
+    // begin method getSortOrderForDatabase
+    public static String getSortOrderForDatabase( Context context ) {
+
+        // 0. get the preferred sort order
+        // 1. return an SQL sort statement based on the preferred sort order
+        // 1a. if the preferred is highest rated, return a vote-average-descending SQL sort
+        // 1b. else return a popularity-descending SQL sort
+
+        // 0. get the preferred sort order
+
+        String preferredSortOrder = getPreferredSortOrder( context );
+
+        // 1. return an SQL sort statement based on the preferred sort order
+
+        // 1a. if the preferred is highest rated, return a vote-average-descending SQL sort
+
+        if ( preferredSortOrder.equals( context.getString(
+                R.string.pref_sort_order_highest_rated_entry_value ) ) ) {
+            return MovieTableColumns.VOTE_AVERAGE + " DESC";
+        }
+
+        // 1b. else return a popularity-descending SQL sort
+
+        else {
+            return MovieTableColumns.POPULARITY + " DESC";
+        }
+
+    } // end method getSortOrderForDatabase
 
     /**
      * Helper method to format the movie release date so that it appears as required by the screenshots.

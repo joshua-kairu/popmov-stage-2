@@ -23,11 +23,23 @@
 
 package com.joslittho.popmov.fragment;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,6 +50,8 @@ import com.joslittho.popmov.R;
 import com.joslittho.popmov.activity.DetailActivity;
 import com.joslittho.popmov.adapter.PosterAdapter;
 import com.joslittho.popmov.data.Utility;
+import com.joslittho.popmov.data.database.MovieTableColumns;
+import com.joslittho.popmov.data.database.MoviesProvider;
 import com.joslittho.popmov.data.model.Movie;
 import com.joslittho.popmov.data.remote.CheckConnectivityAsyncTask;
 import com.joslittho.popmov.data.remote.FetchMovieTask;
@@ -49,19 +63,22 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * {@link Fragment} to show the movie posters.
  * */
 // begin fragment PostersFragment
-public class PostersFragment extends Fragment {
+public class PostersFragment extends Fragment implements LoaderManager.LoaderCallbacks< Cursor > {
 
     /* CONSTANTS */
     
     /* Integers */
-    
+
+    /** Loader ID */
+    public static final int MOVIE_LOADER_ID = 0;
+
     /* Strings */
 
     /**
@@ -73,6 +90,10 @@ public class PostersFragment extends Fragment {
     public static final String POSTER_FRAGMENT_TAG = "POSTER_FRAGMENT_TAG";
 
     /* VARIABLES */
+
+    /* Cursors */
+
+    private Cursor mAllMoviesCursor; // ditto
 
     /* Fragment Posters Bindings */
 
@@ -95,16 +116,52 @@ public class PostersFragment extends Fragment {
     /* Overrides */
 
     @Override
+    // begin onCreate
+    public void onCreate( @Nullable Bundle savedInstanceState ) {
+
+        // 0. super stuff
+        // 1. register for the menu
+
+        // 0. super stuff
+
+        super.onCreate( savedInstanceState );
+
+        // 1. register for the menu
+
+        setHasOptionsMenu( true );
+
+
+    } // end onCreate
+
+    @Override
+    // begin onCreateOptionsMenu
+    public void onCreateOptionsMenu( Menu menu, MenuInflater inflater ) {
+
+        // 0. super stuff
+        // 1. inflate the correct menu for this fragment
+
+        // 0. super stuff
+
+        super.onCreateOptionsMenu( menu, inflater );
+
+        // 1. inflate the correct menu for this fragment
+
+        inflater.inflate( R.menu.menu_fragment_posters, menu );
+
+    } // end onCreateOptionsMenu
+
+    @Override
     // begin onCreateView
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ) {
 
         // 0. use the posters fragment layout
         // 1. get the grid
-        // 2. initialize the movies list
-        // 3. use the poster adapter
-        // 4. when an movie poster is clicked
-        // 4a. go to details of the movie
-        // 5. set the empty view for the grid
+        // 2. use the poster adapter
+        // 2a. get a cursor pointing to all the movies sorted by the user's preference
+        // 2b. initialize the poster adapter with this cursor
+        // 3. when an movie poster is clicked
+        // 3a. go to details of the movie
+        // 4. set the empty view for the grid
         // last. return the inflated view NOT THE INFLATED GRID VIEW SINCE
         // THE INFLATED GRID VIEW *WILL* HAVE A PARENT
 
@@ -116,22 +173,30 @@ public class PostersFragment extends Fragment {
 
         GridView postersGridView = binding.fpGvPosters;
 
-        // 2. initialize the movies list
+        // 2. use the poster adapter
 
-        List< Movie > mMovies = new ArrayList<>();
+        // 2a. get a cursor pointing to all the movies sorted by the user's preference
 
-        // 3. use the poster adapter
+        Context context = getActivity();
 
-        mPosterAdapter = new PosterAdapter( getActivity(), mMovies );
+        String sortOrder = Utility.getSortOrderForDatabase( context );
+
+        mAllMoviesCursor = context.getContentResolver().query(
+                MoviesProvider.MoviesUriHolder.MOVIES_URI, MovieTableColumns.ALL_COLUMNS,
+                null, null, sortOrder );
+
+        // 2b. initialize the poster adapter with this cursor
+
+        mPosterAdapter = new PosterAdapter( context, mAllMoviesCursor, 0 );
 
         postersGridView.setAdapter( mPosterAdapter );
 
-        // 4. when an movie poster is clicked
+        // 3a. go to details of the movie
 
         // begin postersGridView.setOnItemClickListener
         postersGridView.setOnItemClickListener(
 
-                // 4a. go to details of the movie
+                // 3a. go to details of the movie
 
                 // begin new AdapterView.OnItemClickListener
                 new AdapterView.OnItemClickListener() {
@@ -140,6 +205,8 @@ public class PostersFragment extends Fragment {
                     // begin onItemClick
                     public void onItemClick( AdapterView< ? > parent, View view, int position, long id ) {
 
+                        // TODO: 2/11/17 Work on the db here
+                        
                         Movie selectedMovie = ( Movie ) parent.getItemAtPosition( position );
 
                         Intent detailIntent = new Intent( getActivity(), DetailActivity.class );
@@ -154,7 +221,7 @@ public class PostersFragment extends Fragment {
 
         ); // end postersGridView.setOnItemClickListener
 
-        // 5. set the empty view for the grid
+        // 4. set the empty view for the grid
 
         postersGridView.setEmptyView( binding.fpTvEmpty );
 
@@ -164,6 +231,23 @@ public class PostersFragment extends Fragment {
         return binding.getRoot();
 
     } // end onCreateView
+
+    @Override
+    // begin onActivityCreated
+    public void onActivityCreated( @Nullable Bundle savedInstanceState ) {
+
+        // 0. super stuff
+        // 1. initialize loader
+
+        // 0. super stuff
+
+        super.onActivityCreated( savedInstanceState );
+
+        // 1. initialize loader
+
+        getLoaderManager().initLoader( MOVIE_LOADER_ID, null, this );
+
+    } // end onActivityCreated
 
     @Override
     // begin onStart
@@ -193,6 +277,7 @@ public class PostersFragment extends Fragment {
 
         // 0. super stuff
         // 1. unregister from the event bus
+        // 2. close the movies cursor
 
         // 0. super stuff
 
@@ -202,7 +287,86 @@ public class PostersFragment extends Fragment {
 
         EventBus.getDefault().unregister( this );
 
+        // 2. close the movies cursor
+
+        if ( mAllMoviesCursor != null ) { mAllMoviesCursor.close(); }
+
     }// end onPause
+
+    @Override
+    // begin onOptionsItemSelected
+    public boolean onOptionsItemSelected( MenuItem item ) {
+
+        // 0. if it's the refresh item selected
+        // 0a. update the movies
+        // 1. otherwise
+        // 1a. do defaults
+
+        // begin switching the item id
+        switch ( item.getItemId() ) {
+
+            // 0. if it's the refresh item selected
+            // 0a. update the movies
+
+            case R.id.action_refresh:
+                updateMovies(); return true;
+
+            // 1. otherwise
+            // 1a. do defaults
+            default:
+                return super.onOptionsItemSelected( item );
+
+        } // end switching the item id
+
+    } // end onOptionsItemSelected
+
+    @Override
+    // begin onCreateLoader
+    public Loader< Cursor > onCreateLoader( int id, Bundle args ) {
+
+        // 0. load movie data from db using a cursor loader
+
+        // 0. load movie data from db using a cursor loader
+
+        Context context = getActivity();
+
+        String sortOrder = Utility.getSortOrderForDatabase( context );
+
+        Uri moviesUri = MoviesProvider.MoviesUriHolder.MOVIES_URI;
+
+        return new CursorLoader( context, moviesUri, MovieTableColumns.ALL_COLUMNS, null, null,
+                sortOrder );
+
+    } // end onCreateLoader
+
+    @Override
+    // begin onLoadFinished
+    public void onLoadFinished( Loader< Cursor > cursorLoader, Cursor newCursor ) {
+
+        // 0. hide the empty view
+        // 1. refresh the grid view
+
+        // 0. hide the empty view
+
+        binding.fpTvEmpty.setVisibility( View.INVISIBLE );
+
+        // 1. refresh the grid view
+
+        mPosterAdapter.swapCursor( newCursor );
+
+    } // end onLoadFinished
+
+    @Override
+    // begin onLoaderReset
+    public void onLoaderReset( Loader< Cursor > loader ) {
+
+        // 0. remove any cursors being used
+
+        // 0. remove any cursors being used
+
+        mPosterAdapter.swapCursor( null );
+
+    } // end onLoaderReset
 
     /* Other Methods */
 
@@ -326,16 +490,65 @@ public class PostersFragment extends Fragment {
     // begin method onFetchedMoviesEvent
     public void onFetchedMoviesEvent( FetchedMoviesEvent fetchedMoviesEvent ) {
 
-        // 0. remove old movies from adapter
-        // 1. put fetched movies into adapter
+        // 0. initialize the ContentValues vector where we will put the movie data
+        // 1. for each fetched movie
+        // 1a. put it in a ContentValues
+        // 1b. put the ContentValues in the vector made earlier
+        // 2. if the vector has something,
+        // 2a. bulk insert to add the weather entries in the vector to the db
+        // 3. else,
+        // 3a. log
 
-        // 0. remove old movies from adapter
+        // 0. initialize the ContentValues vector where we will put the movie data
 
-        mPosterAdapter.clear();
+        List< Movie > fetchedMovies = fetchedMoviesEvent.getFetchedMovies();
 
-        // 1. put fetched movies into adapter
+        Vector< ContentValues > moviesVector = new Vector<>( fetchedMovies.size() );
 
-        mPosterAdapter.addAll( fetchedMoviesEvent.getFetchedMovies() );
+        // 1. for each fetched movie
+
+        // begin for through each fetched movie
+        for ( Movie movie : fetchedMovies ) {
+
+            // 1a. put it in a ContentValues
+
+            ContentValues movieContentValues = new ContentValues();
+
+            movieContentValues.put( MovieTableColumns.MOVIE_ID, movie.getID() );
+            movieContentValues.put( MovieTableColumns.POSTER_PATH, movie.getPosterPath() );
+            movieContentValues.put( MovieTableColumns.OVERVIEW, movie.getSynopsis() );
+            movieContentValues.put( MovieTableColumns.RELEASE_DATE, movie.getReleaseDate() );
+            movieContentValues.put( MovieTableColumns.TITLE, movie.getTitle() );
+            movieContentValues.put( MovieTableColumns.VOTE_AVERAGE, movie.getUserRating() );
+            movieContentValues.put( MovieTableColumns.POPULARITY, movie.getPopularity() );
+
+            // 1b. put the ContentValues in the vector made earlier
+
+            moviesVector.add( movieContentValues );
+
+        } // end for through each fetched movie
+
+        // 2. if the vector has something,
+        // 2a. bulk insert to add the weather entries in the vector to the db
+
+        int numberOfInserts = 0;
+
+        // begin if the movies vector has something
+        if ( !moviesVector.isEmpty() ) {
+
+            ContentValues movieContentValuesArray[] = new ContentValues[ moviesVector.size() ];
+
+            // stores the vector contents in the content values array
+            moviesVector.toArray( movieContentValuesArray );
+
+            Context context = getActivity();
+
+            numberOfInserts = context.getContentResolver().bulkInsert(
+                    MoviesProvider.MoviesUriHolder.MOVIES_URI, movieContentValuesArray );
+
+        } // end if the movies vector has something
+
+        Log.e( LOG_TAG, "onFetchedMoviesEvent: number of movies inserted: " + numberOfInserts );
 
     } // end method onFetchedMoviesEvent
 

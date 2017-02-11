@@ -30,6 +30,7 @@ ext {
     supportLibraryVersion = "25.0.1"
     playServicesVersion = "10.0.1"
     schematicVersion = "0.7.0"
+    stethoVersion = "1.4.2"
 }
 
 dependencies {
@@ -46,9 +47,10 @@ dependencies {
 
     // schematic content provider generator
     compile "net.simonvt.schematic:schematic:$schematicVersion"
+    annotationProcessor "net.simonvt.schematic:schematic-compiler:$schematicVersion"
 
     // stetho
-    debugCompile 'com.facebook.stetho:stetho:1.4.2'
+    debugCompile "com.facebook.stetho:stetho:$stethoVersion"
 
     // support library
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
