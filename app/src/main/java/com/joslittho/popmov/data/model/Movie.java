@@ -70,6 +70,9 @@ public class Movie implements Parcelable {
     /** The movie's unique ID in TMDB */
     private long mID;
 
+    /** The movie's popularity */
+    private double mPopularity;
+
     /* Strings */
 
     private String mTitle; // ditto
@@ -91,7 +94,7 @@ public class Movie implements Parcelable {
 
     // begin default constructor
     public Movie( long id, String title, String releaseDate, String synopsis, double userRating,
-                  String posterPath ) {
+                  double popularity, String posterPath ) {
 
         // 0. initialize members
 
@@ -102,6 +105,7 @@ public class Movie implements Parcelable {
         setReleaseDate( releaseDate );
         setSynopsis( synopsis );
         setUserRating( userRating );
+        setPopularity( popularity );
         setPosterPath( posterPath );
 
     } // end default constructor
@@ -120,6 +124,7 @@ public class Movie implements Parcelable {
         setReleaseDate( inParcel.readString() );
         setSynopsis( inParcel.readString() );
         setUserRating( inParcel.readDouble() );
+        setPopularity( inParcel.readDouble() );
         setPosterPath( inParcel.readString() );
 
     } // end parcel constructor
@@ -147,6 +152,12 @@ public class Movie implements Parcelable {
     public void setPosterPath( String posterPath ) {
         mPosterPath = posterPath;
     }
+
+    // getter for the popularity
+    public double getPopularity() { return mPopularity; }
+
+    // setter for the popularity
+    public void setPopularity( double popularity ) { mPopularity = popularity; }
 
     // getter for the release date
     public String getReleaseDate() {
@@ -201,6 +212,7 @@ public class Movie implements Parcelable {
         destParcel.writeString( getReleaseDate() );
         destParcel.writeString( getSynopsis() );
         destParcel.writeDouble( getUserRating() );
+        destParcel.writeDouble( getPopularity() );
         destParcel.writeString( getPosterPath() );
 
     } // end writeToParcel
