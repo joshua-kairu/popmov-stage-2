@@ -23,26 +23,20 @@ public interface MovieTableColumns {
     @AutoIncrement
     String _ID = "_id"; // the unique row id
 
-    int COLUMN_ID = 0; // column for the unique row id
-
     @DataType( INTEGER )
     @Unique
     @NotNull
     String MOVIE_ID = "movie_id"; // the unique movie ID - int
 
-    int COLUMN_MOVIE_ID = 1; // column for the unique movie id
-
     @DataType( TEXT )
     @NotNull
     String POSTER_PATH = "poster_path"; // the poster path - string
-
-    int COLUMN_POSTER_PATH = 2; // column for the poster path
 
     @DataType( TEXT )
     @NotNull
     String OVERVIEW = "overview"; // the overview, or synopsis - string
 
-    int COLUMN_OVERVIEW = 3; // column for the overview
+    int DETAILS_COLUMN_OVERVIEW = 3; // column for the overview
 
     @DataType( TEXT )
     @NotNull
@@ -54,24 +48,28 @@ public interface MovieTableColumns {
     @NotNull
     String TITLE = "title"; // the movie title - string
 
-    int COLUMN_TITLE = 5; // column for the movie title
-
     @DataType( REAL )
     @NotNull
     String VOTE_AVERAGE = "vote_average"; // the vote average, or user rating - double, hence real
-
-    int COLUMN_VOTE_AVERAGE = 6; // column for the vote average
 
     @DataType( REAL )
     @NotNull
     String POPULARITY = "popularity"; // the popularity - double, hence real
 
-    int COLUMN_POPULARITY = 7; // column for the popularity
-
     /* Arrays */
 
-    /** Array of all the columns in this movie table */
-    String[] ALL_COLUMNS =
-            { _ID, MOVIE_ID, POSTER_PATH, OVERVIEW, RELEASE_DATE, TITLE, VOTE_AVERAGE, POPULARITY };
+    /**
+     * Array of columns needed to make the {@link com.joslittho.popmov.fragment.PostersFragment} work.
+     *
+     * These columns are the _id, the movie id (for linking to the {@link com.joslittho.popmov.fragment.DetailFragment}),
+     * poster path, movie popularity, and movie vote average
+     * */
+    String[] POSTERS_FRAGMENT_COLUMNS = { _ID, MOVIE_ID, POSTER_PATH, TITLE, VOTE_AVERAGE, POPULARITY };
+
+    int COLUMN_MOVIE_ID = 1; // column for the unique movie id
+    int COLUMN_POSTER_PATH = 2; // column for the poster path
+    int COLUMN_TITLE = 3; // column for the movie title
+    int COLUMN_VOTE_AVERAGE = 4; // column for the vote average
+    int COLUMN_POPULARITY = 5; // column for the popularity
 
 } // end interface MovieTableColumns

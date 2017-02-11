@@ -76,8 +76,8 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     
     /* Integers */
 
-    /** Loader ID */
-    public static final int MOVIE_LOADER_ID = 0;
+    /** Movies loader ID */
+    public static final int MOVIES_LOADER_ID = 0;
 
     /* Strings */
 
@@ -182,7 +182,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         String sortOrder = Utility.getSortOrderForDatabase( context );
 
         mAllMoviesCursor = context.getContentResolver().query(
-                MoviesProvider.MoviesUriHolder.MOVIES_URI, MovieTableColumns.ALL_COLUMNS,
+                MoviesProvider.MoviesUriHolder.MOVIES_URI, MovieTableColumns.POSTERS_FRAGMENT_COLUMNS,
                 null, null, sortOrder );
 
         // 2b. initialize the poster adapter with this cursor
@@ -205,15 +205,29 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
                     // begin onItemClick
                     public void onItemClick( AdapterView< ? > parent, View view, int position, long id ) {
 
-                        // TODO: 2/11/17 Work on the db here
-                        
-                        Movie selectedMovie = ( Movie ) parent.getItemAtPosition( position );
+                        // 0. get the cursor at the given position
+                        // 1. if there is a cursor there
+                        // 1a. start the details activity using the uri from the cursor at this position
 
-                        Intent detailIntent = new Intent( getActivity(), DetailActivity.class );
+                        // 0. get the cursor at the given position
 
-                        detailIntent.putExtra( DetailFragment.ARGUMENT_MOVIE, selectedMovie );
+                        Cursor cursor = ( Cursor ) parent.getItemAtPosition( position );
 
-                        startActivity( detailIntent );
+                        // 1. if there is a cursor there
+
+                        // begin if there is a cursor
+                        if ( cursor != null ) {
+
+                            // 1a. start the details activity using the uri from the cursor at this position
+
+                            long movieId = cursor.getLong( MovieTableColumns.COLUMN_MOVIE_ID );
+
+                            Intent detailsIntent = new Intent( getActivity(), DetailActivity.class )
+                                    .setData( MoviesProvider.MoviesUriHolder.withMovieId( movieId ) );
+
+                            startActivity( detailsIntent );
+
+                        } // end if there is a cursor
 
                     } // end onItemClick
 
@@ -245,7 +259,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         // 1. initialize loader
 
-        getLoaderManager().initLoader( MOVIE_LOADER_ID, null, this );
+        getLoaderManager().initLoader( MOVIES_LOADER_ID, null, this );
 
     } // end onActivityCreated
 
@@ -334,7 +348,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         Uri moviesUri = MoviesProvider.MoviesUriHolder.MOVIES_URI;
 
-        return new CursorLoader( context, moviesUri, MovieTableColumns.ALL_COLUMNS, null, null,
+        return new CursorLoader( context, moviesUri, MovieTableColumns.POSTERS_FRAGMENT_COLUMNS, null, null,
                 sortOrder );
 
     } // end onCreateLoader
