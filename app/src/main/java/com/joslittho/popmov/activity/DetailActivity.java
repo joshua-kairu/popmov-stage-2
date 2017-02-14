@@ -25,6 +25,7 @@ package com.joslittho.popmov.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -78,16 +79,8 @@ public class DetailActivity extends AppCompatActivity {
 
             // 2a. start the detail fragment
 
-            // begin if the intent has a bundle
-            if ( getIntent() != null ) {
-
-                Movie selectedMovie = getIntent().getParcelableExtra( DetailFragment.ARGUMENT_MOVIE );
-
-                getSupportFragmentManager().beginTransaction()
-                        .add( R.id.ad_fl_container, DetailFragment.newInstance( selectedMovie ) )
-                        .commit();
-
-            } // end if the intent has a bundle
+            getSupportFragmentManager().beginTransaction()
+                    .add( R.id.ad_fl_container, new DetailFragment() ).commit();
 
         } // end if the saved state is null
 

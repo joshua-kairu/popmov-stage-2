@@ -23,39 +23,45 @@
 
 package com.joslittho.popmov.fragment;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.joslittho.popmov.R;
 import com.joslittho.popmov.data.Utility;
-import com.joslittho.popmov.data.model.Movie;
 import com.joslittho.popmov.databinding.FragmentDetailBinding;
 import com.squareup.picasso.Picasso;
+
+import static com.joslittho.popmov.data.database.MovieTableColumns.*;
 
 /**
  * {@link Fragment} to show the details of a selected movie
  * */
 // begin fragment DetailFragment
-public class DetailFragment extends Fragment {
+public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks< Cursor > {
     
     /* CONSTANTS */
     
     /* Integers */
-    
-    /* Strings */
 
-    /** Key for the {@link Movie} bundle item. */
-    public static final String ARGUMENT_MOVIE = "ARGUMENT_MOVIE";
+    /** Movie detail loader ID */
+    public static final int MOVIE_DETAIL_LOADER_ID = 0;
+
+    /* Strings */
 
     /* VARIABLES */
 
-    /* Movies */
-
-    private Movie mMovie; // ditto
+    private FragmentDetailBinding mBinding; // ditto
 
     /* CONSTRUCTOR */
 
@@ -66,73 +72,108 @@ public class DetailFragment extends Fragment {
     /* METHODS */
     
     /* Getters and Setters */
-    
+
     /* Overrides */
 
     @Override
     // begin onCreateView
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ) {
 
-        // 0. get the movie from the arguments
-        // 1. use the detail fragment layout
-        // 2. show the movie details
+        // 0. use the detail fragment layout
         // last. return the inflated view
 
-        // 0. get the movie from the arguments
+        // 0. use the detail fragment layout
 
-        if ( getArguments() != null ) { mMovie = getArguments().getParcelable( ARGUMENT_MOVIE ); }
-
-        // 1. use the detail fragment layout
-
-        FragmentDetailBinding binding = DataBindingUtil.inflate( LayoutInflater.from( getActivity() ),
+        mBinding = DataBindingUtil.inflate( LayoutInflater.from( getActivity() ),
                 R.layout.fragment_detail, container, false );
 
-        // 2. show the movie details
-
-        binding.detailTvTitle.setText( mMovie.getTitle() );
-
-        Picasso.with( getActivity() ).load( Utility.getPosterUri( mMovie.getPosterPath() ) )
-                .placeholder( R.color.primary_dark ).into( binding.detailIvPoster );
-
-        binding.detailTvDate.setText( Utility.getFormattedReleaseDate( mMovie.getReleaseDate() ) );
-
-        binding.detailTvVoteAverage.setText(
-                Utility.getFormattedUserRating( getActivity(), mMovie.getUserRating()  ) );
-
-        binding.detailTvSynopsis.setText( mMovie.getSynopsis() );
-
         // last. return the inflated view
 
-        return binding.getRoot();
+        return mBinding.getRoot();
 
     } // end onCreateView
-    
+
+    @Override
+    // begin onActivityCreated
+    public void onActivityCreated( @Nullable Bundle savedInstanceState ) {
+
+        // 0. super stuff
+        // 1. initialize loader
+
+        // 0. super stuff
+
+        super.onActivityCreated( savedInstanceState );
+
+        // 1. initialize loader
+
+        getLoaderManager().initLoader( MOVIE_DETAIL_LOADER_ID, null, this );
+
+    } // end onActivityCreated
+
+    @Override
+    // begin onCreateLoader
+    public Loader< Cursor > onCreateLoader( int id, Bundle args ) {
+
+        // 0. if there is no intent, there is no particular movie's url, so don't load
+        // this can happen in tablet mode
+        // 1. get this particular movie's url from intent
+        // 2. return a loader that fetches this particular movie's url from the db
+
+        // 0. if there is no intent, there is no particular movie's url, so don't load
+        // this can happen in tablet mode
+
+        Intent intent = getActivity().getIntent();
+
+        if ( intent == null ) { return null; }
+
+        // 1. get this particular movie's url from intent
+
+        Uri movieUri = intent.getData();
+
+        // 2. return a loader that fetches this particular movie's url from the db
+
+        return new CursorLoader( getActivity(), movieUri, DETAIL_FRAGMENT_COLUMNS, null, null, null );
+        
+    } // end onCreateLoader
+
+    @Override
+    // begin onLoadFinished
+    public void onLoadFinished( Loader< Cursor > cursorLoader, Cursor cursor ) {
+
+        // 0. bind the needed details to their views
+        
+        // 0. bind the needed details to their views
+        
+        // begin if there is a cursor and it has something
+        if ( cursor != null && cursor.moveToFirst() ) {
+
+            mBinding.detailTvTitle.setText( cursor.getString( COLUMN_TITLE ) );
+
+            Picasso.with( getActivity() )
+                    .load( Utility.getPosterUri( cursor.getString( COLUMN_POSTER_PATH ) ) )
+                    .placeholder( R.color.primary_dark ).into( mBinding.detailIvPoster );
+
+            mBinding.detailTvDate.setText(
+                    Utility.getFormattedReleaseDate( cursor.getString( COLUMN_RELEASE_DATE ) ) );
+
+            mBinding.detailTvUserRating.setText(
+                    Utility.getFormattedUserRating( getActivity(),
+                            cursor.getDouble( COLUMN_VOTE_AVERAGE ) ) );
+
+            mBinding.detailTvSynopsis.setText( cursor.getString( COLUMN_DETAIL_OVERVIEW ) );
+
+        } // end if there is a cursor and it has something
+        
+    } // end onLoadFinished
+
+    @Override
+    // nothing here
+    public void onLoaderReset( Loader< Cursor > loader ) { }
+
     /* Other Methods */
 
     /* statics */
 
-    // begin method newInstance
-    public static DetailFragment newInstance( Movie movie ) {
-
-        // 0. put the movie in a bundle
-        // 1. create a fragment with that bundle
-
-        // 0. put the movie in a bundle
-
-        Bundle bundle = new Bundle();
-
-        bundle.putParcelable( ARGUMENT_MOVIE, movie );
-
-        // 1. create a fragment with that bundle
-
-        DetailFragment detailFragment = new DetailFragment();
-
-        detailFragment.setArguments( bundle );
-
-        return detailFragment;
-
-    } // end method newInstance
-    
     /* INNER CLASSES */
 
 } // end fragment DetailFragment

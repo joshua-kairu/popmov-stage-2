@@ -36,13 +36,9 @@ public interface MovieTableColumns {
     @NotNull
     String OVERVIEW = "overview"; // the overview, or synopsis - string
 
-    int DETAILS_COLUMN_OVERVIEW = 3; // column for the overview
-
     @DataType( TEXT )
     @NotNull
     String RELEASE_DATE = "release_date"; // the release date - string
-
-    int COLUMN_RELEASE_DATE = 4; // column for the release date
 
     @DataType( TEXT )
     @NotNull
@@ -62,14 +58,28 @@ public interface MovieTableColumns {
      * Array of columns needed to make the {@link com.joslittho.popmov.fragment.PostersFragment} work.
      *
      * These columns are the _id, the movie id (for linking to the {@link com.joslittho.popmov.fragment.DetailFragment}),
-     * poster path, movie popularity, and movie vote average
+     * title (for content descriptions), poster path, movie vote average, and movie popularity
      * */
-    String[] POSTERS_FRAGMENT_COLUMNS = { _ID, MOVIE_ID, POSTER_PATH, TITLE, VOTE_AVERAGE, POPULARITY };
+    String[] POSTERS_FRAGMENT_COLUMNS =
+            { _ID, MOVIE_ID, POSTER_PATH, TITLE, VOTE_AVERAGE, POPULARITY };
 
     int COLUMN_MOVIE_ID = 1; // column for the unique movie id
     int COLUMN_POSTER_PATH = 2; // column for the poster path
     int COLUMN_TITLE = 3; // column for the movie title
     int COLUMN_VOTE_AVERAGE = 4; // column for the vote average
-    int COLUMN_POPULARITY = 5; // column for the popularity
+    // int COLUMN_POSTERS_POPULARITY = 5; // column for the popularity - only for the posters, and
+                                          // used for sorting not getting the actual popularity for
+                                          // display
+
+    /**
+     * Array of columns needed to make the {@link com.joslittho.popmov.fragment.DetailFragment} work.
+     *
+     * These columns are the _id, poster path, title, vote average, release date, and overview
+     * */
+    String[] DETAIL_FRAGMENT_COLUMNS =
+            { _ID, MOVIE_ID, POSTER_PATH, TITLE, VOTE_AVERAGE, RELEASE_DATE, OVERVIEW };
+
+    int COLUMN_RELEASE_DATE = 5; // column for the release date - only for the detail
+    int COLUMN_DETAIL_OVERVIEW = 6; // column for the overview - only for the detail
 
 } // end interface MovieTableColumns

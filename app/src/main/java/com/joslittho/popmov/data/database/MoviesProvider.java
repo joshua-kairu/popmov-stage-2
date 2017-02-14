@@ -4,11 +4,16 @@ import android.net.Uri;
 
 import net.simonvt.schematic.annotation.ContentProvider;
 import net.simonvt.schematic.annotation.ContentUri;
+import net.simonvt.schematic.annotation.InexactContentUri;
 import net.simonvt.schematic.annotation.TableEndpoint;
 
 /**
  * {@link android.content.ContentProvider} to serve {@link com.joslittho.popmov.data.model.Movie}s
  * from the db.
+ *
+ * Credits:
+ * https://valeriodg.com/2016/06/09/contentprovider-example-15-minutes/
+ * https://github.com/SimonVT/schematic/blob/master/README.md
  */
 @ContentProvider( authority = MoviesProvider.AUTHORITY, database = MoviesDatabase.class )
 // begin class MoviesProvider
@@ -39,8 +44,6 @@ public class MoviesProvider {
 
     /**
      * Helper method to assist with content Uri generation.
-     *
-     * Credits: https://valeriodg.com/2016/06/09/contentprovider-example-15-minutes/
      *
      * @param paths List of paths to append to the Uri
      *
@@ -78,12 +81,29 @@ public class MoviesProvider {
     public static class MoviesUriHolder {
 
         @ContentUri(
-                path = MoviesDatabase.MOVIES_TABLE_NAME,
-                type = "vnd.android.cursor.dir/" + MoviesDatabase.MOVIES_TABLE_NAME
-                // TODO: 2/8/17 Add sort order
+                path = MoviesDatabase.MOVIES_TABLE_NAME, // the movies table in general
+                type = "vnd.android.cursor.dir/" + MoviesDatabase.MOVIES_TABLE_NAME // this Uri looks for all contents inside the movies table
         )
         /** Uri pointing to the movies table. */
         public static final Uri MOVIES_URI = buildUri( MoviesDatabase.MOVIES_TABLE_NAME );
+
+        @InexactContentUri(
+                path = MoviesDatabase.MOVIES_TABLE_NAME + "/#", // a number in the movies table
+                name = "MOVIE_ID", // name of this inexact URI, I think
+                type = "vnd.android.cursor.item/" + MoviesDatabase.MOVIES_TABLE_NAME, // this Uri looks for an item inside the movies table
+                whereColumn = MovieTableColumns.MOVIE_ID, // the column which we will use to choose a specific item
+                pathSegment = 1 // how many paths the Uri will have, I think. Uri a/b has one path - "b". Uri a/b/c has two paths - "b and c", I think
+        )
+        /**
+         * Uri pointing to a particular movie in the movies table.
+         *
+         * @param movieId The movie's unique id
+         *
+         * @return Uri pointing to the movie with the given id.
+         * */
+        public static Uri withMovieId( long movieId ) {
+            return buildUri( MoviesDatabase.MOVIES_TABLE_NAME, String.valueOf( movieId ) );
+        }
 
     } // end inner class MoviesUriHolder
 
