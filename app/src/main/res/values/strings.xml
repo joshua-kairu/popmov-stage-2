@@ -25,7 +25,21 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="app_name">PopMov</string>
+    <!-- The name of the app. [CHAR LIMIT = NONE] -->
+    <string name="app_name" translatable="false">PopMov</string>
+
+    <!-- A11y -->
+
+    <!-- accessibility text for the individual grid poster pictures.
+     It reads the name of the movie. -->
+    <string name="a11y_grid_poster">
+        <xliff:g id = "movie_title">%1$s</xliff:g>
+    </string>
+
+    <!-- accessibility text for the trailer play button.
+    It will read "Play" since the next thing to be read will be "Trailer x".
+    So "Play trailer x" [CHAR LIMIT = 5] -->
+    <string name="a11y_trailer_play">Play</string>
 
     <!-- Activity titles -->
 
@@ -35,15 +49,17 @@
     <!-- The title for the settings activity [CHAR LIMIT = 15] -->
     <string name="settings_activity_title">Settings</string>
 
-    <!-- A11y -->
+    <!-- Details section titles -->
 
-    <string name="a11y_grid_poster">
-        Poster: <xliff:g id = "movie_title">%1$s</xliff:g>
-    </string>
+    <!-- The title of the section of details that shows the trailers [CHAR LIMIT = 10] -->
+    <string name="detail_title_trailers">Trailers</string>
+
+    <!-- The title of the section of details that shows the user reviews [CHAR LIMIT = 10] -->
+    <string name="detail_title_reviews">Reviews</string>
 
     <!-- Formatting strings -->
 
-    <!-- formatter for the user rating so that a rating 5.92 becomes 5.9/10 -->
+    <!-- formatter for the user rating so that a rating 5.92 becomes 5.9/10 [CHAR LIMIT = NONE] -->
     <string name="user_rating_format"><xliff:g id="user_rating">%1$.1f</xliff:g>/10</string>
 
     <!-- Menus -->
@@ -56,35 +72,59 @@
 
     <!-- Messages -->
 
-    <!-- Message to show there is no movies information. [CHAR LIMIT = 20] -->
+    <!-- Message to show there is no movies information. [CHAR LIMIT = 35] -->
     <string name="message_error_no_movie_info">No movie information available.</string>
 
-    <!-- Message to show the device cannot connect to the internet to fetch movies. [CHAR LIMIT = 35] -->
+    <!-- Message to show the device cannot connect to the internet to fetch movies.
+    [CHAR LIMIT = 60] -->
     <string name="message_error_no_movie_info_no_connectivity">
         No movie information available. No Internet connection.
     </string>
 
+    <!-- Message to show we there are no movies because the user hasn't selected favorites
+    [CHAR LIMIT = 60] -->
+    <string name="message_error_no_movie_info_no_favorites">
+        No movie information available. No favorites chosen.
+    </string>
+
     <!-- Message to show we are fetching movies [CHAR LIMIT = 25] -->
     <string name="message_info_fetching_movies">Fetching movies. . .</string>
+
+    <!-- message that there are no trailers yet [CHAR LIMIT = 20] -->
+    <string name="message_error_no_trailers">No trailers yet.</string>
+
+    <!-- message that there are no reviews yet [CHAR LIMIT = 20] -->
+    <string name="message_error_no_reviews">No reviews yet.</string>
 
     <!-- Preferences -->
 
     <!-- title for the sort order preference [CHAR LIMIT = 20] -->
     <string name="pref_sort_order_title">Sort Order</string>
 
-    <!-- key for the sort order preference -->
+    <!-- key for the sort order preference [CHAR LIMIT = NONE] -->
     <string name="pref_sort_order_key" translatable="false">sort order</string>
 
-    <!-- label, or entry, for displaying the most popular sort order preference [CHAR LIMIT = 25] -->
+    <!-- label, or entry, for displaying the most popular sort order preference
+    [CHAR LIMIT = 25] -->
     <string name="pref_sort_order_most_popular_entry">Most Popular</string>
 
-    <!-- label, or entry, for displaying the highest rated sort order preference [CHAR LIMIT = 25] -->
+    <!-- label, or entry, for displaying the highest rated sort order preference
+    [CHAR LIMIT = 25] -->
     <string name="pref_sort_order_highest_rated_entry">Highest Rated</string>
 
-    <!-- key, or entry value, for storing the most popular sort order preference [CHAR LIMIT = NONE] -->
+    <!-- label, or entry, for displaying the favorites sort order preference [CHAR LIMIT = 15] -->
+    <string name="pref_sort_order_favorites_entry">Favorites</string>
+
+    <!-- key, or entry value, for storing the most popular sort order preference
+    [CHAR LIMIT = NONE] -->
     <string name="pref_sort_order_most_popular_entry_value" translatable="false">popular</string>
 
-    <!-- key, or entry value, for storing the highest rated sort order preference [CHAR LIMIT = NONE] -->
+    <!-- key, or entry value, for storing the highest rated sort order preference
+    [CHAR LIMIT = NONE] -->
     <string name="pref_sort_order_highest_rated_entry_value" translatable="false">top_rated</string>
+
+    <!-- key, or entry value, for storing the favorites sort order preference
+    [CHAR LIMIT = NONE] -->
+    <string name="pref_sort_order_favorites_entry_value" translatable="false">favorites</string>
 
 </resources>
