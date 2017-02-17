@@ -156,7 +156,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mBinding.detailTvDate.setText(
                     Utility.getFormattedReleaseDate( cursor.getString( COLUMN_RELEASE_DATE ) ) );
 
-            mBinding.detailTvUserRating.setText(
+            mBinding.detailTvVoteAverage.setText(
                     Utility.getFormattedUserRating( getActivity(),
                             cursor.getDouble( COLUMN_VOTE_AVERAGE ) ) );
 
