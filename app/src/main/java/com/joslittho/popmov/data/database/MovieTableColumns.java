@@ -57,7 +57,8 @@ public interface MovieTableColumns {
     /**
      * Array of columns needed to make the {@link com.joslittho.popmov.fragment.PostersFragment} work.
      *
-     * These columns are the _id, the movie id (for linking to the {@link com.joslittho.popmov.fragment.DetailFragment}),
+     * These columns are the _id,
+     * the movie id (for linking to the {@link com.joslittho.popmov.fragment.DetailFragment}),
      * title (for content descriptions), poster path, movie vote average, and movie popularity
      * */
     String[] POSTERS_FRAGMENT_COLUMNS =

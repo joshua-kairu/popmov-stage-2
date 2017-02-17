@@ -6,6 +6,7 @@ import net.simonvt.schematic.annotation.NotNull;
 import net.simonvt.schematic.annotation.PrimaryKey;
 import net.simonvt.schematic.annotation.Unique;
 
+import static com.joslittho.popmov.data.database.MoviesDatabase.MovieTablesHolder.FAVORITES_TABLE_NAME;
 import static net.simonvt.schematic.annotation.DataType.Type.INTEGER;
 
 /**
@@ -37,6 +38,18 @@ public interface FavoritesTableColumns {
     /** Integer value meaning that a movie is not a favorite. */
     int FAVORITE_FALSE = 1;
 
-    /* METHODS */
+    /* Arrays */
+
+    /**
+     * Array of columns needed to make the {@link com.joslittho.popmov.fragment.PostersFragment}
+     * show the favorites.
+     *
+     * These columns are the _id, and
+     * the movie id (for linking to the {@link com.joslittho.popmov.fragment.DetailFragment}),
+     * */
+    String[] POSTERS_FRAGMENT_FAVORITES_COLUMNS =
+            { FAVORITES_TABLE_NAME + "." + _ID, FAVORITES_TABLE_NAME + "." + MOVIE_ID };
+
+    int COLUMN_MOVIE_ID = 1; // column for the unique movie id
 
 } // end interface FavoritesTableColumns

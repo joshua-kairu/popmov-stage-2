@@ -10,6 +10,8 @@ import net.simonvt.schematic.annotation.ContentUri;
 import net.simonvt.schematic.annotation.InexactContentUri;
 import net.simonvt.schematic.annotation.TableEndpoint;
 
+import static com.joslittho.popmov.data.database.MoviesDatabase.MovieTablesHolder.*;
+
 /**
  * {@link android.content.ContentProvider} to serve {@link com.joslittho.popmov.data.model.Movie}s
  * from the db.
@@ -75,7 +77,7 @@ public class MoviesProvider {
 
     /* INNER CLASSES */
 
-    @TableEndpoint( table = MovieTablesHolder.MOVIES_TABLE_NAME )
+    @TableEndpoint( table = MOVIES_TABLE_NAME )
     /**
      * Inner class of the {@link MoviesProvider} that contains Uri's which can be queried for {@link Movie}
      * data.
@@ -84,25 +86,17 @@ public class MoviesProvider {
     public static class MoviesUriHolder {
 
         @ContentUri(
-                path = MovieTablesHolder.MOVIES_TABLE_NAME, // the movies table in general
-                type = "vnd.android.cursor.dir/" + MovieTablesHolder.MOVIES_TABLE_NAME // this Uri looks for all contents inside the movies table
+                path = MOVIES_TABLE_NAME, // the movies table in general
+                type = "vnd.android.cursor.dir/" + MOVIES_TABLE_NAME // this Uri looks for all contents inside the movies table
         )
         /** Uri pointing to the movies table. */
-        public static final Uri MOVIES_URI = buildUri( MovieTablesHolder.MOVIES_TABLE_NAME );
-
-        /**
-         * Inner join the movie table with the favorites table where the movie id in both tables match
-         */
-        //private static final String JOIN_MOVIES_WITH_FAVORITES_STRING =
-        //        "JOIN " + MovieTablesHolder.MOVIES_TABLE_NAME + " ON " +
-        //                MovieTableColumns.MOVIE_ID + " = " + FavoritesTableColumns.MOVIE_ID;
+        public static final Uri MOVIES_URI = buildUri( MOVIES_TABLE_NAME );
 
         @InexactContentUri(
                 // TODO: 2/14/17 How to do a join between the movies and favorites tables
-                // join = JOIN_MOVIES_WITH_FAVORITES_STRING,
-                path = MovieTablesHolder.MOVIES_TABLE_NAME + "/#", // a number in the movies table
+                path = MOVIES_TABLE_NAME + "/#", // a number in the movies table
                 name = "PARTICULAR_MOVIE_FROM_MOVIES_LIST", // name of this inexact URI, I think
-                type = "vnd.android.cursor.item/" + MovieTablesHolder.MOVIES_TABLE_NAME, // this Uri looks for an item inside the movies table
+                type = "vnd.android.cursor.item/" + MOVIES_TABLE_NAME, // this Uri looks for an item inside the movies table
                 whereColumn = MovieTableColumns.MOVIE_ID, // the column which we will use to choose a specific item
                 pathSegment = 1 // how many paths the Uri will have, I think. Uri a/b has one path - "b". Uri a/b/c has two paths - "b and c", I think
         )
@@ -114,12 +108,12 @@ public class MoviesProvider {
          * @return Uri pointing to the movie with the given id.
          * */
         public static Uri withMovieId( long movieId ) {
-            return buildUri( MovieTablesHolder.MOVIES_TABLE_NAME, String.valueOf( movieId ) );
+            return buildUri( MOVIES_TABLE_NAME, String.valueOf( movieId ) );
         }
 
     } // end inner class MoviesUriHolder
 
-    @TableEndpoint( table = MovieTablesHolder.FAVORITES_TABLE_NAME )
+    @TableEndpoint( table = FAVORITES_TABLE_NAME )
     /**
      * Inner class of the {@link MoviesProvider} that contains Uris which can be queried for
      * {@link com.joslittho.popmov.data.model.Movie} favorites data.
@@ -127,12 +121,31 @@ public class MoviesProvider {
     // begin inner class FavoritesUriHolder
     public static class FavoritesUriHolder {
 
+        /**
+         * Inner join the movie table with the favorites table where the movie id in both tables match.
+         *
+         * Thanks to http://stackoverflow.com/questions/4957009/how-do-i-join-two-sqlite-tables-in-my-android-application
+         * here is how a join should look like
+         *
+         * "SELECT desired-cols-list FROM T1 INNER JOIN T2 on T1.questionid =T2.questionid AND
+         * T1.categoryid = T2.categoryid WHERE T1.categoryid = {the desired category value}"
+         *
+         * so our join should look like
+         * SELECT favorites._id, movie_id FROM favorites JOIN movies ON favorites.movie_id = movies.movie_id
+         *
+         */
+        private static final String JOIN_MOVIES_WITH_FAVORITES_STRING =
+                "JOIN " + MOVIES_TABLE_NAME + " ON "
+                        + FAVORITES_TABLE_NAME + "." + FavoritesTableColumns.MOVIE_ID + " = "
+                        + MOVIES_TABLE_NAME + "." + MovieTableColumns.MOVIE_ID;
+
         @ContentUri(
-                path = MovieTablesHolder.FAVORITES_TABLE_NAME, // the favorites table in general
-                type = "vnd.android.cursor.dir/" + MovieTablesHolder.FAVORITES_TABLE_NAME // this Uri looks for all contents inside the favorites table
+                join = JOIN_MOVIES_WITH_FAVORITES_STRING,
+                path = FAVORITES_TABLE_NAME, // the favorites table in general
+                type = "vnd.android.cursor.dir/" + FAVORITES_TABLE_NAME // this Uri looks for all contents inside the favorites table
         )
         /** Uri pointing to the favorites table. */
-        public static final Uri FAVORITES_URI = buildUri( MovieTablesHolder.FAVORITES_TABLE_NAME );
+        public static final Uri FAVORITES_URI = buildUri( FAVORITES_TABLE_NAME );
 
     } // end inner class FavoritesUriHolder
 

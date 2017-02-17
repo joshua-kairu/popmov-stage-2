@@ -1,11 +1,7 @@
 package com.joslittho.popmov.data.database;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-
 import net.simonvt.schematic.annotation.Database;
 import net.simonvt.schematic.annotation.IfNotExists;
-import net.simonvt.schematic.annotation.OnUpgrade;
 import net.simonvt.schematic.annotation.Table;
 
 /**
@@ -13,7 +9,7 @@ import net.simonvt.schematic.annotation.Table;
  */
 @Database( version = MoviesDatabase.VERSION )
 // begin class MoviesDatabase
-public class MoviesDatabase {
+class MoviesDatabase {
 
     /* CONSTANTS */
 

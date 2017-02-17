@@ -53,6 +53,7 @@ import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.data.database.MoviesProvider;
+import com.joslittho.popmov.data.database.generated.MoviesDatabase;
 import com.joslittho.popmov.data.model.Movie;
 import com.joslittho.popmov.data.remote.CheckConnectivityAsyncTask;
 import com.joslittho.popmov.data.remote.FetchMovieTask;
@@ -158,11 +159,16 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         // 0. use the posters fragment layout
         // 1. get the grid
         // 2. use the poster adapter
-        // 2a. get a cursor pointing to all the movies sorted by the user's preference
+        // 2a. get a cursor pointing to the movies
+        // 2a0. if the user wants favorites
+        // 2a0a. get the favorites without sorting
+        // 2a1. otherwise
+        // 2a1a. sort the movies based on the user's preference
         // 2b. initialize the poster adapter with this cursor
         // 3. when an movie poster is clicked
         // 3a. go to details of the movie
         // 4. set the empty view for the grid
+        // 4a. update the empty view
         // last. return the inflated view NOT THE INFLATED GRID VIEW SINCE
         // THE INFLATED GRID VIEW *WILL* HAVE A PARENT
 
@@ -176,15 +182,39 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         // 2. use the poster adapter
 
-        // 2a. get a cursor pointing to all the movies sorted by the user's preference
+        // 2a. get a cursor pointing to the movies
 
         Context context = getActivity();
 
-        String sortOrder = Utility.getSortOrderForDatabase( context );
+        String sortOrder = Utility.getPreferredSortOrder( context );
 
-        mAllMoviesCursor = context.getContentResolver().query(
-                MoviesProvider.MoviesUriHolder.MOVIES_URI, MovieTableColumns.POSTERS_FRAGMENT_COLUMNS,
-                null, null, sortOrder );
+        // 2a0. if the user wants favorites
+
+        // begin if it's favorites
+        if ( sortOrder.equals( getString( R.string.pref_sort_order_favorites_entry_value ) ) ) {
+
+            // 2a0a. get the favorites without sorting
+
+            mAllMoviesCursor = context.getContentResolver().query(
+                    MoviesProvider.FavoritesUriHolder.FAVORITES_URI,
+                    FavoritesTableColumns.POSTERS_FRAGMENT_FAVORITES_COLUMNS, null, null, null );
+
+        } // end if it's favorites
+
+        // 2a1. otherwise
+
+        // begin else it's not favorites
+        else {
+
+            // 2a1a. sort the movies based on the user's preference
+
+            String sortOrderForDatabase = Utility.getSortOrderForDatabase( context );
+
+            mAllMoviesCursor = context.getContentResolver().query(
+                    MoviesProvider.MoviesUriHolder.MOVIES_URI,
+                    MovieTableColumns.POSTERS_FRAGMENT_COLUMNS, null, null, sortOrderForDatabase );
+
+        } // end else it's not favorites
 
         // 2b. initialize the poster adapter with this cursor
 
@@ -239,6 +269,10 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         // 4. set the empty view for the grid
 
         postersGridView.setEmptyView( binding.fpTvEmpty );
+
+        // 4a. update the empty view
+
+        updateEmptyView();
 
         // last. return the inflated view NOT THE INFLATED GRID VIEW SINCE
         // THE INFLATED GRID VIEW *WILL* HAVE A PARENT
@@ -340,17 +374,66 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     public Loader< Cursor > onCreateLoader( int id, Bundle args ) {
 
         // 0. load movie data from db using a cursor loader
+        // 0a. if the user wants favorites
+        // 0a0. use the favorites uri
+        // 0a1. use the favorites projection
+        // 0a2. use a null sort order
+        // 0b. otherwise
+        // 0a0. use the movies uri
+        // 0a1. use the posters projection
+        // 0a2. use the user-preferred sort order
 
         // 0. load movie data from db using a cursor loader
 
         Context context = getActivity();
 
-        String sortOrder = Utility.getSortOrderForDatabase( context );
+        String sortOrderForDatabase;
 
-        Uri moviesUri = MoviesProvider.MoviesUriHolder.MOVIES_URI;
+        Uri uri;
 
-        return new CursorLoader( context, moviesUri, MovieTableColumns.POSTERS_FRAGMENT_COLUMNS, null, null,
-                sortOrder );
+        String[] projection;
+
+        // 0a. if the user wants favorites
+
+        String sortOrder = Utility.getPreferredSortOrder( context );
+
+        // begin if it's favorites
+        if ( sortOrder.equals( getString( R.string.pref_sort_order_favorites_entry_value ) ) ) {
+
+            // 0a0. use the favorites uri
+
+            uri = MoviesProvider.FavoritesUriHolder.FAVORITES_URI;
+
+            // 0a1. use the favorites projection
+
+            projection = FavoritesTableColumns.POSTERS_FRAGMENT_FAVORITES_COLUMNS;
+
+            // 0a2. use a null sort order
+
+            sortOrderForDatabase = null;
+
+        } // end if it's favorites
+
+        // 0b. otherwise
+
+        // begin else it's not favorites
+        else {
+
+            // 0a0. use the movies uri
+
+            uri = MoviesProvider.MoviesUriHolder.MOVIES_URI;
+
+            // 0a1. use the posters projection
+
+            projection = MovieTableColumns.POSTERS_FRAGMENT_COLUMNS;
+
+            // 0a2. use the user-preferred sort order
+
+            sortOrderForDatabase = Utility.getSortOrderForDatabase( context );
+
+        } // end else it's not favorites
+
+        return new CursorLoader( context, uri, projection, null, null, sortOrderForDatabase );
 
     } // end onCreateLoader
 
@@ -358,16 +441,16 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     // begin onLoadFinished
     public void onLoadFinished( Loader< Cursor > cursorLoader, Cursor newCursor ) {
 
-        // 0. hide the empty view
-        // 1. refresh the grid view
+        // 0. refresh the grid view
+        // 1. update the empty view
 
-        // 0. hide the empty view
-
-        binding.fpTvEmpty.setVisibility( View.INVISIBLE );
-
-        // 1. refresh the grid view
+        // 0. refresh the grid view
 
         mPosterAdapter.swapCursor( newCursor );
+
+        // 1. update the empty view
+
+        updateEmptyView();
 
     } // end onLoadFinished
 
@@ -392,17 +475,36 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     private void updateMovies() {
 
         // 0. get the preferred sort order
-        // 1. fetch movie info using the preferred sort order
+        // 1. if the preferred order is favorites,
+        // 1a. update the empty view in case there are no favorites chosen
+        // 1b. terminate since we don't need to access the net
+        // 2. else,
+        // 2a. fetch movie info using the preferred sort order
 
         // 0. get the preferred sort order
 
         String preferredSortOrder = Utility.getPreferredSortOrder( getActivity() );
 
-        // 1. fetch movie info using the preferred sort order
+        // 1. if the preferred order is favorites,
 
-        FetchMovieTask fetchMovieTask = new FetchMovieTask( mPosterAdapter );
+        // begin if it's favorites
+        if ( preferredSortOrder.equals(
+                getString( R.string.pref_sort_order_favorites_entry_value ) ) ) {
 
-        fetchMovieTask.execute( preferredSortOrder );
+            // 1a. update the empty view in case there are no favorites chosen
+
+            updateEmptyView();
+
+            // 1b. terminate since we don't need to access the net
+
+        } // end if it's favorites
+
+        // 2. else,
+        // 2a. fetch movie info using the preferred sort order
+
+        else {
+            new FetchMovieTask( mPosterAdapter ).execute( preferredSortOrder );
+        }
 
     } // end method updateMovies
 
@@ -419,40 +521,64 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     /** Helper method to update the view showing that the movie list is empty. */
     // begin method updateEmptyView
     private void updateEmptyView() {
-// TODO: 2/15/17 we need to use this method!
-        // 0. if the movie adapter has nothing
-        // 0a. get the empty view
-        // 0a0. if there is the empty view
-        // 0a0a. tell the user why the list is empty - possibly because
-        // 0a0a0. there is no internet
 
-        // 0. if the movie adapter has nothing
+        // 0. get the empty view
+        // 1. if the posters adapter has nothing
+        // 1a0. if there is the empty view
+        // 1a0a. tell the user why the list is empty - possibly because
+        // 1a0a0. there is no internet
+        // 1a0a1. the user wants to see favorites but hasn't selected any
+        // 1a0b. show the empty view
+        // 2. otherwise the posters adapter has something
+        // 2a. hide the empty view
+
+        // 0. get the empty view
+
+        TextView emptyTextView = binding.fpTvEmpty;
+
+        // 1. if the posters adapter has nothing
 
         // begin if adapter count is zero
         if ( mPosterAdapter.getCount() == 0 ) {
 
-            // 0a. get the empty view
-
-            TextView emptyTextView = binding.fpTvEmpty;
-
-            // 0a0. if there is the empty view
+            // 1a0. if there is the empty view
 
             // begin if there is an empty view
             if ( emptyTextView != null ) {
 
-                // 0a0a. tell the user why the list is empty - possibly because
+                // 1a0a. tell the user why the list is empty - possibly because
 
                 int message = R.string.message_error_no_movie_info;
 
-                // 0a0a0. there is no internet
+                // 1a0a0. there is no internet
 
-                if ( ! Utility.isInternetUp() ) { message = R.string.message_error_no_movie_info_no_connectivity; }
+                if ( ! Utility.isInternetUp() ) {
+                    message = R.string.message_error_no_movie_info_no_connectivity;
+                }
+
+                // 1a0a1. the user wants to see favorites but hasn't selected any
+
+                String preferredSortOrder = Utility.getPreferredSortOrder( getActivity() );
+
+                if ( preferredSortOrder.equals(
+                        getString( R.string.pref_sort_order_favorites_entry_value ) ) ) {
+                    message = R.string.message_error_no_movie_info_no_favorites;
+                }
+
+                // 1a0b. show the empty view
 
                 emptyTextView.setText( message );
+
+                emptyTextView.setVisibility( View.VISIBLE );
 
             } // end if there is an empty view
 
         } // end if adapter count is zero
+
+        // 2. otherwise the posters adapter has something
+        // 2a. hide the empty view
+
+        else { if ( emptyTextView != null ) { emptyTextView.setVisibility( View.INVISIBLE ); } }
 
     } // end method updateEmptyView
 
