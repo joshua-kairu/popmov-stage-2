@@ -67,6 +67,9 @@ public class Movie implements Parcelable {
     /** The movie's user rating, out of 10. */
     private double mUserRating;
 
+    /** if this movie is a user favorite. */
+    private boolean mFavorite; // ditto
+
     /** The movie's unique ID in TMDB */
     private long mID;
 
@@ -94,7 +97,7 @@ public class Movie implements Parcelable {
 
     // begin default constructor
     public Movie( long id, String title, String releaseDate, String synopsis, double userRating,
-                  double popularity, String posterPath ) {
+                  double popularity, String posterPath, boolean favorite ) {
 
         // 0. initialize members
 
@@ -107,6 +110,7 @@ public class Movie implements Parcelable {
         setUserRating( userRating );
         setPopularity( popularity );
         setPosterPath( posterPath );
+        setFavorite( favorite );
 
     } // end default constructor
 
@@ -117,7 +121,6 @@ public class Movie implements Parcelable {
 
         // 0. initialize members from parcel
 
-//        destParcel.writeString( getPosterPath() );
         // Parcel reads need to be in the same order as Parcel writes
         setID( inParcel.readLong() );
         setTitle( inParcel.readString() );
@@ -126,6 +129,7 @@ public class Movie implements Parcelable {
         setUserRating( inParcel.readDouble() );
         setPopularity( inParcel.readDouble() );
         setPosterPath( inParcel.readString() );
+        setFavorite( 0 == inParcel.readInt() );
 
     } // end parcel constructor
 
@@ -195,6 +199,12 @@ public class Movie implements Parcelable {
     // setter for the id
     public void setID( long id ) { mID = id; }
 
+    // getter for favorite
+    public boolean isFavorite() { return mFavorite; }
+
+    // setter for favorite
+    public void setFavorite( boolean favorite ) { this.mFavorite = favorite; }
+
     /* Overrides */
 
     @Override
@@ -214,6 +224,7 @@ public class Movie implements Parcelable {
         destParcel.writeDouble( getUserRating() );
         destParcel.writeDouble( getPopularity() );
         destParcel.writeString( getPosterPath() );
+        destParcel.writeInt( isFavorite() ? 0 : 1 );
 
     } // end writeToParcel
 

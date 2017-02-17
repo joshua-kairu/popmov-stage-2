@@ -50,6 +50,7 @@ import com.joslittho.popmov.R;
 import com.joslittho.popmov.activity.DetailActivity;
 import com.joslittho.popmov.adapter.PosterAdapter;
 import com.joslittho.popmov.data.Utility;
+import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.data.database.MoviesProvider;
 import com.joslittho.popmov.data.model.Movie;
@@ -418,7 +419,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     /** Helper method to update the view showing that the movie list is empty. */
     // begin method updateEmptyView
     private void updateEmptyView() {
-
+// TODO: 2/15/17 we need to use this method!
         // 0. if the movie adapter has nothing
         // 0a. get the empty view
         // 0a0. if there is the empty view
@@ -504,27 +505,29 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     // begin method onFetchedMoviesEvent
     public void onFetchedMoviesEvent( FetchedMoviesEvent fetchedMoviesEvent ) {
 
-        // 0. initialize the ContentValues vector where we will put the movie data
+        // 0. initialize the ContentValues vectors where we will put the movie and favorites data
         // 1. for each fetched movie
-        // 1a. put it in a ContentValues
-        // 1b. put the ContentValues in the vector made earlier
-        // 2. if the vector has something,
-        // 2a. bulk insert to add the weather entries in the vector to the db
+        // 1a. put it in a ContentValues for movies and another for favorites
+        // 1b. put the ContentValues' in the vectors made earlier
+        // 2. if the vectors have something,
+        // 2a. bulk insert to add the movie and favorite entries in the vectors to their respective tables
         // 3. else,
         // 3a. log
 
-        // 0. initialize the ContentValues vector where we will put the movie data
+        // 0. initialize the ContentValues vectors where we will put the movie and favorites data
 
         List< Movie > fetchedMovies = fetchedMoviesEvent.getFetchedMovies();
 
         Vector< ContentValues > moviesVector = new Vector<>( fetchedMovies.size() );
+
+        Vector< ContentValues > favoritesVector = new Vector<>( fetchedMovies.size() );
 
         // 1. for each fetched movie
 
         // begin for through each fetched movie
         for ( Movie movie : fetchedMovies ) {
 
-            // 1a. put it in a ContentValues
+            // 1a. put it in a ContentValues for movies and another for favorites
 
             ContentValues movieContentValues = new ContentValues();
 
@@ -536,16 +539,25 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
             movieContentValues.put( MovieTableColumns.VOTE_AVERAGE, movie.getUserRating() );
             movieContentValues.put( MovieTableColumns.POPULARITY, movie.getPopularity() );
 
-            // 1b. put the ContentValues in the vector made earlier
+            ContentValues favoritesContentValues = new ContentValues();
+
+            favoritesContentValues.put( FavoritesTableColumns.MOVIE_ID, movie.getID() );
+            favoritesContentValues.put( FavoritesTableColumns.IS_FAVORITE,
+                    Utility.getFavoriteForDatabase( movie.isFavorite() ) );
+
+            // 1b. put the ContentValues' in the vectors made earlier
 
             moviesVector.add( movieContentValues );
+            favoritesVector.add( favoritesContentValues );
 
         } // end for through each fetched movie
 
-        // 2. if the vector has something,
-        // 2a. bulk insert to add the weather entries in the vector to the db
+        // 2. if the vectors have something,
+        // 2a. bulk insert to add the movie and favorite entries in the vectors to their respective tables
 
-        int numberOfInserts = 0;
+        int numberOfMovieInserts = 0, numberOfFavoriteInserts = 0;
+
+        Context context = getActivity();
 
         // begin if the movies vector has something
         if ( !moviesVector.isEmpty() ) {
@@ -555,14 +567,27 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
             // stores the vector contents in the content values array
             moviesVector.toArray( movieContentValuesArray );
 
-            Context context = getActivity();
-
-            numberOfInserts = context.getContentResolver().bulkInsert(
+            numberOfMovieInserts = context.getContentResolver().bulkInsert(
                     MoviesProvider.MoviesUriHolder.MOVIES_URI, movieContentValuesArray );
 
         } // end if the movies vector has something
 
-        Log.e( LOG_TAG, "onFetchedMoviesEvent: number of movies inserted: " + numberOfInserts );
+        Log.e( LOG_TAG, "onFetchedMoviesEvent: number of movies inserted: " + numberOfMovieInserts );
+
+        // begin if the favorites vector has something
+        if ( !favoritesVector.isEmpty() ) {
+
+            ContentValues favoritesContentValuesArray[] = new ContentValues[ favoritesVector.size() ];
+
+            // stores the vector contents in the content values array
+            favoritesVector.toArray( favoritesContentValuesArray );
+
+            numberOfFavoriteInserts = context.getContentResolver().bulkInsert(
+                    MoviesProvider.FavoritesUriHolder.FAVORITES_URI, favoritesContentValuesArray );
+
+        } // end if the favorites vector has something
+
+        Log.e( LOG_TAG, "onFetchedMoviesEvent: number of favorites inserted: " + numberOfFavoriteInserts );
 
     } // end method onFetchedMoviesEvent
 

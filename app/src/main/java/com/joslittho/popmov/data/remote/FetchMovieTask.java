@@ -390,7 +390,7 @@ public class FetchMovieTask extends AsyncTask< String, Void, List< Movie > > {
             double moviePopularity = currentMovieJsonObject.getDouble( MOVIE_POPULARITY );
 
             Movie aMovie = new Movie( movieId, movieTitle, movieReleaseDate, movieSynopsis,
-                    movieUserRating, moviePopularity, moviePosterPath );
+                    movieUserRating, moviePopularity, moviePosterPath, false /* Not a favorite */ );
 
             // 1b3. add that object to the movie array
 

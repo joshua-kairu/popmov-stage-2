@@ -2,6 +2,9 @@ package com.joslittho.popmov.data.database;
 
 import android.net.Uri;
 
+import com.joslittho.popmov.data.database.MoviesDatabase.MovieTablesHolder;
+import com.joslittho.popmov.data.model.Movie;
+
 import net.simonvt.schematic.annotation.ContentProvider;
 import net.simonvt.schematic.annotation.ContentUri;
 import net.simonvt.schematic.annotation.InexactContentUri;
@@ -72,25 +75,34 @@ public class MoviesProvider {
 
     /* INNER CLASSES */
 
-    @TableEndpoint( table = MoviesDatabase.MOVIES_TABLE_NAME )
+    @TableEndpoint( table = MovieTablesHolder.MOVIES_TABLE_NAME )
     /**
-     * Inner class of the {@link MoviesProvider} that contains Uri's which can be queried for {@link com.joslittho.popmov.data.model.Movie}
+     * Inner class of the {@link MoviesProvider} that contains Uri's which can be queried for {@link Movie}
      * data.
      * */
     // begin inner class MoviesUriHolder
     public static class MoviesUriHolder {
 
         @ContentUri(
-                path = MoviesDatabase.MOVIES_TABLE_NAME, // the movies table in general
-                type = "vnd.android.cursor.dir/" + MoviesDatabase.MOVIES_TABLE_NAME // this Uri looks for all contents inside the movies table
+                path = MovieTablesHolder.MOVIES_TABLE_NAME, // the movies table in general
+                type = "vnd.android.cursor.dir/" + MovieTablesHolder.MOVIES_TABLE_NAME // this Uri looks for all contents inside the movies table
         )
         /** Uri pointing to the movies table. */
-        public static final Uri MOVIES_URI = buildUri( MoviesDatabase.MOVIES_TABLE_NAME );
+        public static final Uri MOVIES_URI = buildUri( MovieTablesHolder.MOVIES_TABLE_NAME );
+
+        /**
+         * Inner join the movie table with the favorites table where the movie id in both tables match
+         */
+        //private static final String JOIN_MOVIES_WITH_FAVORITES_STRING =
+        //        "JOIN " + MovieTablesHolder.MOVIES_TABLE_NAME + " ON " +
+        //                MovieTableColumns.MOVIE_ID + " = " + FavoritesTableColumns.MOVIE_ID;
 
         @InexactContentUri(
-                path = MoviesDatabase.MOVIES_TABLE_NAME + "/#", // a number in the movies table
-                name = "MOVIE_ID", // name of this inexact URI, I think
-                type = "vnd.android.cursor.item/" + MoviesDatabase.MOVIES_TABLE_NAME, // this Uri looks for an item inside the movies table
+                // TODO: 2/14/17 How to do a join between the movies and favorites tables
+                // join = JOIN_MOVIES_WITH_FAVORITES_STRING,
+                path = MovieTablesHolder.MOVIES_TABLE_NAME + "/#", // a number in the movies table
+                name = "PARTICULAR_MOVIE_FROM_MOVIES_LIST", // name of this inexact URI, I think
+                type = "vnd.android.cursor.item/" + MovieTablesHolder.MOVIES_TABLE_NAME, // this Uri looks for an item inside the movies table
                 whereColumn = MovieTableColumns.MOVIE_ID, // the column which we will use to choose a specific item
                 pathSegment = 1 // how many paths the Uri will have, I think. Uri a/b has one path - "b". Uri a/b/c has two paths - "b and c", I think
         )
@@ -102,9 +114,26 @@ public class MoviesProvider {
          * @return Uri pointing to the movie with the given id.
          * */
         public static Uri withMovieId( long movieId ) {
-            return buildUri( MoviesDatabase.MOVIES_TABLE_NAME, String.valueOf( movieId ) );
+            return buildUri( MovieTablesHolder.MOVIES_TABLE_NAME, String.valueOf( movieId ) );
         }
 
     } // end inner class MoviesUriHolder
+
+    @TableEndpoint( table = MovieTablesHolder.FAVORITES_TABLE_NAME )
+    /**
+     * Inner class of the {@link MoviesProvider} that contains Uris which can be queried for
+     * {@link com.joslittho.popmov.data.model.Movie} favorites data.
+     * */
+    // begin inner class FavoritesUriHolder
+    public static class FavoritesUriHolder {
+
+        @ContentUri(
+                path = MovieTablesHolder.FAVORITES_TABLE_NAME, // the favorites table in general
+                type = "vnd.android.cursor.dir/" + MovieTablesHolder.FAVORITES_TABLE_NAME // this Uri looks for all contents inside the favorites table
+        )
+        /** Uri pointing to the favorites table. */
+        public static final Uri FAVORITES_URI = buildUri( MovieTablesHolder.FAVORITES_TABLE_NAME );
+
+    } // end inner class FavoritesUriHolder
 
 } // end class MoviesProvider

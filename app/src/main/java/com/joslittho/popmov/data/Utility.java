@@ -30,6 +30,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.joslittho.popmov.R;
+import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 
 import java.io.IOException;
@@ -269,6 +270,25 @@ public class Utility {
         return context.getString( R.string.user_rating_format, userRating );
 
     } // end method getFormattedUserRating
+
+    /**
+     * Helper method to determine the integer value to put in the db as a representation of a
+     * movie's favorite status.
+     *
+     * @param movieFavorite Boolean for if the movie is a favorite
+     *
+     * @return 0 or 1 based on the favorite status
+     * */
+    // begin method getFavoriteForDatabase
+    public static int getFavoriteForDatabase( boolean movieFavorite ) {
+
+        // 0. return the 0 or 1 based on the favorite
+
+        // 0. return the 0 or 1 based on the favorite
+        return movieFavorite ?
+                FavoritesTableColumns.FAVORITE_TRUE : FavoritesTableColumns.FAVORITE_FALSE;
+
+    } // end method getFavoriteForDatabase
 
     /* INNER CLASSES */
 
