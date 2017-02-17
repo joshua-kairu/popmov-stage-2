@@ -165,6 +165,32 @@
 
             />
 
+        <!-- button for favorite-ing -->
+
+        <Button
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+
+            android:id="@+id/detail_b_favorite"
+
+            android:layout_below="@id/detail_tv_vote_average"
+
+            android:layout_toEndOf="@id/detail_iv_poster"
+
+            android:layout_toRightOf="@id/detail_iv_poster"
+
+            android:layout_marginTop="@dimen/space_between_content_areas"
+
+            android:layout_marginLeft="@dimen/detail_poster_start_margin"
+
+            android:layout_marginStart="@dimen/detail_poster_start_margin"
+
+            android:text="@string/detail_button"
+
+            />
+
         <!-- TextView for plot synopsis -->
 
         <TextView

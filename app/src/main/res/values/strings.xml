@@ -49,13 +49,17 @@
     <!-- The title for the settings activity [CHAR LIMIT = 15] -->
     <string name="settings_activity_title">Settings</string>
 
-    <!-- Details section titles -->
+    <!-- Details section strings -->
 
     <!-- The title of the section of details that shows the trailers [CHAR LIMIT = 10] -->
     <string name="detail_title_trailers">Trailers</string>
 
     <!-- The title of the section of details that shows the user reviews [CHAR LIMIT = 10] -->
     <string name="detail_title_reviews">Reviews</string>
+
+    <!-- string to display on the button the users can tap to mark a movie as a favorite
+     [CHAR LIMIT = 20] -->
+    <string name="detail_button">Mark As Favorite</string>
 
     <!-- Formatting strings -->
 
