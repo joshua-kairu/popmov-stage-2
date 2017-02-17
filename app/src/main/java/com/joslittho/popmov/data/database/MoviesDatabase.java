@@ -22,27 +22,7 @@ public class MoviesDatabase {
     /* Strings */
 
     /** The db's current version. */
-    public static final int VERSION = 1;
-
-
-//    /** Migrations for db upgrading. One string per version increment. */
-//    // From https://www.tutorialspoint.com/sql/sql-create-table.htm
-//    // CREATE TABLE table_name(
-//    // column1 datatype,
-//    // column2 datatype,
-//    // column3 datatype,
-//    // .....
-//    // columnN datatype,
-//    // PRIMARY KEY( one or more columns )
-//    // );
-//    public static final String[] _MIGRATIONS = {
-//            "CREATE TABLE " + FAVORITES_TABLE_NAME + "("
-//                    + " column " + FavoritesTableColumns._ID + " INT NOT NULL"
-//                    + " column " + FavoritesTableColumns.MOVIE_ID + " INT UNIQUE NOT NULL"
-//                    + " column " + FavoritesTableColumns.IS_FAVORITE + " INT NOT NULL"
-//                    + " PRIMARY KEY (" + FavoritesTableColumns._ID + ")"
-//                    + ");"
-//    };
+    static final int VERSION = 1;
 
     /* VARIABLES */
     

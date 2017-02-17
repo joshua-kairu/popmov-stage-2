@@ -505,29 +505,27 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     // begin method onFetchedMoviesEvent
     public void onFetchedMoviesEvent( FetchedMoviesEvent fetchedMoviesEvent ) {
 
-        // 0. initialize the ContentValues vectors where we will put the movie and favorites data
+        // 0. initialize the ContentValues vectors where we will put the movie data
         // 1. for each fetched movie
-        // 1a. put it in a ContentValues for movies and another for favorites
-        // 1b. put the ContentValues' in the vectors made earlier
-        // 2. if the vectors have something,
-        // 2a. bulk insert to add the movie and favorite entries in the vectors to their respective tables
+        // 1a. put it in a ContentValues for movies
+        // 1b. put the ContentValues in the vector made earlier
+        // 2. if the vector has something,
+        // 2a. bulk insert to add the movie entries in the vector to movie table
         // 3. else,
         // 3a. log
 
-        // 0. initialize the ContentValues vectors where we will put the movie and favorites data
+        // 0. initialize the ContentValues vectors where we will put the movie data
 
         List< Movie > fetchedMovies = fetchedMoviesEvent.getFetchedMovies();
 
         Vector< ContentValues > moviesVector = new Vector<>( fetchedMovies.size() );
-
-        Vector< ContentValues > favoritesVector = new Vector<>( fetchedMovies.size() );
 
         // 1. for each fetched movie
 
         // begin for through each fetched movie
         for ( Movie movie : fetchedMovies ) {
 
-            // 1a. put it in a ContentValues for movies and another for favorites
+            // 1a. put it in a ContentValues for movies
 
             ContentValues movieContentValues = new ContentValues();
 
@@ -539,23 +537,16 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
             movieContentValues.put( MovieTableColumns.VOTE_AVERAGE, movie.getUserRating() );
             movieContentValues.put( MovieTableColumns.POPULARITY, movie.getPopularity() );
 
-            ContentValues favoritesContentValues = new ContentValues();
-
-            favoritesContentValues.put( FavoritesTableColumns.MOVIE_ID, movie.getID() );
-            favoritesContentValues.put( FavoritesTableColumns.IS_FAVORITE,
-                    Utility.getFavoriteForDatabase( movie.isFavorite() ) );
-
-            // 1b. put the ContentValues' in the vectors made earlier
+            // 1b. put the ContentValues in the vector made earlier
 
             moviesVector.add( movieContentValues );
-            favoritesVector.add( favoritesContentValues );
 
         } // end for through each fetched movie
 
-        // 2. if the vectors have something,
-        // 2a. bulk insert to add the movie and favorite entries in the vectors to their respective tables
+        // 2. if the vector has something,
+        // 2a. bulk insert to add the movie entries in the vector to movie table
 
-        int numberOfMovieInserts = 0, numberOfFavoriteInserts = 0;
+        int numberOfMovieInserts = 0;
 
         Context context = getActivity();
 
@@ -573,21 +564,6 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         } // end if the movies vector has something
 
         Log.e( LOG_TAG, "onFetchedMoviesEvent: number of movies inserted: " + numberOfMovieInserts );
-
-        // begin if the favorites vector has something
-        if ( !favoritesVector.isEmpty() ) {
-
-            ContentValues favoritesContentValuesArray[] = new ContentValues[ favoritesVector.size() ];
-
-            // stores the vector contents in the content values array
-            favoritesVector.toArray( favoritesContentValuesArray );
-
-            numberOfFavoriteInserts = context.getContentResolver().bulkInsert(
-                    MoviesProvider.FavoritesUriHolder.FAVORITES_URI, favoritesContentValuesArray );
-
-        } // end if the favorites vector has something
-
-        Log.e( LOG_TAG, "onFetchedMoviesEvent: number of favorites inserted: " + numberOfFavoriteInserts );
 
     } // end method onFetchedMoviesEvent
 
