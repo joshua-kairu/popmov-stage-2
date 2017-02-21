@@ -77,21 +77,28 @@ public class MoviesProvider {
 
     /* INNER CLASSES */
 
-    @TableEndpoint( table = MOVIES_TABLE_NAME )
     /**
      * Inner class of the {@link MoviesProvider} that contains Uri's which can be queried for {@link Movie}
      * data.
      * */
+    @TableEndpoint( table = MOVIES_TABLE_NAME )
     // begin inner class MoviesUriHolder
     public static class MoviesUriHolder {
 
+        /** Uri pointing to the movies table. */
         @ContentUri(
                 path = MOVIES_TABLE_NAME, // the movies table in general
                 type = "vnd.android.cursor.dir/" + MOVIES_TABLE_NAME // this Uri looks for all contents inside the movies table
         )
-        /** Uri pointing to the movies table. */
         public static final Uri MOVIES_URI = buildUri( MOVIES_TABLE_NAME );
 
+        /**
+         * Uri pointing to a particular movie in the movies table.
+         *
+         * @param movieId The movie's unique id
+         *
+         * @return Uri pointing to the movie with the given id.
+         * */
         @InexactContentUri(
                 // TODO: 2/14/17 How to do a join between the movies and favorites tables
                 path = MOVIES_TABLE_NAME + "/#", // a number in the movies table
@@ -100,24 +107,17 @@ public class MoviesProvider {
                 whereColumn = MovieTableColumns.MOVIE_ID, // the column which we will use to choose a specific item
                 pathSegment = 1 // how many paths the Uri will have, I think. Uri a/b has one path - "b". Uri a/b/c has two paths - "b and c", I think
         )
-        /**
-         * Uri pointing to a particular movie in the movies table.
-         *
-         * @param movieId The movie's unique id
-         *
-         * @return Uri pointing to the movie with the given id.
-         * */
         public static Uri withMovieId( long movieId ) {
             return buildUri( MOVIES_TABLE_NAME, String.valueOf( movieId ) );
         }
 
     } // end inner class MoviesUriHolder
 
-    @TableEndpoint( table = FAVORITES_TABLE_NAME )
     /**
      * Inner class of the {@link MoviesProvider} that contains Uris which can be queried for
      * {@link com.joslittho.popmov.data.model.Movie} favorites data.
      * */
+    @TableEndpoint( table = FAVORITES_TABLE_NAME )
     // begin inner class FavoritesUriHolder
     public static class FavoritesUriHolder {
 
@@ -139,12 +139,12 @@ public class MoviesProvider {
                         + FAVORITES_TABLE_NAME + "." + FavoritesTableColumns.MOVIE_ID + " = "
                         + MOVIES_TABLE_NAME + "." + MovieTableColumns.MOVIE_ID;
 
+        /** Uri pointing to the favorites table. */
         @ContentUri(
                 join = JOIN_MOVIES_WITH_FAVORITES_STRING,
                 path = FAVORITES_TABLE_NAME, // the favorites table in general
                 type = "vnd.android.cursor.dir/" + FAVORITES_TABLE_NAME // this Uri looks for all contents inside the favorites table
         )
-        /** Uri pointing to the favorites table. */
         public static final Uri FAVORITES_URI = buildUri( FAVORITES_TABLE_NAME );
 
     } // end inner class FavoritesUriHolder
