@@ -187,7 +187,7 @@
 
             android:layout_marginStart="@dimen/detail_poster_start_margin"
 
-            android:text="@string/detail_button"
+            android:text="@string/mark_as_favorite"
 
             />
 
@@ -213,7 +213,8 @@
 
             android:paddingStart="@dimen/layout_padding"
 
-            tools:text="Movie details layout contains title, release date, movie poster, vote average, and plot synopsis."
+            tools:text="Movie details layout contains title, release date, movie poster,
+            vote average, and plot synopsis."
 
             style="@style/TextAppearance.AppCompat.Body1"
 
@@ -222,4 +223,3 @@
     </RelativeLayout>
 
 </layout>
-

@@ -59,7 +59,11 @@
 
     <!-- string to display on the button the users can tap to mark a movie as a favorite
      [CHAR LIMIT = 20] -->
-    <string name="detail_button">Mark As Favorite</string>
+    <string name="mark_as_favorite">Mark As Favorite</string>
+
+    <!-- string to display on the button the users can tap to unmark a movie as a favorite
+     [CHAR LIMIT = 20] -->
+    <string name="unmark_as_favorite">Unmark As Favorite</string>
 
     <!-- Formatting strings -->
 

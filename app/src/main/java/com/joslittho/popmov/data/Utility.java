@@ -32,7 +32,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.joslittho.popmov.R;
-import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.data.database.MoviesProvider;
 
@@ -124,7 +123,8 @@ public class Utility {
 
         // 0. get the preferences
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences( context );
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences( context );
 
         // 1. return the preferred sort order, default popular
 
@@ -170,7 +170,8 @@ public class Utility {
     } // end method getSortOrderForDatabase
 
     /**
-     * Helper method to format the movie release date so that it appears as required by the screenshots.
+     * Helper method to format the movie release date so that it appears as required by the
+     * screenshots.
      *
      * TMDB JSON gives the movie release date in the form YYYY-MM-DD, for example 2016-06-16.
      * The screenshots need the date to be in the form YYYY, for example 2016.
@@ -295,14 +296,15 @@ public class Utility {
     } // end method getFavoriteForDatabase
 
     /**
-     * Helper method to get the favorite status of a movie from the database
+     * Helper method to get the favorite status of a movie from the database. This status will be
+     * used in the details screen.
      *
      * @param cursor The {@link Cursor} pointing to a movie record in the db
      *
      * @return If the movie is a favorite
      * */
-    // begin method getFavoriteFromDatabase
-    public static boolean getFavoriteFromDatabase ( Cursor cursor ) {
+    // begin method getFavoriteForDetailFromDatabase
+    public static boolean getFavoriteForDetailFromDatabase( Cursor cursor ) {
 
         // 0. if the cursor has the favorite column
         // 0a. return a boolean of the favorite column
@@ -315,13 +317,19 @@ public class Utility {
         // 1a. return false
 
         return cursor.getColumnIndex( IS_FAVORITE ) > -1 &&
-                cursor.getInt( COLUMN_IS_FAVORITE ) == FAVORITE_TRUE;
+                cursor.getInt( COLUMN_DETAIL_IS_FAVORITE ) == FAVORITE_TRUE;
 
-    } // end method getFavoriteFromDatabase
+    } // end method getFavoriteForDetailFromDatabase
 
     /**
      * Helper method to determine if there already is a movie with the given movie id
      * in the movie db.
+     *
+     * @param movieId The movie's unique id
+     * @param contentResolver The {@link ContentResolver} which will be used to query the db for
+     *                        the movie
+     *
+     * @return If the movie is in the db
      * */
     // begin method isMovieInDatabase
     public static boolean isMovieInDatabase ( long movieId, ContentResolver contentResolver ) {
@@ -349,6 +357,25 @@ public class Utility {
         return movieInDb;
 
     } // end method isMovieInDatabase
+
+    /**
+     * Helper method to know if the user is currently interested in favorites only.
+     *
+     * @param context Android context
+     *
+     * @return If the user has preferred favorites at the moment
+     */
+    // begin method isSortOrderFavorites
+    public static boolean isSortOrderFavorites( Context context ) {
+
+        // 0. return if the sort order is favorites now
+
+        // 0. return if the sort order is favorites now
+
+        return getPreferredSortOrder( context ).equals( context.getString(
+                R.string.pref_sort_order_favorites_entry_value ) );
+
+    } // end method isSortOrderFavorites
 
     /* INNER CLASSES */
 

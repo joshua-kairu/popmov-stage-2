@@ -68,6 +68,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 import java.util.Vector;
 
+import static com.joslittho.popmov.data.database.MoviesProvider.*;
+
 /**
  * {@link Fragment} to show the movie posters.
  * */
@@ -154,7 +156,8 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     // begin onCreateView
-    public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ) {
+    public View onCreateView( LayoutInflater inflater, final ViewGroup container,
+                              Bundle savedInstanceState ) {
 
         // 0. use the posters fragment layout
         // 1. get the grid
@@ -196,7 +199,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
             // 2a0a. get the favorites without sorting
 
             mAllMoviesCursor = context.getContentResolver().query(
-                    MoviesProvider.FavoritesUriHolder.FAVORITES_URI,
+                    FavoritesUriHolder.FAVORITES_URI,
                     FavoritesTableColumns.POSTERS_FRAGMENT_FAVORITES_COLUMNS, null, null, null );
 
         } // end if it's favorites
@@ -211,7 +214,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
             String sortOrderForDatabase = Utility.getSortOrderForDatabase( context );
 
             mAllMoviesCursor = context.getContentResolver().query(
-                    MoviesProvider.MoviesUriHolder.MOVIES_URI,
+                    MoviesUriHolder.MOVIES_URI,
                     MovieTableColumns.POSTERS_FRAGMENT_COLUMNS, null, null, sortOrderForDatabase );
 
         } // end else it's not favorites
@@ -238,7 +241,8 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
                         // 0. get the cursor at the given position
                         // 1. if there is a cursor there
-                        // 1a. start the details activity using the uri from the cursor at this position
+                        // 1a. use a uri based on whether this is a regular or a favorite movie
+                        // 1b. start the details activity using the gotten uri
 
                         // 0. get the cursor at the given position
 
@@ -249,12 +253,22 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
                         // begin if there is a cursor
                         if ( cursor != null ) {
 
-                            // 1a. start the details activity using the uri from the cursor at this position
+                            // 1a. use a uri based on whether this is a regular or a favorite movie
 
                             long movieId = cursor.getLong( MovieTableColumns.COLUMN_MOVIE_ID );
 
+                            // by default use the regular movie uri
+                            Uri uri = MoviesUriHolder.withMovieId( movieId );
+
+                            // if we are doing favorites, edit the uri appropriately
+                            if ( Utility.isSortOrderFavorites( getActivity() ) ) {
+                                uri = FavoritesUriHolder.withFavoriteMovieId( movieId );
+                            }
+
+                            // 1b. start the details activity using the gotten uri
+
                             Intent detailsIntent = new Intent( getActivity(), DetailActivity.class )
-                                    .setData( MoviesProvider.MoviesUriHolder.withMovieId( movieId ) );
+                                    .setData( uri );
 
                             startActivity( detailsIntent );
 
@@ -402,7 +416,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
             // 0a0. use the favorites uri
 
-            uri = MoviesProvider.FavoritesUriHolder.FAVORITES_URI;
+            uri = FavoritesUriHolder.FAVORITES_URI;
 
             // 0a1. use the favorites projection
 
@@ -421,7 +435,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
             // 0a0. use the movies uri
 
-            uri = MoviesProvider.MoviesUriHolder.MOVIES_URI;
+            uri = MoviesUriHolder.MOVIES_URI;
 
             // 0a1. use the posters projection
 
@@ -558,10 +572,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
                 // 1a0a1. the user wants to see favorites but hasn't selected any
 
-                String preferredSortOrder = Utility.getPreferredSortOrder( getActivity() );
-
-                if ( preferredSortOrder.equals(
-                        getString( R.string.pref_sort_order_favorites_entry_value ) ) ) {
+                if ( Utility.isSortOrderFavorites( getActivity() ) ) {
                     message = R.string.message_error_no_movie_info_no_favorites;
                 }
 
@@ -596,6 +607,8 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         // 0b. update the movies
         // 1. if not connected
         // 1a. inform user
+
+        // TODO: 2/21/17 streamline the fetching of movies to only happen when refresh is selected
 
         // 0. if we're connected to net,
 
@@ -692,7 +705,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
             moviesVector.toArray( movieContentValuesArray );
 
             numberOfMovieInserts = context.getContentResolver().bulkInsert(
-                    MoviesProvider.MoviesUriHolder.MOVIES_URI, movieContentValuesArray );
+                    MoviesUriHolder.MOVIES_URI, movieContentValuesArray );
 
         } // end if the movies vector has something
 

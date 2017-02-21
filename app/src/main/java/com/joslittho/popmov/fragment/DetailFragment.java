@@ -23,6 +23,8 @@
 
 package com.joslittho.popmov.fragment;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
@@ -39,6 +41,9 @@ import android.view.ViewGroup;
 
 import com.joslittho.popmov.R;
 import com.joslittho.popmov.data.Utility;
+import com.joslittho.popmov.data.database.FavoritesTableColumns;
+import com.joslittho.popmov.data.database.MovieTableColumns;
+import com.joslittho.popmov.data.database.MoviesProvider.FavoritesUriHolder;
 import com.joslittho.popmov.databinding.FragmentDetailBinding;
 import com.squareup.picasso.Picasso;
 
@@ -59,6 +64,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     /* Strings */
 
+    private static final String LOG_TAG = DetailFragment.class.getSimpleName();
     /* VARIABLES */
 
     private FragmentDetailBinding mBinding; // ditto
@@ -77,7 +83,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     // begin onCreateView
-    public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ) {
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState ) {
 
         // 0. use the detail fragment layout
         // last. return the inflated view
@@ -114,36 +121,61 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     // begin onCreateLoader
     public Loader< Cursor > onCreateLoader( int id, Bundle args ) {
 
-        // 0. if there is no intent, there is no particular movie's url, so don't load
+        // 0. if there is no intent, there is no particular movie's uri, so don't load
         // this can happen in tablet mode
-        // 1. get this particular movie's url from intent
-        // 2. return a loader that fetches this particular movie's url from the db
+        // 1. get this particular movie's uri from intent
+        // 2. use a projection based on whether this is a regular or a favorite movie
+        // 3. return a loader that fetches the movie's uri from the db using the gotten projection
 
-        // 0. if there is no intent, there is no particular movie's url, so don't load
+        // 0. if there is no intent, there is no particular movie's uri, so don't load
         // this can happen in tablet mode
 
         Intent intent = getActivity().getIntent();
 
         if ( intent == null ) { return null; }
 
-        // 1. get this particular movie's url from intent
+        // 1. get this particular movie's uri from intent
 
         Uri movieUri = intent.getData();
 
-        // 2. return a loader that fetches this particular movie's url from the db
+        // 2. use a projection based on whether this is a regular or a favorite movie
 
-        return new CursorLoader( getActivity(), movieUri, DETAIL_FRAGMENT_COLUMNS, null, null, null );
+        // by default use the regular movie's projection
+        String[] projection = DETAIL_FRAGMENT_COLUMNS;
+
+        // if we are showing favorites, use the favorite movie's projection
+        if ( Utility.isSortOrderFavorites( getActivity() ) ) {
+            projection = FavoritesTableColumns.DETAIL_FRAGMENT_FAVORITE_COLUMNS;
+        }
+
+        // 3. return a loader that fetches the movie's uri from the db using the gotten projection
+
+        return new CursorLoader( getActivity(), movieUri, projection, null, null, null );
         
     } // end onCreateLoader
 
     @Override
     // begin onLoadFinished
-    public void onLoadFinished( Loader< Cursor > cursorLoader, Cursor cursor ) {
+    public void onLoadFinished( Loader< Cursor > cursorLoader, final Cursor cursor ) {
 
         // 0. bind the needed details to their views
+        // 0a. if the mark as favorite button is touched
+        // 0a0. get the context for later content provider use
+        // 0a1. get the movie id for this movie that we are to make favorite
+        // 0a2. if the movie is a favorite
+        // 0a2a. display "Mark As Favorite" since by touching this button
+        // the user has unmarked this movie as favorite
+        // 0a2b. remove this movie from the favorites table
+        // 0a3. otherwise the movie is not a favorite
+        // 0a3a. display "Unmark As Favorite" since by touching this button
+        // the user has marked this movie as favorite
+        // 0a3b. add this movie to the favorites table
+        // 0a3b0. create a content values
+        // 0a3b1. add needed values to the content values
+        // 0a3b2. add content values to the db
         
         // 0. bind the needed details to their views
-        
+
         // begin if there is a cursor and it has something
         if ( cursor != null && cursor.moveToFirst() ) {
 
@@ -161,6 +193,93 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                             cursor.getDouble( COLUMN_VOTE_AVERAGE ) ) );
 
             mBinding.detailTvSynopsis.setText( cursor.getString( COLUMN_DETAIL_OVERVIEW ) );
+
+            final boolean favorite = Utility.getFavoriteForDetailFromDatabase( cursor );
+
+            // if this movie is favorite, put the "Unmark As Favorite" text in the button
+            // if this movie is not favorite, put the "Mark As Favorite" text in the button
+            mBinding.detailBFavorite.setText(
+                    favorite ? R.string.unmark_as_favorite : R.string.mark_as_favorite );
+
+            // 0a. if the mark as favorite button is touched
+
+            // begin mBinding.detailBFavorite.setOnClickListener
+            mBinding.detailBFavorite.setOnClickListener(
+
+                    // begin new View.OnClickListener
+                    new View.OnClickListener() {
+
+                        @Override
+                        // begin onClick
+                        public void onClick( View view ) {
+
+                            // 0a0. get the context for later content provider use
+                            // 0a1. get the movie id for this movie that we are to make favorite
+
+                            // 0a0. get the context for later content provider use
+
+                            Context context = getActivity();
+
+                            // 0a1. get the movie id for this movie that we are to make favorite
+
+                            long movieId = cursor.getLong( MovieTableColumns.COLUMN_MOVIE_ID );
+
+                            // 0a2. if the movie is a favorite
+
+                            // begin if favorite
+                            if ( favorite ) {
+
+                                // 0a2a. display "Mark As Favorite" since by touching this button
+                                // the user has unmarked this movie as favorite
+
+                                mBinding.detailBFavorite.setText( R.string.mark_as_favorite );
+
+                                // 0a2b. remove this movie from the favorites table
+
+                                context.getContentResolver().delete(
+                                        FavoritesUriHolder.withFavoriteMovieId( movieId ),
+                                        null, null );
+
+                            } // end if favorite
+
+                            // 0a3. otherwise the movie is not a favorite
+
+                            // begin else not favorite
+                            else {
+
+                                // 0a3a. display "Unmark As Favorite" since by touching this button
+                                // the user has marked this movie as favorite
+
+                                mBinding.detailBFavorite.setText( R.string.unmark_as_favorite );
+
+                                // 0a3b. add this movie to the favorites table
+
+                                // 0a3b0. create a content values
+
+                                ContentValues favoriteContentValues = new ContentValues();
+
+                                // 0a3b1. add needed values to the content values
+
+                                favoriteContentValues.put(
+                                        FavoritesTableColumns.MOVIE_ID, movieId );
+                                favoriteContentValues.put(
+                                        FavoritesTableColumns.IS_FAVORITE,
+                                        Utility.getFavoriteForDatabase(
+                                                true /*favorite is always true here since the user
+                                                wants to add the movie to favorites*/ ) );
+
+                                // 0a3b2. add content values to the db
+
+                                context.getContentResolver().insert(
+                                        FavoritesUriHolder.FAVORITES_URI, favoriteContentValues );
+
+                            } // end else not favorite
+
+                        } // end onClick
+
+                    } // end new View.OnClickListener
+
+            ); // end mBinding.detailBFavorite.setOnClickListener
 
         } // end if there is a cursor and it has something
         

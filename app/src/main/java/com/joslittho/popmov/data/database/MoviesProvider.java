@@ -78,7 +78,8 @@ public class MoviesProvider {
     /* INNER CLASSES */
 
     /**
-     * Inner class of the {@link MoviesProvider} that contains Uri's which can be queried for {@link Movie}
+     * Inner class of the {@link MoviesProvider} that contains Uri's which can be queried for
+     * {@link Movie}
      * data.
      * */
     @TableEndpoint( table = MOVIES_TABLE_NAME )
@@ -88,7 +89,8 @@ public class MoviesProvider {
         /** Uri pointing to the movies table. */
         @ContentUri(
                 path = MOVIES_TABLE_NAME, // the movies table in general
-                type = "vnd.android.cursor.dir/" + MOVIES_TABLE_NAME // this Uri looks for all contents inside the movies table
+                type = "vnd.android.cursor.dir/" + MOVIES_TABLE_NAME // this Uri looks for all
+                // contents inside the movies table
         )
         public static final Uri MOVIES_URI = buildUri( MOVIES_TABLE_NAME );
 
@@ -100,12 +102,14 @@ public class MoviesProvider {
          * @return Uri pointing to the movie with the given id.
          * */
         @InexactContentUri(
-                // TODO: 2/14/17 How to do a join between the movies and favorites tables
                 path = MOVIES_TABLE_NAME + "/#", // a number in the movies table
                 name = "PARTICULAR_MOVIE_FROM_MOVIES_LIST", // name of this inexact URI, I think
-                type = "vnd.android.cursor.item/" + MOVIES_TABLE_NAME, // this Uri looks for an item inside the movies table
-                whereColumn = MovieTableColumns.MOVIE_ID, // the column which we will use to choose a specific item
-                pathSegment = 1 // how many paths the Uri will have, I think. Uri a/b has one path - "b". Uri a/b/c has two paths - "b and c", I think
+                type = "vnd.android.cursor.item/" + MOVIES_TABLE_NAME, // this Uri looks for an item
+                // inside the movies table
+                whereColumn = MovieTableColumns.MOVIE_ID, // the column which we will use to choose
+                // a specific item
+                pathSegment = 1 // how many paths the Uri will have, I think. Uri a/b has one path -
+                // "b". Uri a/b/c has two paths - "b and c", I think
         )
         public static Uri withMovieId( long movieId ) {
             return buildUri( MOVIES_TABLE_NAME, String.valueOf( movieId ) );
@@ -131,7 +135,8 @@ public class MoviesProvider {
          * T1.categoryid = T2.categoryid WHERE T1.categoryid = {the desired category value}"
          *
          * so our join should look like
-         * SELECT favorites._id, movie_id FROM favorites JOIN movies ON favorites.movie_id = movies.movie_id
+         * SELECT favorites._id, movie_id FROM favorites JOIN movies ON
+         * favorites.movie_id = movies.movie_id
          *
          */
         private static final String JOIN_MOVIES_WITH_FAVORITES_STRING =
@@ -143,9 +148,32 @@ public class MoviesProvider {
         @ContentUri(
                 join = JOIN_MOVIES_WITH_FAVORITES_STRING,
                 path = FAVORITES_TABLE_NAME, // the favorites table in general
-                type = "vnd.android.cursor.dir/" + FAVORITES_TABLE_NAME // this Uri looks for all contents inside the favorites table
+                type = "vnd.android.cursor.dir/" + FAVORITES_TABLE_NAME // this Uri looks for all
+                // contents inside the favorites table
         )
         public static final Uri FAVORITES_URI = buildUri( FAVORITES_TABLE_NAME );
+
+        /**
+         * Uri pointing to a particular favorite in the favorites table.
+         *
+         * @param favoriteMovieId The favorite movie's unique id
+         *
+         * @return Uri pointing to the favorite with the given id.
+         * */
+        @InexactContentUri(
+                join = JOIN_MOVIES_WITH_FAVORITES_STRING,
+                path = FAVORITES_TABLE_NAME + "/#", // a row in the movies table
+                name = "PARTICULAR_FAVORITE_FROM_FAVORITE_LIST", // name of this inexact URI
+                type = "vnd.android.cursor.item/" + FAVORITES_TABLE_NAME, // this Uri looks for an
+                // item inside the favorites table
+                whereColumn = FAVORITES_TABLE_NAME + "." + FavoritesTableColumns.MOVIE_ID, // the
+                // column which we will use to choose a specific favorite
+                pathSegment = 1 // how many paths the Uri will have, I think. Uri a/b has one path
+                // - "b". Uri a/b/c has two paths - "b and c", I think
+        )
+        public static Uri withFavoriteMovieId( long favoriteMovieId ) {
+            return buildUri( FAVORITES_TABLE_NAME, String.valueOf( favoriteMovieId ) );
+        }
 
     } // end inner class FavoritesUriHolder
 
