@@ -633,8 +633,9 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         // 0. initialize the ContentValues vectors where we will put the movie data
         // 1. for each fetched movie
-        // 1a. put it in a ContentValues for movies
-        // 1b. put the ContentValues in the vector made earlier
+        // 1a. if it is already in the db, skip it
+        // 1b. put it in a ContentValues for movies
+        // 1c. put the ContentValues in the vector made earlier
         // 2. if the vector has something,
         // 2a. bulk insert to add the movie entries in the vector to movie table
         // 3. else,
@@ -646,12 +647,20 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         Vector< ContentValues > moviesVector = new Vector<>( fetchedMovies.size() );
 
+        Context context = getActivity();
+
         // 1. for each fetched movie
 
         // begin for through each fetched movie
         for ( Movie movie : fetchedMovies ) {
 
-            // 1a. put it in a ContentValues for movies
+            // 1a. if it is already in the db, skip it
+
+            if ( Utility.isMovieInDatabase( movie.getID(), context.getContentResolver() ) ) {
+                continue;
+            }
+
+            // 1b. put it in a ContentValues for movies
 
             ContentValues movieContentValues = new ContentValues();
 
@@ -663,7 +672,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
             movieContentValues.put( MovieTableColumns.VOTE_AVERAGE, movie.getUserRating() );
             movieContentValues.put( MovieTableColumns.POPULARITY, movie.getPopularity() );
 
-            // 1b. put the ContentValues in the vector made earlier
+            // 1c. put the ContentValues in the vector made earlier
 
             moviesVector.add( movieContentValues );
 
@@ -673,8 +682,6 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         // 2a. bulk insert to add the movie entries in the vector to movie table
 
         int numberOfMovieInserts = 0;
-
-        Context context = getActivity();
 
         // begin if the movies vector has something
         if ( !moviesVector.isEmpty() ) {

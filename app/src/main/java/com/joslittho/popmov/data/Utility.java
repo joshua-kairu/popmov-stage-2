@@ -23,8 +23,10 @@
 
 package com.joslittho.popmov.data;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -32,12 +34,15 @@ import android.util.Log;
 import com.joslittho.popmov.R;
 import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
+import com.joslittho.popmov.data.database.MoviesProvider;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import static com.joslittho.popmov.data.database.FavoritesTableColumns.*;
 
 /**
  * A utility class to handle preferences and formatting
@@ -285,10 +290,65 @@ public class Utility {
         // 0. return the 0 or 1 based on the favorite
 
         // 0. return the 0 or 1 based on the favorite
-        return movieFavorite ?
-                FavoritesTableColumns.FAVORITE_TRUE : FavoritesTableColumns.FAVORITE_FALSE;
+        return movieFavorite ? FAVORITE_TRUE : FAVORITE_FALSE;
 
     } // end method getFavoriteForDatabase
+
+    /**
+     * Helper method to get the favorite status of a movie from the database
+     *
+     * @param cursor The {@link Cursor} pointing to a movie record in the db
+     *
+     * @return If the movie is a favorite
+     * */
+    // begin method getFavoriteFromDatabase
+    public static boolean getFavoriteFromDatabase ( Cursor cursor ) {
+
+        // 0. if the cursor has the favorite column
+        // 0a. return a boolean of the favorite column
+        // 1. otherwise the cursor has not the favorite column
+        // 1a. return false
+
+        // 0. if the cursor has the favorite column
+        // 0a. return a boolean of the favorite column
+        // 1. otherwise the cursor has not the favorite column
+        // 1a. return false
+
+        return cursor.getColumnIndex( IS_FAVORITE ) > -1 &&
+                cursor.getInt( COLUMN_IS_FAVORITE ) == FAVORITE_TRUE;
+
+    } // end method getFavoriteFromDatabase
+
+    /**
+     * Helper method to determine if there already is a movie with the given movie id
+     * in the movie db.
+     * */
+    // begin method isMovieInDatabase
+    public static boolean isMovieInDatabase ( long movieId, ContentResolver contentResolver ) {
+
+        // 0. query the db for a movie with the given movie id
+        // 1. determine if there is such a movie in the db
+        // 2. close the cursor
+        // 3. return the determined cursor state
+
+        // 0. query the db for a movie with the given movie id
+
+        Cursor movieCursor = contentResolver.query(
+                MoviesProvider.MoviesUriHolder.withMovieId( movieId ), null, null, null, null );
+
+        // 1. determine if there is such a movie in the db
+
+        boolean movieInDb = ( movieCursor!= null && movieCursor.moveToFirst() );
+
+        // 2. close the cursor
+
+        if ( movieCursor != null ) { movieCursor.close(); }
+
+        // 3. return the determined cursor state
+
+        return movieInDb;
+
+    } // end method isMovieInDatabase
 
     /* INNER CLASSES */
 
