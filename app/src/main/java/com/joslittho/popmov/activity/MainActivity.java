@@ -33,6 +33,7 @@ import android.view.MenuItem;
 import com.joslittho.popmov.R;
 import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.fragment.PostersFragment;
+import com.joslittho.popmov.sync.MoviesSyncAdapter;
 
 /**
  * The landing activity
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         // 0b. store current sort order
         // 1. use the main activity layout
         // 2. the posters fragment is added in XML
+        // 3. initialize the sync adapter
 
         // 0. preliminaries
 
@@ -83,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
         DataBindingUtil.setContentView( this, R.layout.activity_main );
 
         // 2. the posters fragment is added in XML
+
+        // 3. initialize the sync adapter
+
+        MoviesSyncAdapter.initializeSyncAdapter( this );
 
     } // end onCreate
 

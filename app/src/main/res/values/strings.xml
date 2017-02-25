@@ -49,6 +49,11 @@
     <!-- The title for the settings activity [CHAR LIMIT = 15] -->
     <string name="settings_activity_title">Settings</string>
 
+    <!-- Database -->
+    <!-- The content authority that defines the movies provider [CHAR LIMIT = NONE] -->
+    <string name="movies_provider_content_authority" translatable="false">
+        com.joslittho.popmov.data.database.MoviesProvider</string>
+
     <!-- Details section strings -->
 
     <!-- The title of the section of details that shows the trailers [CHAR LIMIT = 10] -->
@@ -134,5 +139,10 @@
     <!-- key, or entry value, for storing the favorites sort order preference
     [CHAR LIMIT = NONE] -->
     <string name="pref_sort_order_favorites_entry_value" translatable="false">favorites</string>
+
+    <!-- Sync -->
+
+    <!-- suggests that the account is specific to our PopMov app. [CHAR LIMIT = NONE] -->
+    <string name="sync_account_type" translatable="false">popmov.joslittho.com</string>
 
 </resources>

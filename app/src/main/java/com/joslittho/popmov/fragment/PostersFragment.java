@@ -60,6 +60,7 @@ import com.joslittho.popmov.data.remote.FetchMovieTask;
 import com.joslittho.popmov.databinding.FragmentPostersBinding;
 import com.joslittho.popmov.event.ConnectivityEvent;
 import com.joslittho.popmov.event.FetchedMoviesEvent;
+import com.joslittho.popmov.sync.MoviesSyncAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -317,20 +318,10 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     public void onStart() {
 
         // 0. super stuff
-        // 1. register for the event bus
-        // 2. check for connectivity
 
         // 0. super stuff
 
         super.onStart();
-
-        // 1. register for the event bus
-
-        EventBus.getDefault().register( this );
-
-        // 2. check for connectivity
-
-        new CheckConnectivityAsyncTask().execute();
 
     } // end onStart
 
@@ -339,18 +330,13 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     public void onPause() {
 
         // 0. super stuff
-        // 1. unregister from the event bus
-        // 2. close the movies cursor
+        // 1. close the movies cursor
 
         // 0. super stuff
 
         super.onPause();
 
-        // 1. unregister from the event bus
-
-        EventBus.getDefault().unregister( this );
-
-        // 2. close the movies cursor
+        // 1. close the movies cursor
 
         if ( mAllMoviesCursor != null ) { mAllMoviesCursor.close(); }
 
@@ -488,37 +474,11 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     // begin method updateMovies
     private void updateMovies() {
 
-        // 0. get the preferred sort order
-        // 1. if the preferred order is favorites,
-        // 1a. update the empty view in case there are no favorites chosen
-        // 1b. terminate since we don't need to access the net
-        // 2. else,
-        // 2a. fetch movie info using the preferred sort order
+        // 0. sync up
 
-        // 0. get the preferred sort order
+        // 0. sync up
 
-        String preferredSortOrder = Utility.getPreferredSortOrder( getActivity() );
-
-        // 1. if the preferred order is favorites,
-
-        // begin if it's favorites
-        if ( preferredSortOrder.equals(
-                getString( R.string.pref_sort_order_favorites_entry_value ) ) ) {
-
-            // 1a. update the empty view in case there are no favorites chosen
-
-            updateEmptyView();
-
-            // 1b. terminate since we don't need to access the net
-
-        } // end if it's favorites
-
-        // 2. else,
-        // 2a. fetch movie info using the preferred sort order
-
-        else {
-            new FetchMovieTask( mPosterAdapter ).execute( preferredSortOrder );
-        }
+        MoviesSyncAdapter.syncImmediately( getActivity() );
 
     } // end method updateMovies
 
@@ -592,126 +552,6 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         else { if ( emptyTextView != null ) { emptyTextView.setVisibility( View.INVISIBLE ); } }
 
     } // end method updateEmptyView
-
-    /**
-     * Responds to receiving a {@link com.joslittho.popmov.event.ConnectivityEvent}.
-     *
-     * @param connectivityEvent The received {@link ConnectivityEvent}
-     * */
-    @Subscribe( threadMode = ThreadMode.MAIN )
-    // begin method onConnectivityEvent
-    public void onConnectivityEvent( ConnectivityEvent connectivityEvent ) {
-
-        // 0. if we're connected to net,
-        // 0a. inform user we are fetching the movies
-        // 0b. update the movies
-        // 1. if not connected
-        // 1a. inform user
-
-        // TODO: 2/21/17 streamline the fetching of movies to only happen when refresh is selected
-
-        // 0. if we're connected to net,
-
-        // begin if connected
-        if ( connectivityEvent.isConnected() ) {
-
-            // 0a. inform user we are fetching the movies
-
-            binding.fpTvEmpty.setText( R.string.message_info_fetching_movies );
-
-            // 0b. update the movies
-
-            updateMovies();
-
-        } // end if connected
-
-        // 1. if not connected
-
-        // 1a. inform user
-
-        else {
-            binding.fpTvEmpty.setText( R.string.message_error_no_movie_info_no_connectivity );
-        }
-
-    } // end method onConnectivityEvent
-
-    /**
-     * Receives a {@link com.joslittho.popmov.event.FetchedMoviesEvent}
-     *
-     * @param fetchedMoviesEvent The received {@link FetchedMoviesEvent}
-     * */
-    @Subscribe( threadMode = ThreadMode.MAIN )
-    // begin method onFetchedMoviesEvent
-    public void onFetchedMoviesEvent( FetchedMoviesEvent fetchedMoviesEvent ) {
-
-        // 0. initialize the ContentValues vectors where we will put the movie data
-        // 1. for each fetched movie
-        // 1a. if it is already in the db, skip it
-        // 1b. put it in a ContentValues for movies
-        // 1c. put the ContentValues in the vector made earlier
-        // 2. if the vector has something,
-        // 2a. bulk insert to add the movie entries in the vector to movie table
-        // 3. else,
-        // 3a. log
-
-        // 0. initialize the ContentValues vectors where we will put the movie data
-
-        List< Movie > fetchedMovies = fetchedMoviesEvent.getFetchedMovies();
-
-        Vector< ContentValues > moviesVector = new Vector<>( fetchedMovies.size() );
-
-        Context context = getActivity();
-
-        // 1. for each fetched movie
-
-        // begin for through each fetched movie
-        for ( Movie movie : fetchedMovies ) {
-
-            // 1a. if it is already in the db, skip it
-
-            if ( Utility.isMovieInDatabase( movie.getID(), context.getContentResolver() ) ) {
-                continue;
-            }
-
-            // 1b. put it in a ContentValues for movies
-
-            ContentValues movieContentValues = new ContentValues();
-
-            movieContentValues.put( MovieTableColumns.MOVIE_ID, movie.getID() );
-            movieContentValues.put( MovieTableColumns.POSTER_PATH, movie.getPosterPath() );
-            movieContentValues.put( MovieTableColumns.OVERVIEW, movie.getSynopsis() );
-            movieContentValues.put( MovieTableColumns.RELEASE_DATE, movie.getReleaseDate() );
-            movieContentValues.put( MovieTableColumns.TITLE, movie.getTitle() );
-            movieContentValues.put( MovieTableColumns.VOTE_AVERAGE, movie.getUserRating() );
-            movieContentValues.put( MovieTableColumns.POPULARITY, movie.getPopularity() );
-
-            // 1c. put the ContentValues in the vector made earlier
-
-            moviesVector.add( movieContentValues );
-
-        } // end for through each fetched movie
-
-        // 2. if the vector has something,
-        // 2a. bulk insert to add the movie entries in the vector to movie table
-
-        int numberOfMovieInserts = 0;
-
-        // begin if the movies vector has something
-        if ( !moviesVector.isEmpty() ) {
-
-            ContentValues movieContentValuesArray[] = new ContentValues[ moviesVector.size() ];
-
-            // stores the vector contents in the content values array
-            moviesVector.toArray( movieContentValuesArray );
-
-            numberOfMovieInserts = context.getContentResolver().bulkInsert(
-                    MoviesUriHolder.MOVIES_URI, movieContentValuesArray );
-
-        } // end if the movies vector has something
-
-        Log.e( LOG_TAG, "onFetchedMoviesEvent: number of movies inserted: " + numberOfMovieInserts );
-
-    } // end method onFetchedMoviesEvent
 
     /* INNER CLASSES */
 
