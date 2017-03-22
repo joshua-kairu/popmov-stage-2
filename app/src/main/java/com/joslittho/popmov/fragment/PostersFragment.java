@@ -23,7 +23,6 @@
 
 package com.joslittho.popmov.fragment;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -35,7 +34,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,22 +50,8 @@ import com.joslittho.popmov.adapter.PosterAdapter;
 import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
-import com.joslittho.popmov.data.database.MoviesProvider;
-import com.joslittho.popmov.data.database.generated.MoviesDatabase;
-import com.joslittho.popmov.data.model.Movie;
-import com.joslittho.popmov.data.remote.CheckConnectivityAsyncTask;
-import com.joslittho.popmov.data.remote.FetchMovieTask;
 import com.joslittho.popmov.databinding.FragmentPostersBinding;
-import com.joslittho.popmov.event.ConnectivityEvent;
-import com.joslittho.popmov.event.FetchedMoviesEvent;
 import com.joslittho.popmov.sync.MoviesSyncAdapter;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
-import java.util.Vector;
 
 import static com.joslittho.popmov.data.database.MoviesProvider.*;
 
