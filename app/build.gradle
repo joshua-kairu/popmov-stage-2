@@ -6,7 +6,7 @@ android {
     dataBinding.enabled = true
 
     defaultConfig {
-        applicationId "com.jlt.popmov"
+        applicationId "com.joslittho.popmov"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
