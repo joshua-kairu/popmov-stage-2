@@ -27,14 +27,29 @@
 
     xmlns:android="http://schemas.android.com/apk/res/android"
 
+    xmlns:tools="http://schemas.android.com/tools"
+
     package="com.joslittho.popmov"
 
     >
 
     <!-- Permissions -->
 
-    <!-- Internet -->
+    <!-- accounts -->
+
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"
+                      />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <!-- internet -->
+
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- sync -->
+
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+
 
     <application
 
@@ -49,6 +64,8 @@
         android:supportsRtl="true"
 
         android:theme="@style/AppTheme"
+
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
 
         >
 
@@ -97,7 +114,10 @@
 
             />
 
+        <!-- providers -->
+
         <!-- the movies provider -->
+
         <provider
 
             android:authorities="com.joslittho.popmov.data.database.MoviesProvider"
@@ -107,6 +127,78 @@
             android:exported="false"
 
             />
+
+        <!-- sync -->
+
+        <!-- the movies authenticator service -->
+
+        <service
+
+            android:name=".sync.MoviesAuthenticatorService"
+
+            tools:ignore="ExportedService"
+
+            >
+
+            <!--
+            watch for the intent action called android.accounts.AccountAuthenticator and when
+            that intent is triggered, run the authenticator service's onBind method - which will
+            return the authenticator's IBinder for RPC.
+            -->
+            <intent-filter>
+
+                <action android:name="android.accounts.AccountAuthenticator" />
+
+            </intent-filter>
+
+            <!--
+             name - link this meta-data to the authentication framework
+             resource - points to the xml file that has the authentication info
+             -->
+            <meta-data
+
+                android:name="android.accounts.AccountAuthenticator"
+
+                android:resource="@xml/movies_authenticator"
+
+                />
+
+        </service>
+
+        <!-- the movies sync adapter service -->
+
+        <service
+
+            android:name=".sync.MoviesSyncService"
+
+            android:exported="true"
+
+            tools:ignore="ExportedService"
+
+            >
+
+            <!-- the MoviesSyncAdapter service intercepts the SyncAdapter system intent action so
+            as to start running. When this action is intercepted, MoviesSyncAdapter's onBind is
+            called. -->
+            <intent-filter>
+
+                <action android:name="android.content.SyncAdapter" />
+
+            </intent-filter>
+
+            <!--
+            name - link this meta-data to the sync adapter framework
+            resource - points to the xml file that has the authentication info
+            -->
+            <meta-data
+
+                android:name="android.content.SyncAdapter"
+
+                android:resource="@xml/movies_sync_adapter"
+
+                />
+
+        </service>
 
     </application>
 
