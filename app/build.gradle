@@ -40,15 +40,14 @@ ext {
 }
 
 dependencies {
+
     compile fileTree(include: ['*.jar'], dir: 'libs')
+
     // constraint layout
     compile "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
 
-    // expandable recyclerview
+    // expandable recycler view
     compile "com.thoughtbot:expandablerecyclerview:$expandableRecyclerVersion"
-
-    // eventbus
-    compile 'org.greenrobot:eventbus:3.0.0'
 
     // gson
     compile "com.google.code.gson:gson:$gsonVersion"
@@ -86,4 +85,5 @@ dependencies {
 
     // test
     testCompile 'junit:junit:4.12'
+
 }
