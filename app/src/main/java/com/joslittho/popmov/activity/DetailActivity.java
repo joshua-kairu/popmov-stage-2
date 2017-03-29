@@ -25,14 +25,12 @@ package com.joslittho.popmov.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.joslittho.popmov.R;
-import com.joslittho.popmov.data.model.Movie;
 import com.joslittho.popmov.fragment.DetailFragment;
 
 /**
@@ -62,7 +60,7 @@ public class DetailActivity extends AppCompatActivity {
         // 0. super things
         // 1. use the detail layout
         // 2. if this is the first time
-        // 2a. start the detail fragment
+        // 2a. start the detail fragment with the movie uri in a bundle
 
         // 0. super things
 
@@ -77,10 +75,14 @@ public class DetailActivity extends AppCompatActivity {
         // begin if the saved state is null
         if ( savedInstanceState == null ) {
 
-            // 2a. start the detail fragment
+            // 2a. start the detail fragment with the movie uri in a bundle
+
+            Bundle bundle = new Bundle();
+
+            bundle.putParcelable( DetailFragment.KEY_MOVIE_URL, getIntent().getData() );
 
             getSupportFragmentManager().beginTransaction()
-                    .add( R.id.ad_fl_container, new DetailFragment() ).commit();
+                    .add( R.id.detail_fl_container, DetailFragment.newInstance( bundle ) ).commit();
 
         } // end if the saved state is null
 

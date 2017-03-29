@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- the integers -->
+
+<resources>
+
+    <!-- 3 columns in the posters recycler grid for tabs -->
+    <integer name="posters_grid_columns">3</integer>
+
+</resources>

@@ -23,7 +23,7 @@
 
  -->
 
-<!-- the detail activity layout. -->
+<!-- the detail activity layout. a shell in which the detail fragment will live -->
 
 <layout
 
@@ -39,7 +39,7 @@
 
         android:layout_height="match_parent"
 
-        android:id="@+id/ad_fl_container"
+        android:id="@+id/detail_fl_container"
 
         tools:context="DetailActivity"
 

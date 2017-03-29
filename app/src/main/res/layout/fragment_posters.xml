@@ -41,33 +41,18 @@
 
         tools:context="com.joslittho.popmov.fragment.PostersFragment"
 
-        android:id="@+id/fp_fl_container"
+        android:id="@+id/main_fl_container"
 
         >
 
-        <!-- auto_fit - Display as many columns as possible to fill the available space. -->
-        <!-- verticalSpacing -  Defines the default vertical spacing between rows. -->
-        <!-- horizontalSpacing -  Defines the default horizontal spacing between rows. -->
-        <!-- stretchMode -  Defines how columns should stretch to fill the available empty space, if any. -->
-        <!-- columnWidth - Each column is stretched equally. -->
-        <!-- gravity -  Specifies the gravity within each cell. -->
-        <GridView
+        <!-- recycler for the posters -->
+        <android.support.v7.widget.RecyclerView
 
             android:layout_width="match_parent"
 
             android:layout_height="match_parent"
 
-            android:id="@+id/fp_gv_posters"
-
-            android:numColumns="auto_fit"
-
-            android:verticalSpacing="@dimen/grid_item_spacing"
-
-            android:horizontalSpacing="@dimen/grid_item_spacing"
-
-            android:stretchMode="columnWidth"
-
-            android:gravity="center"
+            android:id="@+id/main_rv_posters"
 
             />
 
@@ -75,7 +60,7 @@
 
         <TextView
 
-            android:id="@+id/fp_tv_empty"
+            android:id="@+id/main_tv_empty"
 
             android:layout_width="match_parent"
 

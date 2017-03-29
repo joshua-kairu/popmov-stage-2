@@ -23,6 +23,7 @@
 
 package com.joslittho.popmov.fragment;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -34,6 +35,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,9 +51,12 @@ import android.widget.TextView;
 import com.joslittho.popmov.R;
 import com.joslittho.popmov.activity.DetailActivity;
 import com.joslittho.popmov.adapter.PosterAdapter;
+import com.joslittho.popmov.adapter.PosterAdapterOnClickHandler;
+import com.joslittho.popmov.data.PosterCallback;
 import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
+import com.joslittho.popmov.data.database.MoviesProvider;
 import com.joslittho.popmov.databinding.FragmentPostersBinding;
 import com.joslittho.popmov.sync.MoviesSyncAdapter;
 
@@ -59,7 +66,8 @@ import static com.joslittho.popmov.data.database.MoviesProvider.*;
  * {@link Fragment} to show the movie posters.
  * */
 // begin fragment PostersFragment
-public class PostersFragment extends Fragment implements LoaderManager.LoaderCallbacks< Cursor > {
+public class PostersFragment extends Fragment implements LoaderManager.LoaderCallbacks< Cursor >,
+        PosterAdapterOnClickHandler {
 
     /* CONSTANTS */
     
@@ -80,10 +88,6 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
     /* VARIABLES */
 
-    /* Cursors */
-
-    private Cursor mAllMoviesCursor; // ditto
-
     /* Fragment Posters Bindings */
 
     private FragmentPostersBinding binding; // ditto
@@ -91,7 +95,11 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     /* Poster Adapters */
 
     private PosterAdapter mPosterAdapter; // ditto
-    
+
+    /* PosterCallbacks */
+
+    private PosterCallback posterCallbackListener; // ditto
+
     /* CONSTRUCTOR */
 
     // empty constructor for fragment subclasses
@@ -110,6 +118,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         // 0. super stuff
         // 1. register for the menu
+        // 2. initialize the poster callback listener
 
         // 0. super stuff
 
@@ -119,6 +128,14 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         setHasOptionsMenu( true );
 
+        // 2. initialize the poster callback listener
+
+        try {
+            posterCallbackListener = ( PosterCallback ) getActivity();
+        }
+        catch ( ClassCastException e ) {
+            Log.e( LOG_TAG, "The parent activity must implement PosterCallback" );
+        }
 
     } // end onCreate
 
@@ -145,18 +162,12 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
                               Bundle savedInstanceState ) {
 
         // 0. use the posters fragment layout
-        // 1. get the grid
-        // 2. use the poster adapter
-        // 2a. get a cursor pointing to the movies
-        // 2a0. if the user wants favorites
-        // 2a0a. get the favorites without sorting
-        // 2a1. otherwise
-        // 2a1a. sort the movies based on the user's preference
-        // 2b. initialize the poster adapter with this cursor
-        // 3. when an movie poster is clicked
-        // 3a. go to details of the movie
-        // 4. set the empty view for the grid
-        // 4a. update the empty view
+        // 1. initialize the adapter
+        // 2. the recycler
+        // 2a. find reference to it
+        // 2b. use a grid layout manager with screen-size-dependent columns
+        // 2c. has fixed size
+        // 2d. use the poster adapter
         // last. return the inflated view NOT THE INFLATED GRID VIEW SINCE
         // THE INFLATED GRID VIEW *WILL* HAVE A PARENT
 
@@ -164,114 +175,29 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         binding = DataBindingUtil.inflate( inflater, R.layout.fragment_posters, container, false );
 
-        // 1. get the grid
+        // 1. initialize the adapter
 
-        GridView postersGridView = binding.fpGvPosters;
+        mPosterAdapter = new PosterAdapter( getActivity(), binding.mainTvEmpty, this );
 
-        // 2. use the poster adapter
+        // 2. the recycler
 
-        // 2a. get a cursor pointing to the movies
+        // 2a. find reference to it
 
-        Context context = getActivity();
+        RecyclerView mPostersRecyclerView = binding.mainRvPosters;
 
-        String sortOrder = Utility.getPreferredSortOrder( context );
+        // 2b. use a grid layout manager with screen-size-dependent columns
 
-        // 2a0. if the user wants favorites
+        int columnCount = getResources().getInteger( R.integer.posters_grid_columns );
 
-        // begin if it's favorites
-        if ( sortOrder.equals( getString( R.string.pref_sort_order_favorites_entry_value ) ) ) {
+        mPostersRecyclerView.setLayoutManager( new GridLayoutManager( getActivity(), columnCount ) );
 
-            // 2a0a. get the favorites without sorting
+        // 2c. has fixed size
 
-            mAllMoviesCursor = context.getContentResolver().query(
-                    FavoritesUriHolder.FAVORITES_URI,
-                    FavoritesTableColumns.POSTERS_FRAGMENT_FAVORITES_COLUMNS, null, null, null );
+        mPostersRecyclerView.setHasFixedSize( true );
 
-        } // end if it's favorites
+        // 2d. use the poster adapter
 
-        // 2a1. otherwise
-
-        // begin else it's not favorites
-        else {
-
-            // 2a1a. sort the movies based on the user's preference
-
-            String sortOrderForDatabase = Utility.getSortOrderForDatabase( context );
-
-            mAllMoviesCursor = context.getContentResolver().query(
-                    MoviesUriHolder.MOVIES_URI,
-                    MovieTableColumns.POSTERS_FRAGMENT_COLUMNS, null, null, sortOrderForDatabase );
-
-        } // end else it's not favorites
-
-        // 2b. initialize the poster adapter with this cursor
-
-        mPosterAdapter = new PosterAdapter( context, mAllMoviesCursor, 0 );
-
-        postersGridView.setAdapter( mPosterAdapter );
-
-        // 3a. go to details of the movie
-
-        // begin postersGridView.setOnItemClickListener
-        postersGridView.setOnItemClickListener(
-
-                // 3a. go to details of the movie
-
-                // begin new AdapterView.OnItemClickListener
-                new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    // begin onItemClick
-                    public void onItemClick( AdapterView< ? > parent, View view, int position, long id ) {
-
-                        // 0. get the cursor at the given position
-                        // 1. if there is a cursor there
-                        // 1a. use a uri based on whether this is a regular or a favorite movie
-                        // 1b. start the details activity using the gotten uri
-
-                        // 0. get the cursor at the given position
-
-                        Cursor cursor = ( Cursor ) parent.getItemAtPosition( position );
-
-                        // 1. if there is a cursor there
-
-                        // begin if there is a cursor
-                        if ( cursor != null ) {
-
-                            // 1a. use a uri based on whether this is a regular or a favorite movie
-
-                            long movieId = cursor.getLong( MovieTableColumns.COLUMN_MOVIE_ID );
-
-                            // by default use the regular movie uri
-                            Uri uri = MoviesUriHolder.withMovieId( movieId );
-
-                            // if we are doing favorites, edit the uri appropriately
-                            if ( Utility.isSortOrderFavorites( getActivity() ) ) {
-                                uri = FavoritesUriHolder.withFavoriteMovieId( movieId );
-                            }
-
-                            // 1b. start the details activity using the gotten uri
-
-                            Intent detailsIntent = new Intent( getActivity(), DetailActivity.class )
-                                    .setData( uri );
-
-                            startActivity( detailsIntent );
-
-                        } // end if there is a cursor
-
-                    } // end onItemClick
-
-                } // end new AdapterView.OnItemClickListener
-
-        ); // end postersGridView.setOnItemClickListener
-
-        // 4. set the empty view for the grid
-
-        postersGridView.setEmptyView( binding.fpTvEmpty );
-
-        // 4a. update the empty view
-
-        updateEmptyView();
+        mPostersRecyclerView.setAdapter( mPosterAdapter );
 
         // last. return the inflated view NOT THE INFLATED GRID VIEW SINCE
         // THE INFLATED GRID VIEW *WILL* HAVE A PARENT
@@ -296,35 +222,6 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         getLoaderManager().initLoader( MOVIES_LOADER_ID, null, this );
 
     } // end onActivityCreated
-
-    @Override
-    // begin onStart
-    public void onStart() {
-
-        // 0. super stuff
-
-        // 0. super stuff
-
-        super.onStart();
-
-    } // end onStart
-
-    @Override
-    // begin onPause
-    public void onPause() {
-
-        // 0. super stuff
-        // 1. close the movies cursor
-
-        // 0. super stuff
-
-        super.onPause();
-
-        // 1. close the movies cursor
-
-        if ( mAllMoviesCursor != null ) { mAllMoviesCursor.close(); }
-
-    }// end onPause
 
     @Override
     // begin onOptionsItemSelected
@@ -450,6 +347,23 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
     } // end onLoaderReset
 
+    @Override
+    // begin onClick
+    public void onClick( long movieId ) {
+
+        // 0. get the uri for this movie
+        // 1. pass the gotten movie uri to the callback listener
+
+        // 0. get the uri for this movie
+
+        Uri movieUri = MoviesProvider.MoviesUriHolder.withMovieId( movieId );
+
+        // 1. pass the gotten movie uri to the callback listener
+
+        posterCallbackListener.onPosterItemSelected( movieUri );
+
+    } // end onClick
+
     /* Other Methods */
 
     /**
@@ -492,12 +406,12 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         // 0. get the empty view
 
-        TextView emptyTextView = binding.fpTvEmpty;
+        TextView emptyTextView = binding.mainTvEmpty;
 
         // 1. if the posters adapter has nothing
 
         // begin if adapter count is zero
-        if ( mPosterAdapter.getCount() == 0 ) {
+        if ( mPosterAdapter.getCursor().getCount() == 0 ) {
 
             // 1a0. if there is the empty view
 

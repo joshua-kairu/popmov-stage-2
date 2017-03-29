@@ -65,16 +65,66 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     /* Strings */
 
     private static final String LOG_TAG = DetailFragment.class.getSimpleName();
+
+    public static final String KEY_MOVIE_URL = "MOVIE_URL"; // ditto
+
     /* VARIABLES */
 
+    /* FragmentDetailBindings */
+
     private FragmentDetailBinding mBinding; // ditto
+
+    /* Uris */
+
+    private Uri mMovieUri; // ditto
 
     /* CONSTRUCTOR */
 
     // empty constructor for fragment subclasses
     public DetailFragment() {
     }
-    
+
+    /* statics */
+
+    /**
+     * Create a new {@link DetailFragment} with arguments from the given {@link Bundle}.
+     *
+     * @param bundle The Bundle containing the arguments - in this case the movie Uri
+     * @return The instantiated {@link DetailFragment}
+     */
+    // begin instantiating method newInstance
+    public static DetailFragment newInstance( Bundle bundle ) {
+
+        // 0. create a new DetailFragment
+        // 1. if the bundle is null, just return the new DetailFragment
+        // 2. use the bundle as the arguments for the created DetailFragment
+        // 3. return the created DetailFragment
+
+        // 0. create a new DetailFragment
+        // 1. if the bundle is null, just return the new DetailFragment
+        // 2. use the bundle as the arguments for the created DetailFragment
+        // 3. return the created DetailFragment
+
+        // 0. create a new DetailFragment
+
+        DetailFragment fragment = new DetailFragment();
+
+        // 1. if the bundle is null, just return the new DetailFragment
+
+        if ( bundle == null ) {
+            return fragment;
+        }
+
+        // 2. use the bundle as the arguments for the created DetailFragment
+
+        fragment.setArguments( bundle );
+
+        // 3. return the created DetailFragment
+
+        return fragment;
+
+    } // end instantiating method newInstance
+
     /* METHODS */
     
     /* Getters and Setters */
@@ -87,12 +137,19 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                               Bundle savedInstanceState ) {
 
         // 0. use the detail fragment layout
+        // 1. initialize the data uri, if possible
         // last. return the inflated view
 
         // 0. use the detail fragment layout
 
         mBinding = DataBindingUtil.inflate( LayoutInflater.from( getActivity() ),
                 R.layout.fragment_detail, container, false );
+
+        // 1. initialize the data uri, if possible
+
+        if ( getArguments() != null ) {
+            mMovieUri = getArguments().getParcelable( KEY_MOVIE_URL );
+        }
 
         // last. return the inflated view
 
@@ -121,24 +178,18 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     // begin onCreateLoader
     public Loader< Cursor > onCreateLoader( int id, Bundle args ) {
 
-        // 0. if there is no intent, there is no particular movie's uri, so don't load
+        // 0. if there is no particular movie's uri, so don't load
         // this can happen in tablet mode
-        // 1. get this particular movie's uri from intent
-        // 2. use a projection based on whether this is a regular or a favorite movie
-        // 3. return a loader that fetches the movie's uri from the db using the gotten projection
+        // 1. use a projection based on whether this is a regular or a favorite movie
+        // 2. return a loader that fetches the movie's uri from the db using the gotten projection
 
-        // 0. if there is no intent, there is no particular movie's uri, so don't load
+        // 0. if there is no particular movie's uri, so don't load
         // this can happen in tablet mode
 
-        Intent intent = getActivity().getIntent();
+        if ( mMovieUri == null ) { return null; }
 
-        if ( intent == null ) { return null; }
-
-        // 1. get this particular movie's uri from intent
-
-        Uri movieUri = intent.getData();
-
-        // 2. use a projection based on whether this is a regular or a favorite movie
+        // 1. use a projection based on whether this is a regular or a favorite movie
+        // 2. return a loader that fetches the movie's uri from the db using the gotten projection
 
         // by default use the regular movie's projection
         String[] projection = DETAIL_FRAGMENT_COLUMNS;
@@ -150,7 +201,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         // 3. return a loader that fetches the movie's uri from the db using the gotten projection
 
-        return new CursorLoader( getActivity(), movieUri, projection, null, null, null );
+        return new CursorLoader( getActivity(), mMovieUri, projection, null, null, null );
         
     } // end onCreateLoader
 

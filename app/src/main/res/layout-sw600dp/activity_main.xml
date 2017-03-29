@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+main activity layout for
+devices whose smallest width is greater than 600 dp,
+such as 7" and 10" tablets.
+-->
+
+<!-- uses a two-pane layout for a master/detail flow. -->
+
+<layout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+
+    >
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+
+        android:baselineAligned="false"
+
+        >
+
+        <!-- the forecast fragment - is static since we know it will be there before run time. -->
+
+        <!-- list_content - layout that displays a list of individual "item-subitem"s -->
+        <fragment
+
+            android:id="@+id/main_f_posters"
+
+            android:name="com.joslittho.popmov.fragment.PostersFragment"
+
+            android:layout_width="0dp"
+
+            android:layout_height="match_parent"
+
+            android:layout_weight="5"
+
+            />
+
+        <!-- the dynamic detail fragment container -->
+        <FrameLayout
+
+
+            android:layout_width="0dp"
+
+            android:layout_height="match_parent"
+
+            android:layout_weight="7"
+
+            android:id="@+id/detail_fl_container"
+
+            tools:context="DetailActivity"
+
+            />
+
+    </LinearLayout>
+
+</layout>
+

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- the integers -->
+
+<resources>
+
+    <!-- 2 columns in the posters recycler grid for phones -->
+    <integer name="posters_grid_columns">2</integer>
+
+</resources>

@@ -43,7 +43,7 @@
 
         <fragment
 
-            android:id="@+id/am_f_posters"
+            android:id="@+id/main_f_posters"
 
             android:name="com.joslittho.popmov.fragment.PostersFragment"
 

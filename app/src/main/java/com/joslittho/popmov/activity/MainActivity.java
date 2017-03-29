@@ -25,13 +25,16 @@ package com.joslittho.popmov.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.joslittho.popmov.R;
+import com.joslittho.popmov.data.PosterCallback;
 import com.joslittho.popmov.data.Utility;
+import com.joslittho.popmov.databinding.ActivityMainBinding;
 import com.joslittho.popmov.fragment.PostersFragment;
 import com.joslittho.popmov.sync.MoviesSyncAdapter;
 
@@ -39,7 +42,7 @@ import com.joslittho.popmov.sync.MoviesSyncAdapter;
  * The landing activity
  * */
 // begin activity MainActivity
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PosterCallback {
 
     /* CONSTANTS */
     
@@ -48,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
     /* Strings */
     
     /* VARIABLES */
+
+    /* Primitives */
+
+    private boolean mTwoPane; // ditto
 
     /* Strings */
 
@@ -69,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
         // 1. use the main activity layout
         // 2. the posters fragment is added in XML
         // 3. initialize the sync adapter
+        // 4. if we are in two pane mode
+        // 4a. set the two pane primitive to true
+        // 5. else we are not in two pane mode
+        // 5a. set the two pane primitive to false
 
         // 0. preliminaries
 
@@ -80,15 +91,39 @@ public class MainActivity extends AppCompatActivity {
 
         mCurrentSortOrder = Utility.getPreferredSortOrder( this );
 
+        // 0c. get main activity binding -> done when initializing layout
+
         // 1. use the main activity layout
 
-        DataBindingUtil.setContentView( this, R.layout.activity_main );
+        ActivityMainBinding binding = DataBindingUtil.setContentView( this, R.layout.activity_main );
 
         // 2. the posters fragment is added in XML
 
         // 3. initialize the sync adapter
 
         MoviesSyncAdapter.initializeSyncAdapter( this );
+
+        // 4. if we are in two pane mode
+
+        // begin if there is the detail container
+        if ( binding.detailFlContainer != null ) {
+
+            // 4a. set the two pane primitive to true
+
+            mTwoPane = true;
+
+        } // end if there is the detail container
+
+        // 5. else we are not in two pane mode
+
+        // begin else there is no detail container
+        else {
+
+            // 5a. set the two pane primitive to false
+
+            mTwoPane = false;
+
+        } // end else there is no detail container
 
     } // end onCreate
 
@@ -170,6 +205,36 @@ public class MainActivity extends AppCompatActivity {
         } // end if sort order is different
 
     } // end onResume
+
+    @Override
+    // begin onPosterItemSelected
+    public void onPosterItemSelected( Uri movieUri ) {
+
+        // 0. if we are in two pane
+        // 1. otherwise we are in one pane
+        // 1a. start the detail activity
+
+        // 0. if we are in two pane
+
+        // begin if two pane
+        if ( mTwoPane ) {
+
+
+
+        } // end if two pane
+
+        // 1. otherwise we are in one pane
+
+        // begin else one pane
+        else {
+
+            // 1a. start the detail activity
+
+            startActivity( new Intent( this, DetailActivity.class ).setData( movieUri ) );
+
+        } // end else one pane
+
+    } // end onPosterItemSelected
 
     /* Other Methods */
     
