@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.joslittho.popmov.BuildConfig;
 import com.joslittho.popmov.R;
 import com.joslittho.popmov.data.Utility;
@@ -564,7 +565,7 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
      * @param movieJSONString The string having the movie JSON
      * */
     // begin method getMovieDataFromJSON
-    private void getMovieDataFromJSON( String movieJSONString ) throws JSONException {
+    private void getMovieDataFromJSON( String movieJSONString ) throws JSONException, IOException {
 
         /*
 
@@ -611,7 +612,10 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
         // 1b. have an array list of movies matching the JSON list
         // 1b1. get a movie JSON item
         // 1b2. create a movie object from it
-        // 1b3. fetch trailers using movie id
+        // 1b3. handle trailers asynchronously using retrofit
+        // 1b3a. fetch trailers using movie id
+        // 1b3b. convert fetched trailers into JSON
+        // 1b3c. insert converted JSON to db
         // 1b-last. add that object to the movie array
         // 2. initialize the ContentValues vectors where we will put the movie data
         // 3. for each fetched movie
@@ -691,11 +695,13 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
 
             double moviePopularity = currentMovieJsonObject.getDouble( MOVIE_POPULARITY );
 
-            Movie aMovie = new Movie( movieId, movieTitle, movieReleaseDate, movieSynopsis,
+            final Movie aMovie = new Movie( movieId, movieTitle, movieReleaseDate, movieSynopsis,
                     movieUserRating, moviePopularity, moviePosterPath, false /* Not a favorite */,
                     null );
 
-            // 1b3. fetch trailers using movie id
+            // 1b3. handle trailers asynchronously using retrofit
+
+            // 1b3a. fetch trailers using movie id
 
             Call< Trailer > call = apiService.getMovieTrailersResult(
                     Integer.parseInt( String.valueOf( movieId ) ),
@@ -708,28 +714,42 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
                 // begin onResponse
                 public void onResponse( Call< Trailer > call, Response< Trailer > response ) {
 
+                    // 1b3b. convert fetched trailers into JSON
+
                     List< Result > trailerResults = response.body().getResults();
 
-                    Log.e( LOG_TAG, "onResponse: trailerResults = " + trailerResults );
+                    String resultsString = new Gson().toJson( trailerResults );
+
+                    // 1b3c. insert converted JSON to db
+
+                    long movieId  = response.body().getId();
+
+                    ContentValues trailerContentValues = new ContentValues();
+
+                    trailerContentValues.put( MovieTableColumns.TRAILERS, resultsString );
+
+                    getContext().getContentResolver().update(
+                            MoviesProvider.MoviesUriHolder.withMovieId( movieId ),
+                            trailerContentValues, null, null );
 
                 } // end onResponse
 
                 @Override
                 // begin onFailure
+                // tells the user
                 public void onFailure( Call< Trailer > call, Throwable t ) {
-
+                    Toast.makeText( getContext(), R.string.message_error_fetching_trailers,
+                            Toast.LENGTH_SHORT ).show();
                 } // end onFailure
 
             } ); // end call.enqueue
+
             // 1b-last. add that object to the movie array
 
             movies.add( aMovie );
 
-            // 1c. fetch trailers using movie id
-
         } // end for to initialize a movie from the JSON array
 
-// TODO: 3/24/17 know where to put retrofit to fetch trailers
         // 2. initialize the ContentValues vectors where we will put the movie data
 
         Vector< ContentValues > moviesVector = new Vector<>( movies.size() );
