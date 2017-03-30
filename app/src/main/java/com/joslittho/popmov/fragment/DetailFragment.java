@@ -181,28 +181,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         // 0. if there is no particular movie's uri, so don't load
         // this can happen in tablet mode
-        // 1. use a projection based on whether this is a regular or a favorite movie
-        // 2. return a loader that fetches the movie's uri from the db using the gotten projection
+        // 1. return a loader that fetches the data from movie's uri using the details projection
 
         // 0. if there is no particular movie's uri, so don't load
         // this can happen in tablet mode
 
         if ( mMovieUri == null ) { return null; }
 
-        // 1. use a projection based on whether this is a regular or a favorite movie
-        // 2. return a loader that fetches the movie's uri from the db using the gotten projection
+        // 1. return a loader that fetches the data from movie's uri using the details projection
 
-        // by default use the regular movie's projection
-        String[] projection = DETAIL_FRAGMENT_COLUMNS;
-
-        // if we are showing favorites, use the favorite movie's projection
-        if ( Utility.isSortOrderFavorites( getActivity() ) ) {
-            projection = FavoritesTableColumns.DETAIL_FRAGMENT_FAVORITE_COLUMNS;
-        }
-
-        // 3. return a loader that fetches the movie's uri from the db using the gotten projection
-
-        return new CursorLoader( getActivity(), mMovieUri, projection, null, null, null );
+        return new CursorLoader( getActivity(), mMovieUri, DETAIL_FRAGMENT_COLUMNS,
+                null, null, null );
         
     } // end onCreateLoader
 
