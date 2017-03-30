@@ -111,8 +111,14 @@
     <!-- message that there are no trailers yet [CHAR LIMIT = 20] -->
     <string name="message_error_no_trailers">No trailers yet.</string>
 
+    <!-- message that there was an error fetching the trailers [CHAR LIMIT = 30] -->
+    <string name="message_error_fetching_trailers">Error fetching trailers.</string>
+
     <!-- message that there are no reviews yet [CHAR LIMIT = 20] -->
     <string name="message_error_no_reviews">No reviews yet.</string>
+
+    <!-- message that there was an error fetching the reviews [CHAR LIMIT = 30] -->
+    <string name="message_error_fetching_reviews">Error fetching reviews.</string>
 
     <!-- Preferences -->
 
