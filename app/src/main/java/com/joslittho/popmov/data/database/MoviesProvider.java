@@ -35,6 +35,25 @@ public class MoviesProvider {
     // idea from https://valeriodg.com/2016/06/09/contentprovider-example-15-minutes/
     static final Uri BASE_CONTENT_URI = Uri.parse( "content://" + AUTHORITY ); // ditto
 
+//    /**
+//     * Inner join the movie table with the favorites table where the movie id in both tables match.
+//     *
+//     * Thanks to http://stackoverflow.com/questions/4957009/how-do-i-join-two-sqlite-tables-in-my-android-application
+//     * here is how a join should look like
+//     *
+//     * "SELECT desired-cols-list FROM T1 INNER JOIN T2 on T1.questionid =T2.questionid AND
+//     * T1.categoryid = T2.categoryid WHERE T1.categoryid = {the desired category value}"
+//     *
+//     * so our join should look like
+//     * SELECT columns-list FROM movies JOIN favorites ON
+//     * movies.movie_id = favorites.movie_id
+//     *
+//     */
+//    private static final String JOIN_MOVIES_WITH_FAVORITES_STRING =
+//            "JOIN " + FAVORITES_TABLE_NAME + " ON "
+//                    + MOVIES_TABLE_NAME + "." + MovieTableColumns.MOVIE_ID + " = "
+//                    + FAVORITES_TABLE_NAME + "." + FavoritesTableColumns.MOVIE_ID;
+
     /* VARIABLES */
     
     /* CONSTRUCTOR */
@@ -102,7 +121,7 @@ public class MoviesProvider {
          * @return Uri pointing to the movie with the given id.
          * */
         @InexactContentUri(
-                path = MOVIES_TABLE_NAME + "/#", // a number in the movies table
+                path = MOVIES_TABLE_NAME + "/#", // a row in the movies table
                 name = "PARTICULAR_MOVIE_FROM_MOVIES_LIST", // name of this inexact URI, I think
                 type = "vnd.android.cursor.item/" + MOVIES_TABLE_NAME, // this Uri looks for an item
                 // inside the movies table
@@ -126,7 +145,7 @@ public class MoviesProvider {
     public static class FavoritesUriHolder {
 
         /**
-         * Inner join the movie table with the favorites table where the movie id in both tables match.
+         * Inner join the favorites table with the movies table where the movie id in both tables match.
          *
          * Thanks to http://stackoverflow.com/questions/4957009/how-do-i-join-two-sqlite-tables-in-my-android-application
          * here is how a join should look like
@@ -134,19 +153,19 @@ public class MoviesProvider {
          * "SELECT desired-cols-list FROM T1 INNER JOIN T2 on T1.questionid =T2.questionid AND
          * T1.categoryid = T2.categoryid WHERE T1.categoryid = {the desired category value}"
          *
-         * so our join should look like
+         * Our join should look like
          * SELECT favorites._id, movie_id FROM favorites JOIN movies ON
          * favorites.movie_id = movies.movie_id
          *
          */
-        private static final String JOIN_MOVIES_WITH_FAVORITES_STRING =
+        private static final String JOIN_FAVORITES_WITH_MOVIES_STRING =
                 "JOIN " + MOVIES_TABLE_NAME + " ON "
                         + FAVORITES_TABLE_NAME + "." + FavoritesTableColumns.MOVIE_ID + " = "
                         + MOVIES_TABLE_NAME + "." + MovieTableColumns.MOVIE_ID;
 
         /** Uri pointing to the favorites table. */
         @ContentUri(
-                join = JOIN_MOVIES_WITH_FAVORITES_STRING,
+                join = JOIN_FAVORITES_WITH_MOVIES_STRING,
                 path = FAVORITES_TABLE_NAME, // the favorites table in general
                 type = "vnd.android.cursor.dir/" + FAVORITES_TABLE_NAME // this Uri looks for all
                 // contents inside the favorites table
@@ -161,7 +180,7 @@ public class MoviesProvider {
          * @return Uri pointing to the favorite with the given id.
          * */
         @InexactContentUri(
-                join = JOIN_MOVIES_WITH_FAVORITES_STRING,
+                join = JOIN_FAVORITES_WITH_MOVIES_STRING,
                 path = FAVORITES_TABLE_NAME + "/#", // a row in the movies table
                 name = "PARTICULAR_FAVORITE_FROM_FAVORITE_LIST", // name of this inexact URI
                 type = "vnd.android.cursor.item/" + FAVORITES_TABLE_NAME, // this Uri looks for an

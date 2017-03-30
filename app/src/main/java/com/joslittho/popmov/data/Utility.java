@@ -32,6 +32,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.joslittho.popmov.R;
+import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.data.database.MoviesProvider;
 
@@ -333,8 +334,8 @@ public class Utility {
         // 0. query the favorites db for a movie with the given movie id
 
         Cursor favoriteMovieCursor = contentResolver.query(
-                MoviesProvider.FavoritesUriHolder.withFavoriteMovieId( favoriteMovieId ), null,
-                null, null, null );
+                MoviesProvider.FavoritesUriHolder.withFavoriteMovieId( favoriteMovieId ),
+                FavoritesTableColumns.DETAIL_FRAGMENT_FAVORITE_COLUMNS, null, null, null );
 
         // 1. determine if there is such a movie in the favorites table
 

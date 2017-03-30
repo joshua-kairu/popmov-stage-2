@@ -22,10 +22,14 @@ public interface FavoritesTableColumns {
 
     /* VARIABLES */
 
-    @DataType( INTEGER )
+    @DataType( INTEGER ) // the data type stored in this column
     @PrimaryKey
     @AutoIncrement
     String _ID = "_id"; // the unique row id
+
+//    @DataType( INTEGER )
+//    @AutoIncrement
+//    String ROW_ID = "rowid"; // the unique row id
 
     @DataType( INTEGER )
     @Unique

@@ -55,7 +55,8 @@ public interface MovieTableColumns {
     /* Arrays */
 
     /**
-     * Array of columns needed to make the {@link com.joslittho.popmov.fragment.PostersFragment} work.
+     * Array of columns needed to make the {@link com.joslittho.popmov.fragment.PostersFragment}
+     * work.
      *
      * These columns are the _id,
      * the movie id (for linking to the {@link com.joslittho.popmov.fragment.DetailFragment}),
@@ -73,9 +74,11 @@ public interface MovieTableColumns {
                                           // display
 
     /**
-     * Array of columns needed to make the {@link com.joslittho.popmov.fragment.DetailFragment} work.
+     * Array of columns needed to make the {@link com.joslittho.popmov.fragment.DetailFragment}
+     * work.
      *
-     * These columns are the _id, poster path, title, vote average, release date, and overview
+     * These columns are the _id, movie_id, poster path, title, vote average, release date, and
+     * overview
      * */
     String[] DETAIL_FRAGMENT_COLUMNS =
             { _ID, MOVIE_ID, POSTER_PATH, TITLE, VOTE_AVERAGE, RELEASE_DATE, OVERVIEW };
