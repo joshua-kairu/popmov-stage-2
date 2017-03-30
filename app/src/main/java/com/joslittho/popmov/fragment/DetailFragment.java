@@ -35,6 +35,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -245,7 +246,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             mBinding.detailTvSynopsis.setText( cursor.getString( COLUMN_DETAIL_OVERVIEW ) );
 
-            final boolean favorite = Utility.getFavoriteForDetailFromDatabase( cursor );
+            final boolean favorite = Utility.isMovieAFavorite( cursor.getLong( COLUMN_MOVIE_ID ),
+                    getActivity().getContentResolver() );
 
             // if this movie is favorite, put the "Unmark As Favorite" text in the button
             // if this movie is not favorite, put the "Mark As Favorite" text in the button
@@ -257,6 +259,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             // begin mBinding.detailBFavorite.setOnClickListener
             mBinding.detailBFavorite.setOnClickListener(
 
+                    // TODO: 3/29/17 unique constraint fails when adding a fav 
                     // begin new View.OnClickListener
                     new View.OnClickListener() {
 
@@ -313,11 +316,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
                                 favoriteContentValues.put(
                                         FavoritesTableColumns.MOVIE_ID, movieId );
-                                favoriteContentValues.put(
-                                        FavoritesTableColumns.IS_FAVORITE,
-                                        Utility.getFavoriteForDatabase(
-                                                true /*favorite is always true here since the user
-                                                wants to add the movie to favorites*/ ) );
 
                                 // 0a3b2. add content values to the db
 

@@ -41,8 +41,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.joslittho.popmov.data.database.FavoritesTableColumns.*;
-
 /**
  * A utility class to handle preferences and formatting
  * */
@@ -278,50 +276,6 @@ public class Utility {
     } // end method getFormattedUserRating
 
     /**
-     * Helper method to determine the integer value to put in the db as a representation of a
-     * movie's favorite status.
-     *
-     * @param movieFavorite Boolean for if the movie is a favorite
-     *
-     * @return 0 or 1 based on the favorite status
-     * */
-    // begin method getFavoriteForDatabase
-    public static int getFavoriteForDatabase( boolean movieFavorite ) {
-
-        // 0. return the 0 or 1 based on the favorite
-
-        // 0. return the 0 or 1 based on the favorite
-        return movieFavorite ? FAVORITE_TRUE : FAVORITE_FALSE;
-
-    } // end method getFavoriteForDatabase
-
-    /**
-     * Helper method to get the favorite status of a movie from the database. This status will be
-     * used in the details screen.
-     *
-     * @param cursor The {@link Cursor} pointing to a movie record in the db
-     *
-     * @return If the movie is a favorite
-     * */
-    // begin method getFavoriteForDetailFromDatabase
-    public static boolean getFavoriteForDetailFromDatabase( Cursor cursor ) {
-
-        // 0. if the cursor has the favorite column
-        // 0a. return a boolean of the favorite column
-        // 1. otherwise the cursor has not the favorite column
-        // 1a. return false
-
-        // 0. if the cursor has the favorite column
-        // 0a. return a boolean of the favorite column
-        // 1. otherwise the cursor has not the favorite column
-        // 1a. return false
-
-        return cursor.getColumnIndex( IS_FAVORITE ) > -1 &&
-                cursor.getInt( COLUMN_DETAIL_IS_FAVORITE ) == FAVORITE_TRUE;
-
-    } // end method getFavoriteForDetailFromDatabase
-
-    /**
      * Helper method to determine if there already is a movie with the given movie id
      * in the movie db.
      *
@@ -357,6 +311,44 @@ public class Utility {
         return movieInDb;
 
     } // end method isMovieInDatabase
+
+    /**
+     * Helper method to determine if a given movie is a favorite.
+     *
+     * @param favoriteMovieId The favorite movie's unique id
+     * @param contentResolver The {@link ContentResolver} which will be used to query the db for
+     *                        the movie
+     *
+     * @return If the movie is a favorite
+     * */
+    // begin method isMovieAFavorite
+    public static boolean isMovieAFavorite ( long favoriteMovieId,
+                                             ContentResolver contentResolver ) {
+
+        // 0. query the favorites db for a movie with the given movie id
+        // 1. determine if there is such a movie in the favorites table
+        // 2. close the cursor
+        // 3. return the determined cursor state
+
+        // 0. query the favorites db for a movie with the given movie id
+
+        Cursor favoriteMovieCursor = contentResolver.query(
+                MoviesProvider.FavoritesUriHolder.withFavoriteMovieId( favoriteMovieId ), null,
+                null, null, null );
+
+        // 1. determine if there is such a movie in the favorites table
+
+        boolean movieIsFav = ( favoriteMovieCursor!= null && favoriteMovieCursor.moveToFirst() );
+
+        // 2. close the cursor
+
+        if ( favoriteMovieCursor != null ) { favoriteMovieCursor.close(); }
+
+        // 3. return the determined cursor state
+
+        return movieIsFav;
+
+    } // end method isMovieAFavorite
 
     /**
      * Helper method to know if the user is currently interested in favorites only.

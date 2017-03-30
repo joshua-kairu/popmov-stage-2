@@ -32,17 +32,6 @@ public interface FavoritesTableColumns {
     @NotNull
     String MOVIE_ID = "movie_id"; // the unique movie ID - int
 
-    @DataType( INTEGER )
-    @NotNull
-    String IS_FAVORITE = "is_favorite"; // whether or not this movie is a favorite - int 0 or 1
-                                        // depending on whether favorite or not
-
-    /** Integer value meaning that a movie is a favorite. */
-    int FAVORITE_TRUE = 0;
-
-    /** Integer value meaning that a movie is not a favorite. */
-    int FAVORITE_FALSE = 1;
-
     /* Arrays */
 
     /**
@@ -89,7 +78,7 @@ public interface FavoritesTableColumns {
             VOTE_AVERAGE, // 4
             RELEASE_DATE, // 5
             OVERVIEW, // 6
-            IS_FAVORITE }; // 7
+    };
 
     // use column indices from MovieTableColumns
 
@@ -99,7 +88,5 @@ public interface FavoritesTableColumns {
     // int COLUMN_VOTE_AVERAGE = 4; // column for the vote average
     // int COLUMN_RELEASE_DATE = 5; // column for the release date - only for the detail
     // int COLUMN_DETAIL_OVERVIEW = 6; // column for the overview - only for the detail
-    int COLUMN_DETAIL_IS_FAVORITE = DETAIL_FRAGMENT_FAVORITE_COLUMNS.length - 1; // column for the
-    // favorite - is the last column in the array
 
 } // end interface FavoritesTableColumns
