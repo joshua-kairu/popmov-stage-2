@@ -9,7 +9,10 @@ import net.simonvt.schematic.annotation.OnUpgrade;
 import net.simonvt.schematic.annotation.Table;
 
 import static com.joslittho.popmov.data.database.FavoritesTableColumns.*;
+import static com.joslittho.popmov.data.database.MovieTableColumns.REVIEWS;
+import static com.joslittho.popmov.data.database.MovieTableColumns.TRAILERS;
 import static com.joslittho.popmov.data.database.MoviesDatabase.MovieTablesHolder.FAVORITES_TABLE_NAME;
+import static com.joslittho.popmov.data.database.MoviesDatabase.MovieTablesHolder.MOVIES_TABLE_NAME;
 
 /**
  * A representation of the db holding the movie data
@@ -25,7 +28,7 @@ public class MoviesDatabase {
     /* Strings */
 
     /** The db's current version. */
-    static final int VERSION = 18;
+    static final int VERSION = 20;
 
     /**
      * The logger.
@@ -76,37 +79,20 @@ public class MoviesDatabase {
     // begin _MIGRATIONS
     public static final String[] _MIGRATIONS = {
 
-            // BEGIN TRANSACTION;
+            // 0. add trailers column to movie table
+            // ALTER TABLE movies ADD trailers TEXT;
+            // 1. add reviews column to movie table
+            // ALTER TABLE movies ADD reviews TEXT;
 
-            // "BEGIN TRANSACTION;",
+            // 0. add trailers column to movie table
+            // ALTER TABLE movies ADD trailers TEXT;
 
-            // CREATE TEMPORARY TABLE favorites_backup(rowid, movie_id);
+            "ALTER TABLE " + MOVIES_TABLE_NAME + " ADD " +  TRAILERS + " TEXT;",
 
-            // "CREATE TEMPORARY TABLE favorites_backup(" + ROW_ID + ", " + MOVIE_ID + ");",
+            // 1. add reviews column to movie table
+            // ALTER TABLE movies ADD reviews TEXT;
 
-            // INSERT INTO favorites_backup SELECT rowid, movie_id FROM favorites;
-
-            // "INSERT INTO favorites_backup SELECT " + ROW_ID + ", " + MOVIE_ID + " FROM " + FAVORITES_TABLE_NAME + ";",
-
-            // DROP TABLE favorites;
-
-            // "DROP TABLE " + FAVORITES_TABLE_NAME + ";",
-
-            // CREATE TABLE favorites(_id, movie_id);
-
-            // "CREATE TABLE " + FAVORITES_TABLE_NAME + "(" + _ID + ", " + MOVIE_ID + ");",
-
-            // INSERT INTO favorites SELECT rowid, movie_id FROM favorites_backup;
-
-            // "INSERT INTO " + FAVORITES_TABLE_NAME + " SELECT " + ROW_ID + ", " + MOVIE_ID + " FROM favorites_backup;",
-
-            // DROP TABLE favorites_backup;
-
-            // "DROP TABLE favorites_backup;",
-
-            // COMMIT;
-
-            // "COMMIT"
+            "ALTER TABLE " + MOVIES_TABLE_NAME + " ADD " +  REVIEWS + " TEXT;"
 
     }; // end _MIGRATIONS
 
@@ -123,7 +109,6 @@ public class MoviesDatabase {
     /**
      * Upgrade method copied from https://github.com/SimonVT/schematic/issues/44
      * */
-    /*
     @OnUpgrade
     // begin onUpgrade
     public static void onUpgrade( SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -141,7 +126,6 @@ public class MoviesDatabase {
             }
         }
     } // end onUpgrade
-    */
     
     /* Other Methods */
 

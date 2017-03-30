@@ -52,6 +52,12 @@ public interface MovieTableColumns {
     @NotNull
     String POPULARITY = "popularity"; // the popularity - double, hence real
 
+    @DataType( TEXT )
+    String TRAILERS = "trailers"; // the trailers (JSON) list - string
+
+    @DataType( TEXT )
+    String REVIEWS = "reviews"; // the reviews (JSON) list - string
+
     /* Arrays */
 
     /**
