@@ -75,6 +75,11 @@
     <!-- formatter for the user rating so that a rating 5.92 becomes 5.9/10 [CHAR LIMIT = NONE] -->
     <string name="user_rating_format"><xliff:g id="user_rating">%1$.1f</xliff:g>/10</string>
 
+    <!-- Expandable group header titles -->
+
+    <!-- title for the trailers expandable group header [CHAR LIMIT = 10] -->
+    <string name="trailers_header_title">Trailers</string>
+
     <!-- Menus -->
 
     <!-- title for the settings menu item [CHAR LIMIT = 10] -->

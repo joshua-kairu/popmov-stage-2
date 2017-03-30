@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- layout for an individual trailer item -->
+
+<android.support.constraint.ConstraintLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+
+    android:layout_height="wrap_content"
+
+    tools:ignore="GradleDependency"
+
+    >
+
+    <!-- image for play -->
+
+    <ImageView
+
+        android:id="@+id/trailer_item_iv_play"
+
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        app:srcCompat="@drawable/ic_play_arrow_black_24dp"
+
+        android:layout_marginLeft="8dp"
+
+        android:layout_marginStart="8dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:layout_marginTop="8dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:layout_marginBottom="8dp"
+
+        android:contentDescription="@null"
+
+        />
+
+    <!-- text for the trailer name -->
+
+    <TextView
+
+        android:id="@+id/trailer_item_tv_name"
+
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        app:layout_constraintLeft_toRightOf="@+id/trailer_item_iv_play"
+
+        android:layout_marginLeft="8dp"
+
+        android:layout_marginStart="8dp"
+
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:layout_marginTop="8dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:layout_marginBottom="8dp"
+
+        style="@style/TextAppearance.AppCompat.Body2"
+
+        tools:text="Official US Trailer"
+
+        />
+
+</android.support.constraint.ConstraintLayout>

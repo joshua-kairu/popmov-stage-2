@@ -26,41 +26,24 @@ package com.joslittho.popmov.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * A movie, as defined by the TMDB JSON.
  * */
 // begin class Movie
-public class Movie implements Parcelable {
+public class Movie {
 
     /* CONSTANTS */
-
-    /* Creators */
-
-    // begin new Parcelable.Creator< Movie >
-    public static final Parcelable.Creator< Movie > CREATOR
-            = new Parcelable.Creator< Movie >() {
-
-        @Override
-        /**
-         * Create a new instance of the Parcelable class, instantiating it from
-         * the given Parcel whose data had previously been written by
-         * Parcelable.writeToParcel()
-         * */
-        // createFromParcel
-        public Movie createFromParcel( Parcel source ) { return new Movie( source ); }
-
-        @Override
-        /** Create a new array of the Parcelable class. */
-        // newArray
-        public Movie[] newArray( int size ) { return new Movie[ size ]; }
-
-    }; // end new Parcelable.Creator< Movie >
 
     /* Integers */
     
     /* Strings */
         
     /* VARIABLES */
+
+    /** The trailers for this movie */
+    private List< Result > mTrailers; // ditto
 
     /* Primitives */
 
@@ -97,7 +80,7 @@ public class Movie implements Parcelable {
 
     // begin default constructor
     public Movie( long id, String title, String releaseDate, String synopsis, double userRating,
-                  double popularity, String posterPath, boolean favorite ) {
+                  double popularity, String posterPath, boolean favorite, List trailers ) {
 
         // 0. initialize members
 
@@ -113,25 +96,6 @@ public class Movie implements Parcelable {
         setFavorite( favorite );
 
     } // end default constructor
-
-    // begin parcel constructor
-    public Movie( Parcel inParcel ) {
-
-        // 0. initialize members from parcel
-
-        // 0. initialize members from parcel
-
-        // Parcel reads need to be in the same order as Parcel writes
-        setID( inParcel.readLong() );
-        setTitle( inParcel.readString() );
-        setReleaseDate( inParcel.readString() );
-        setSynopsis( inParcel.readString() );
-        setUserRating( inParcel.readDouble() );
-        setPopularity( inParcel.readDouble() );
-        setPosterPath( inParcel.readString() );
-        setFavorite( 0 == inParcel.readInt() );
-
-    } // end parcel constructor
 
     /* METHODS */
     
@@ -205,38 +169,17 @@ public class Movie implements Parcelable {
     // setter for favorite
     public void setFavorite( boolean favorite ) { this.mFavorite = favorite; }
 
-    /* Overrides */
-
-    @Override
-    /** Flatten this object in to a Parcel. */
-    // begin writeToParcel
-    public void writeToParcel( Parcel destParcel, int flags ) {
-
-        // 0. write members to the parcel
-
-        // 0. write members to the parcel
-
-        // Parcel writes need to be in the same order as Parcel reads
-        destParcel.writeLong( getID() );
-        destParcel.writeString( getTitle() );
-        destParcel.writeString( getReleaseDate() );
-        destParcel.writeString( getSynopsis() );
-        destParcel.writeDouble( getUserRating() );
-        destParcel.writeDouble( getPopularity() );
-        destParcel.writeString( getPosterPath() );
-        destParcel.writeInt( isFavorite() ? 0 : 1 );
-
-    } // end writeToParcel
-
-    @Override
-    /**
-     * Describe the kinds of special objects
-     * contained in this Parcelable instance's marshaled representation.
-     * */
-    // describeContents
-    public int describeContents() {
-        return 0;
+    // getter for trailers
+    public List< Result > getTrailers() {
+        return mTrailers;
     }
+
+    // setter for trailers
+    public void setTrailers( List< Result > trailers ) {
+        this.mTrailers = trailers;
+    }
+
+    /* Overrides */
 
     /* Other Methods */
 

@@ -22,6 +22,10 @@ import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.data.database.MoviesProvider;
 import com.joslittho.popmov.data.model.Movie;
+import com.joslittho.popmov.data.model.Result;
+import com.joslittho.popmov.data.model.Trailer;
+import com.joslittho.popmov.rest.ApiClient;
+import com.joslittho.popmov.rest.ApiInterface;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.json.JSONArray;
@@ -38,6 +42,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import rx.functions.Action1;
 
 import static android.Manifest.permission.GET_ACCOUNTS;
@@ -598,12 +605,14 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
         // 0f. title
         // 0g. vote average
         // 0h. popularity
+        // 0i. and the retrofit instance
         // 1. extract data from JSON
         // 1a. get the list of movies from the JSON
         // 1b. have an array list of movies matching the JSON list
         // 1b1. get a movie JSON item
         // 1b2. create a movie object from it
-        // 1b3. add that object to the movie array
+        // 1b3. fetch trailers using movie id
+        // 1b-last. add that object to the movie array
         // 2. initialize the ContentValues vectors where we will put the movie data
         // 3. for each fetched movie
         // 3a. if it is already in the db, skip it
@@ -631,6 +640,10 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
         final String MOVIE_TITLE = "original_title";
         final String MOVIE_VOTE_AVERAGE = "vote_average";
         final String MOVIE_POPULARITY = "popularity";
+
+        // 0i. and the retrofit instance
+
+        ApiInterface apiService = ApiClient.getClient().create( ApiInterface.class );
 
         // 1. extract data from JSON
 
@@ -679,14 +692,44 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
             double moviePopularity = currentMovieJsonObject.getDouble( MOVIE_POPULARITY );
 
             Movie aMovie = new Movie( movieId, movieTitle, movieReleaseDate, movieSynopsis,
-                    movieUserRating, moviePopularity, moviePosterPath, false /* Not a favorite */ );
+                    movieUserRating, moviePopularity, moviePosterPath, false /* Not a favorite */,
+                    null );
 
-            // 1b3. add that object to the movie array
+            // 1b3. fetch trailers using movie id
+
+            Call< Trailer > call = apiService.getMovieTrailersResult(
+                    Integer.parseInt( String.valueOf( movieId ) ),
+                    BuildConfig.THE_MOVIE_DB_API_KEY );
+
+            // begin call.enqueue
+            call.enqueue( new Callback< Trailer >() {
+
+                @Override
+                // begin onResponse
+                public void onResponse( Call< Trailer > call, Response< Trailer > response ) {
+
+                    List< Result > trailerResults = response.body().getResults();
+
+                    Log.e( LOG_TAG, "onResponse: trailerResults = " + trailerResults );
+
+                } // end onResponse
+
+                @Override
+                // begin onFailure
+                public void onFailure( Call< Trailer > call, Throwable t ) {
+
+                } // end onFailure
+
+            } ); // end call.enqueue
+            // 1b-last. add that object to the movie array
 
             movies.add( aMovie );
 
+            // 1c. fetch trailers using movie id
+
         } // end for to initialize a movie from the JSON array
 
+// TODO: 3/24/17 know where to put retrofit to fetch trailers
         // 2. initialize the ContentValues vectors where we will put the movie data
 
         Vector< ContentValues > moviesVector = new Vector<>( movies.size() );
