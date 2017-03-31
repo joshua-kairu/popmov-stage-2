@@ -22,8 +22,8 @@ import java.util.List;
  *
  * Source: http://www.androidhive.info/2013/07/android-expandable-list-view-tutorial/
  */
-// begin class TrailersAdapter
-public class TrailersAdapter extends BaseExpandableListAdapter {
+// begin class TrailerAdapter
+public class TrailerAdapter extends BaseExpandableListAdapter {
 
     /* CONSTANTS */
     
@@ -44,16 +44,11 @@ public class TrailersAdapter extends BaseExpandableListAdapter {
 
     private List< String > mHeaderTitles; // ditto
 
-    /* TrailersAdapterOnClickHandlers */
-
-    public TrailersAdapterOnClickHandler mTrailersAdapterOnClickHandler; // ditto
-    
     /* CONSTRUCTOR */
 
     // begin default constructor
-    public TrailersAdapter( Context context, List< String > headerTitles,
-                            HashMap< String, List< Result > > childTrailers,
-                            TrailersAdapterOnClickHandler handler ) {
+    public TrailerAdapter( Context context, List< String > headerTitles,
+                           HashMap< String, List< Result > > childTrailers ) {
 
         // 0. initialize members
 
@@ -64,8 +59,6 @@ public class TrailersAdapter extends BaseExpandableListAdapter {
         mHeaderTitles = headerTitles;
 
         mChildTrailers = childTrailers;
-
-        mTrailersAdapterOnClickHandler = handler;
 
     } // end default constructor
     
@@ -274,4 +267,4 @@ public class TrailersAdapter extends BaseExpandableListAdapter {
 
     /* Other Methods */
 
-} // end class TrailersAdapter
+} // end class TrailerAdapter
