@@ -46,8 +46,8 @@ dependencies {
     // constraint layout
     compile "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
 
-    // expandable recycler view
-    compile "com.thoughtbot:expandablerecyclerview:$expandableRecyclerVersion"
+    // design
+    compile "com.android.support:design:$supportLibraryVersion"
 
     // gson
     compile "com.google.code.gson:gson:$gsonVersion"
