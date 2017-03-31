@@ -46,6 +46,7 @@ import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.data.database.MoviesProvider.FavoritesUriHolder;
+import com.joslittho.popmov.data.model.Result;
 import com.joslittho.popmov.databinding.FragmentDetailBinding;
 import com.squareup.picasso.Picasso;
 
@@ -221,12 +222,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         // 0a3b1. add needed values to the content values
         // 0a3b2. add content values to the db
         // 0b. the trailers
-        // 0b0. get the trailer titles from db JSON
+        // 0b0. get the trailers from db JSON
         // 0b1. instantiate the trailers adapter with the gotten trailers
         // 0b1a. create a list of trailer headers
-        // 0b1b. get a hash map to store the trailer titles that will be children of the trailer
+        // 0b1b. get a hash map to store the trailer titles that will be children of the trailer 
         // header
-        // 0b1c. put the trailer titles gotten from the db into the map
+        // 0b1c. put the titles of the trailers gotten from the db into the map
         // 0b1-last. instantiate the trailers adapter with the needed list and headers
         // 0b2. use the trailers adapter to populate the trailers recycler
         
@@ -335,9 +336,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             // 0b. the trailers
 
-            // 0b0. get the trailer titles from db JSON
+            // 0b0. get the trailers from db JSON
 
-            List< String > trailerTitlesList = Utility.getTrailerTitlesFromDB(
+            List< Result > trailerList = Utility.getTrailersFromDB( 
                     cursor.getString( COLUMN_DETAIL_TRAILERS ) );
 
             // 0b1. instantiate the trailers adapter with the gotten trailers
@@ -349,19 +350,19 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             List< String > trailersHeaderList = new ArrayList<>( 1 );
             trailersHeaderList.add( trailersHeaderTitle );
 
-            // 0b1b. get a hash map to store the trailer titles that will be children of the trailer
+            // 0b1b. get a hash map to store the trailer titles that will be children of the trailer 
             // header
 
-            HashMap< String, List< String > > trailersChildMap = 
-                    new HashMap<>( trailerTitlesList.size() );
+            HashMap< String, List< Result > > trailersChildMap =
+                    new HashMap<>( trailerList.size() );
 
-            // 0b1c. put the trailer titles gotten from the db into the map
+            // 0b1c. put the titles of the trailers gotten from the db into the map
 
-            trailersChildMap.put( trailersHeaderTitle, trailerTitlesList );
+            trailersChildMap.put( trailersHeaderTitle, trailerList );
 
             // 0b1-last. instantiate the trailers adapter with the needed list and headers
 
-            TrailersAdapter trailersAdapter = new TrailersAdapter( getActivity(),
+            TrailersAdapter trailersAdapter = new TrailersAdapter( getActivity(), 
                     trailersHeaderList, trailersChildMap, this );
 
             // 0b2. use the trailers adapter to populate the trailers recycler

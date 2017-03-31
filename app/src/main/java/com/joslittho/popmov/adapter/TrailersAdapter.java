@@ -1,7 +1,6 @@
 package com.joslittho.popmov.adapter;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
@@ -12,16 +11,11 @@ import android.widget.TextView;
 
 import com.joslittho.popmov.R;
 import com.joslittho.popmov.data.model.Result;
-import com.joslittho.popmov.data.model.Trailer;
 import com.joslittho.popmov.databinding.TrailerItemBinding;
 import com.joslittho.popmov.databinding.TrailersExpandableGroupHeaderBinding;
-import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
-import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
 import java.util.HashMap;
 import java.util.List;
-
-import static android.view.View.GONE;
 
 /**
  * Adapter to populate the {@link TrailersGroup} expandable
@@ -43,8 +37,8 @@ public class TrailersAdapter extends BaseExpandableListAdapter {
 
     private Context mContext; // ditto
 
-    // child data in format of <header title, child title(s)>
-    private HashMap< String, List< String > > mChildTitles;
+    // child data in format of <header trailer title, child trailer(s)>
+    private HashMap< String, List< Result > > mChildTrailers;
 
     /* Lists */
 
@@ -58,7 +52,7 @@ public class TrailersAdapter extends BaseExpandableListAdapter {
 
     // begin default constructor
     public TrailersAdapter( Context context, List< String > headerTitles,
-                            HashMap< String, List< String > > childTitles,
+                            HashMap< String, List< Result > > childTrailers,
                             TrailersAdapterOnClickHandler handler ) {
 
         // 0. initialize members
@@ -69,7 +63,7 @@ public class TrailersAdapter extends BaseExpandableListAdapter {
 
         mHeaderTitles = headerTitles;
 
-        mChildTitles = childTitles;
+        mChildTrailers = childTrailers;
 
         mTrailersAdapterOnClickHandler = handler;
 
@@ -101,7 +95,7 @@ public class TrailersAdapter extends BaseExpandableListAdapter {
 
         // 0b. get the child group of the group title gotten above
 
-        List< String > currentChildGroup = mChildTitles.get( currentGroupTitle );
+        List< Result > currentChildGroup = mChildTrailers.get( currentGroupTitle );
 
         // 0c. return the child in position childPosition of the child group gotten above
 
@@ -126,16 +120,17 @@ public class TrailersAdapter extends BaseExpandableListAdapter {
     public View getChildView( int groupPosition, final int childPosition,
                               boolean isLastChild, View convertView, ViewGroup parent ) {
 
-        // 0. get the title of this child
+        // 0. get the title of this child trailer
         // 1. if the child view is not inflated
         // 1a. set it up
         // 2. get reference to the text view which will hold the child's title
         // 3. put the child's title in the text view
         // last. return the child view
 
-        // 0. get the title of this child
+        // 0. get the title of this child trailer
 
-        String childTitle = ( String ) getChild( groupPosition, childPosition );
+        Result childTrailer = ( Result ) getChild( groupPosition, childPosition );
+        String childTitle = childTrailer.getName();
 
         // 1. if the child view is not inflated
         // 1a. set it up
@@ -186,7 +181,7 @@ public class TrailersAdapter extends BaseExpandableListAdapter {
 
         // 1. return the number of children in that group
 
-        return mChildTitles.get( groupTitle ).size();
+        return mChildTrailers.get( groupTitle ).size();
 
     } // end getChildrenCount
 
@@ -214,7 +209,8 @@ public class TrailersAdapter extends BaseExpandableListAdapter {
     /** Gets a View that displays the data for the given child within the given group. */
     @Override
     // begin getGroupView
-    public View getGroupView( int groupPosition, boolean isExpanded, View convertView, ViewGroup parent ) {
+    public View getGroupView( int groupPosition, boolean isExpanded, View convertView,
+                              ViewGroup parent ) {
 
         // 0. get the title of this group
         // 1. if the group view is not inflated

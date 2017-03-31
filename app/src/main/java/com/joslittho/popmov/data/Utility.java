@@ -381,34 +381,18 @@ public class Utility {
      *
      * @param trailersJSONString The JSON string - gotten from the db - that contains the trailers
      *
-     * @return A {@link List} of the trailers' titles
+     * @return A {@link List} of trailers as individual {@link Result} objects
      * */
-    // begin method getTrailerTitlesFromDB
-    public static List< String > getTrailerTitlesFromDB( String trailersJSONString ) {
+    // begin method getTrailersFromDB
+    public static List< Result > getTrailersFromDB ( String trailersJSONString ) {
 
-        // 0. gson convert to get the trailers
-        // 1. get a list of the trailers' titles
-        // 2. return the gotten list
-
-        // 0. gson convert to get the trailers
+        // 0. gson convert and return the trailers
 
         Type type = new TypeToken< List< Result > >(){}.getType();
 
-        List< Result > resultList = new Gson().fromJson( trailersJSONString, type );
+        return new Gson().fromJson( trailersJSONString, type );
 
-        List< String > trailerTitlesList = new ArrayList<>( resultList.size() );
-
-        // 1. get a list of the trailers' titles
-
-        for ( Result trailerResult : resultList ) {
-            trailerTitlesList.add( trailerResult.getName() );
-        }
-
-        // 2. return the gotten list
-
-        return trailerTitlesList;
-
-    } // end method getTrailerTitlesFromDB
+    } // end method getTrailersFromDB
 
     /* INNER CLASSES */
 
