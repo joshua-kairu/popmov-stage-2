@@ -1,6 +1,6 @@
 package com.joslittho.popmov.adapter;
 
-import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
@@ -20,26 +20,26 @@ public class TrailersGroupViewHolder extends GroupViewHolder {
     
     /* VARIABLES */
 
-    /* TextViews */
+    /* ImageViews */
 
-    public TextView mTitleTextView; // ditto
+    public ImageView mDropArrowImageView; // ditto
     
     /* CONSTRUCTOR */
 
     /** Default constructor. */
     // begin constructor
-    public TrailersGroupViewHolder( TextView titleTextView ) {
+    public TrailersGroupViewHolder( ImageView dropArrowImageView ) {
 
         // 0. super stuff
         // 1. initialize members
 
         // 0. super stuff
 
-        super( titleTextView );
+        super( dropArrowImageView );
 
         // 1. initialize members
 
-        mTitleTextView = titleTextView;
+        mDropArrowImageView = dropArrowImageView;
 
     } // end constructor
     

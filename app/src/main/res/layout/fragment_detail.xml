@@ -35,213 +35,225 @@
 
     >
 
-    <RelativeLayout
+    <ScrollView
 
         android:layout_width="match_parent"
 
         android:layout_height="match_parent"
 
+        android:fillViewport="true"
+
         >
 
-        <!-- TextView to hold the title -->
-
-        <TextView
+        <RelativeLayout
 
             android:layout_width="match_parent"
 
-            android:layout_height="@dimen/title_height"
-
-            android:id="@+id/detail_tv_title"
-
-            app:elevation="@dimen/detail_title_elevation"
-
-            android:paddingStart="@dimen/layout_padding"
-
-            android:paddingEnd="@dimen/layout_padding"
-
-            android:paddingLeft="@dimen/layout_padding"
-
-            android:paddingRight="@dimen/layout_padding"
-
-            android:gravity="center_vertical"
-
-            android:textColor="@android:color/white"
-
-            tools:text="Chappie"
-
-            android:background="?colorPrimary"
-
-            style="@style/TextAppearance.AppCompat.Display1"
-
-            />
-
-        <!-- ImageView for the poster -->
-
-        <ImageView
-
-            android:id="@+id/detail_iv_poster"
-
-            android:layout_width="@dimen/detail_poster_width"
-
             android:layout_height="wrap_content"
 
-            android:layout_alignParentLeft="true"
+            >
 
-            android:layout_alignParentStart="true"
+            <!-- TextView to hold the title -->
 
-            android:layout_below="@id/detail_tv_title"
+            <TextView
 
-            android:contentDescription="@null"
+                android:layout_width="match_parent"
 
-            android:layout_marginTop="@dimen/space_between_content_areas"
+                android:layout_height="@dimen/title_height"
 
-            android:layout_marginLeft="@dimen/detail_poster_start_margin"
+                android:id="@+id/detail_tv_title"
 
-            android:layout_marginStart="@dimen/detail_poster_start_margin"
+                app:elevation="@dimen/detail_title_elevation"
 
-            android:adjustViewBounds="true"
+                android:paddingStart="@dimen/layout_padding"
 
-            tools:src="@drawable/interstellar"
+                android:paddingEnd="@dimen/layout_padding"
 
-            />
+                android:paddingLeft="@dimen/layout_padding"
 
-        <!-- TextView for the release date -->
+                android:paddingRight="@dimen/layout_padding"
 
-        <TextView
+                android:gravity="center_vertical"
 
-            android:id="@+id/detail_tv_date"
+                android:textColor="@android:color/white"
 
-            android:layout_toEndOf="@id/detail_iv_poster"
+                tools:text="Chappie"
 
-            android:layout_toRightOf="@id/detail_iv_poster"
+                android:background="?colorPrimary"
 
-            android:layout_below="@id/detail_tv_title"
+                style="@style/TextAppearance.AppCompat.Display1"
 
-            android:layout_width="wrap_content"
+                />
 
-            android:layout_height="wrap_content"
+            <!-- ImageView for the poster -->
 
-            android:layout_marginTop="@dimen/space_between_content_areas"
+            <ImageView
 
-            android:layout_marginLeft="@dimen/detail_poster_start_margin"
+                android:id="@+id/detail_iv_poster"
 
-            android:layout_marginStart="@dimen/detail_poster_start_margin"
+                android:layout_width="@dimen/detail_poster_width"
 
-            android:fontFamily="sans-serif-light"
+                android:layout_height="wrap_content"
 
-            tools:text="2015"
+                android:layout_alignParentLeft="true"
 
-            style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_alignParentStart="true"
 
-            />
+                android:layout_below="@id/detail_tv_title"
 
-        <!-- TextView for vote average -->
+                android:contentDescription="@null"
 
-        <TextView
+                android:layout_marginTop="@dimen/space_between_content_areas"
 
-            android:id="@+id/detail_tv_vote_average"
+                android:layout_marginLeft="@dimen/detail_poster_start_margin"
 
-            android:textStyle="bold"
+                android:layout_marginStart="@dimen/detail_poster_start_margin"
 
-            android:layout_width="wrap_content"
+                android:adjustViewBounds="true"
 
-            android:layout_height="wrap_content"
+                tools:src="@drawable/interstellar"
 
-            android:layout_toEndOf="@id/detail_iv_poster"
+                />
 
-            android:layout_toRightOf="@id/detail_iv_poster"
+            <!-- TextView for the release date -->
 
-            android:layout_below="@id/detail_tv_date"
+            <TextView
 
-            android:layout_marginTop="@dimen/space_between_content_areas"
+                android:id="@+id/detail_tv_date"
 
-            android:layout_marginLeft="@dimen/detail_poster_start_margin"
+                android:layout_toEndOf="@id/detail_iv_poster"
 
-            android:layout_marginStart="@dimen/detail_poster_start_margin"
+                android:layout_toRightOf="@id/detail_iv_poster"
 
-            tools:text="8.1/10"
+                android:layout_below="@id/detail_tv_title"
 
-            style="@style/TextAppearance.AppCompat.Button"
+                android:layout_width="wrap_content"
 
-            />
+                android:layout_height="wrap_content"
 
-        <!-- button for favorite-ing -->
+                android:layout_marginTop="@dimen/space_between_content_areas"
 
-        <Button
+                android:layout_marginLeft="@dimen/detail_poster_start_margin"
 
-            android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/detail_poster_start_margin"
 
-            android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
 
-            android:id="@+id/detail_b_favorite"
+                tools:text="2015"
 
-            android:layout_below="@id/detail_tv_vote_average"
+                style="@style/TextAppearance.AppCompat.Headline"
 
-            android:layout_toEndOf="@id/detail_iv_poster"
+                />
 
-            android:layout_toRightOf="@id/detail_iv_poster"
+            <!-- TextView for vote average -->
 
-            android:layout_marginTop="@dimen/space_between_content_areas"
+            <TextView
 
-            android:layout_marginLeft="@dimen/detail_poster_start_margin"
+                android:id="@+id/detail_tv_vote_average"
 
-            android:layout_marginStart="@dimen/detail_poster_start_margin"
+                android:textStyle="bold"
 
-            android:text="@string/mark_as_favorite"
+                android:layout_width="wrap_content"
 
-            />
+                android:layout_height="wrap_content"
 
-        <!-- TextView for plot synopsis -->
+                android:layout_toEndOf="@id/detail_iv_poster"
 
-        <TextView
+                android:layout_toRightOf="@id/detail_iv_poster"
 
-            android:id="@+id/detail_tv_synopsis"
+                android:layout_below="@id/detail_tv_date"
 
-            android:layout_width="wrap_content"
+                android:layout_marginTop="@dimen/space_between_content_areas"
 
-            android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_poster_start_margin"
 
-            android:layout_below="@id/detail_iv_poster"
+                android:layout_marginStart="@dimen/detail_poster_start_margin"
 
-            android:layout_marginTop="@dimen/layout_padding"
+                tools:text="8.1/10"
 
-            android:paddingLeft="@dimen/layout_padding"
+                style="@style/TextAppearance.AppCompat.Button"
 
-            android:paddingEnd="@dimen/layout_padding"
+                />
 
-            android:paddingRight="@dimen/layout_padding"
+            <!-- button for favorite-ing -->
 
-            android:paddingStart="@dimen/layout_padding"
+            <Button
 
-            tools:text="Movie details layout contains title, release date, movie poster,
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:id="@+id/detail_b_favorite"
+
+                android:layout_below="@id/detail_tv_vote_average"
+
+                android:layout_toEndOf="@id/detail_iv_poster"
+
+                android:layout_toRightOf="@id/detail_iv_poster"
+
+                android:layout_marginTop="@dimen/space_between_content_areas"
+
+                android:layout_marginLeft="@dimen/detail_poster_start_margin"
+
+                android:layout_marginStart="@dimen/detail_poster_start_margin"
+
+                android:text="@string/mark_as_favorite"
+
+                />
+
+            <!-- TextView for plot synopsis -->
+
+            <TextView
+
+                android:id="@+id/detail_tv_synopsis"
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:layout_below="@id/detail_iv_poster"
+
+                android:layout_marginTop="@dimen/layout_padding"
+
+                android:paddingLeft="@dimen/layout_padding"
+
+                android:paddingEnd="@dimen/layout_padding"
+
+                android:paddingRight="@dimen/layout_padding"
+
+                android:paddingStart="@dimen/layout_padding"
+
+                tools:text="Movie details layout contains title, release date, movie poster,
             vote average, and plot synopsis."
 
-            style="@style/TextAppearance.AppCompat.Body1"
+                style="@style/TextAppearance.AppCompat.Body1"
 
-            />
+                />
 
-        <!-- recycler for the trailers -->
+            <!-- expandable list view for the trailers -->
 
-        <android.support.v7.widget.RecyclerView
+            <ExpandableListView
 
-            android:layout_width="match_parent"
+                android:layout_width="match_parent"
 
-            android:layout_height="wrap_content"
+                android:layout_height="wrap_content"
 
-            android:paddingStart="@dimen/layout_padding"
+                android:paddingStart="@dimen/layout_padding"
 
-            android:paddingEnd="@dimen/layout_padding"
+                android:paddingEnd="@dimen/layout_padding"
 
-            android:layout_below="@id/detail_tv_synopsis"
+                android:layout_below="@id/detail_tv_synopsis"
 
-            android:layout_marginTop="@dimen/layout_padding"
+                android:layout_marginTop="@dimen/space_between_content_areas"
 
-            android:id="@+id/detail_rv_trailers"
+                android:id="@+id/detail_elv_trailers"
 
-            android:layout_marginBottom="@dimen/layout_padding"
+                android:layout_marginBottom="@dimen/layout_padding"
 
-            />
+                />
 
-    </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
 
 </layout>

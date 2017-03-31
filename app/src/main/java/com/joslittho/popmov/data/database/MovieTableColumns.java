@@ -83,13 +83,14 @@ public interface MovieTableColumns {
      * Array of columns needed to make the {@link com.joslittho.popmov.fragment.DetailFragment}
      * work.
      *
-     * These columns are the _id, movie_id, poster path, title, vote average, release date, and
-     * overview
+     * These columns are the _id, movie_id, poster path, title, vote average, release date,
+     * overview, and trailers
      * */
     String[] DETAIL_FRAGMENT_COLUMNS =
-            { _ID, MOVIE_ID, POSTER_PATH, TITLE, VOTE_AVERAGE, RELEASE_DATE, OVERVIEW };
+            { _ID, MOVIE_ID, POSTER_PATH, TITLE, VOTE_AVERAGE, RELEASE_DATE, OVERVIEW, TRAILERS };
 
     int COLUMN_RELEASE_DATE = 5; // column for the release date - only for the detail
     int COLUMN_DETAIL_OVERVIEW = 6; // column for the overview - only for the detail
+    int COLUMN_DETAIL_TRAILERS = 7; // column for the trailers - only for the detail
 
 } // end interface MovieTableColumns

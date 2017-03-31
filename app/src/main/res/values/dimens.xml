@@ -130,4 +130,7 @@
     <!-- the elevation of the movie title section, should be 4dp here -->
     <dimen name="detail_title_elevation">4dp</dimen>
 
+    <!-- start padding for the expandable headers -->
+    <dimen name="expandable_header_start_padding">40dp</dimen>
+
 </resources>    

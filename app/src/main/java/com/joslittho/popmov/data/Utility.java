@@ -31,15 +31,21 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.joslittho.popmov.R;
 import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.data.database.MoviesProvider;
+import com.joslittho.popmov.data.model.Result;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -369,6 +375,40 @@ public class Utility {
                 R.string.pref_sort_order_favorites_entry_value ) );
 
     } // end method isSortOrderFavorites
+
+    /**
+     * Helper method to extract trailers from the JSON stored in the db.
+     *
+     * @param trailersJSONString The JSON string - gotten from the db - that contains the trailers
+     *
+     * @return A {@link List} of the trailers' titles
+     * */
+    // begin method getTrailerTitlesFromDB
+    public static List< String > getTrailerTitlesFromDB( String trailersJSONString ) {
+
+        // 0. gson convert to get the trailers
+        // 1. get a list of the trailers' titles
+        // 2. return the gotten list
+
+        // 0. gson convert to get the trailers
+
+        Type type = new TypeToken< List< Result > >(){}.getType();
+
+        List< Result > resultList = new Gson().fromJson( trailersJSONString, type );
+
+        List< String > trailerTitlesList = new ArrayList<>( resultList.size() );
+
+        // 1. get a list of the trailers' titles
+
+        for ( Result trailerResult : resultList ) {
+            trailerTitlesList.add( trailerResult.getName() );
+        }
+
+        // 2. return the gotten list
+
+        return trailerTitlesList;
+
+    } // end method getTrailerTitlesFromDB
 
     /* INNER CLASSES */
 
