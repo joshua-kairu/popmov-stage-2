@@ -394,6 +394,28 @@ public class Utility {
 
     } // end method getTrailersFromDB
 
+    /**
+     * Helper method to generate a YouTube url from a trailer's key.
+     *
+     * For example, if the key is NQu-153MnGQ, the generated url should be:
+     * https://www.youtube.com/watch?v=NQu-153MnGQ
+     *
+     * @param context Android context
+     * @param key The trailer's YouTube key
+     *
+     * @return A string containing the YouTube url to the trailer
+     * */
+    // begin method getYouTubeUrlFromKey
+    public static String getYouTubeUrlFromKey( Context context, String key ) {
+
+        // 0. return the YouTube url
+
+        // 0. return the YouTube url
+
+        return context.getString( R.string.youtube_url_format, key );
+
+    } // end method getYouTubeUrlFromKey
+
     /* INNER CLASSES */
 
 } // end class Utility

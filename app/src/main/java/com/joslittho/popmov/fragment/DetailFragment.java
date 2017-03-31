@@ -23,8 +23,12 @@
 
 package com.joslittho.popmov.fragment;
 
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -383,7 +387,68 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     // begin onClick
     public void onClick( int trailerPosition ) {
-        // TODO: 3/30/17 fill this up
+
+        // when a trailer is selected, allow users to view and play trailers
+        // ( either in the youtube app or a web browser).
+
+        // 0. get the trailer at the position
+        // 1. get the trailer's YouTube url based on its key
+        // 2. put the url in an intent
+        // 3. if YouTube is installed
+        // 3a. launch YouTube with the intent
+        // 4. else no YouTube
+        // 4a. offer the user a choice of how they'd want to view the trailer
+
+        // 0. get the trailer at the position
+
+        Result trailer = mTrailersList.get( trailerPosition );
+
+        // 1. get the trailer's YouTube url based on its key
+
+        String trailerUrl = Utility.getYouTubeUrlFromKey( getActivity(), trailer.getKey() );
+
+        // 2. put the url in an intent
+
+        String youTubePackageName = "com.google.android.youtube";
+        String youTubePlayerActivityName = "com.google.android.youtube.PlayerActivity";
+
+        Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( trailerUrl ) )
+                .setComponent( new ComponentName( youTubePackageName, youTubePlayerActivityName ) );
+
+        PackageManager packageManager = getActivity().getPackageManager();
+
+        // queryIntentActivities - Retrieve all activities that can be performed for the given
+        //  intent.
+        // parameters for queryIntentActivities are the intent itself and a flag
+        // queryIntentActivities returns a List of ResolveInfo objects containing one entry for
+        //  each matching activity, ordered from best to worst.
+        // ResolveInfo - Information that is returned from resolving an intent against an
+        //  IntentFilter.
+        List< ResolveInfo > resolveInfos = packageManager.queryIntentActivities( intent, 0 );
+
+        // 3. if YouTube is installed
+        // 3a. launch YouTube with the intent
+
+        // if YouTube is resolved, then the resolveInfos will having something in it
+        if ( resolveInfos.size() > 0 ) {
+            startActivity( intent );
+        }
+
+        // 4. else no YouTube
+
+        // begin else no YouTube
+        else {
+
+            // 4a. offer the user a choice of how they'd want to view the trailer
+
+            intent = new Intent( Intent.ACTION_VIEW, Uri.parse( trailerUrl ) );
+
+            startActivity( intent );
+
+        } // end else no YouTube
+
+        // TODO: 3/31/17 test on devices not having YouTube. I cannot uninstall YouTube in mine
+
     } // end onClick
 
     /* Other Methods */

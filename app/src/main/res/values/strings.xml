@@ -73,7 +73,16 @@
     <!-- Formatting strings -->
 
     <!-- formatter for the user rating so that a rating 5.92 becomes 5.9/10 [CHAR LIMIT = NONE] -->
-    <string name="user_rating_format"><xliff:g id="user_rating">%1$.1f</xliff:g>/10</string>
+    <string name="user_rating_format" translatable="false">
+        <xliff:g id="user_rating">%1$.1f</xliff:g>/10
+    </string>
+
+    <!-- formatter for converting a trailer's YouTube key to a YouTube url.
+    For example, if the key is NQu-153MnGQ, the generated url should be:
+    https://www.youtube.com/watch?v=NQu-153MnGQ [CHAR LIMIT = NONE]-->
+    <string name="youtube_url_format" translatable="false">
+        https://www.youtube.com/watch?v=<xliff:g id="trailer_key">%1$s</xliff:g>
+    </string>
 
     <!-- Expandable group header titles -->
 
