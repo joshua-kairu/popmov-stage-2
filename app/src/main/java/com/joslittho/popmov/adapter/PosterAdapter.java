@@ -269,7 +269,6 @@ public class PosterAdapter extends RecyclerView.Adapter< PosterViewHolder > {
     /* Other Methods */
 
     /**
-     *
      * Replaces the member {@link Cursor} with the one passed in and refreshes the data.
      *
      * @param newCursor The {@link Cursor} to replace the member cursor with.
