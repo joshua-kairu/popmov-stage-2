@@ -34,14 +34,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.joslittho.popmov.R;
-import com.joslittho.popmov.adapter.TrailersAdapter;
-import com.joslittho.popmov.adapter.TrailersAdapterOnClickHandler;
+import com.joslittho.popmov.adapter.TrailerAdapter;
+import com.joslittho.popmov.adapter.TrailerAdapterOnClickHandler;
 import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
@@ -61,7 +62,7 @@ import static com.joslittho.popmov.data.database.MovieTableColumns.*;
  * */
 // begin fragment DetailFragment
 public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks< Cursor >,
-        TrailersAdapterOnClickHandler{
+        TrailerAdapterOnClickHandler {
     
     /* CONSTANTS */
     
@@ -81,6 +82,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     /* FragmentDetailBindings */
 
     private FragmentDetailBinding mBinding; // ditto
+
+    /* Lists */
+
+    // a list of individual trailers. Useful when a trailer is tapped
+    private List< Result > mTrailersList;
 
     /* Uris */
 
@@ -223,14 +229,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         // 0a3b2. add content values to the db
         // 0b. the trailers
         // 0b0. get the trailers from db JSON
-        // 0b1. instantiate the trailers adapter with the gotten trailers
-        // 0b1a. create a list of trailer headers
-        // 0b1b. get a hash map to store the trailer titles that will be children of the trailer 
-        // header
-        // 0b1c. put the titles of the trailers gotten from the db into the map
-        // 0b1-last. instantiate the trailers adapter with the needed list and headers
-        // 0b2. use the trailers adapter to populate the trailers recycler
-        
+        // 0b1. store the trailers list since we'll use it to handle taps
+        // 0b2. instantiate the trailers adapter with the gotten trailers
+        // 0b3. the recycler
+        // 0b3a. find reference to it
+        // 0b3b. use a linear layout manager
+        // 0b3c. has fixed size
+        // 0b3d. use the trailers adapter
+
         // 0. bind the needed details to their views
 
         // begin if there is a cursor and it has something
@@ -337,37 +343,34 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             // 0b. the trailers
 
             // 0b0. get the trailers from db JSON
+            // 0b1. store the trailers list since we'll use it to handle taps
 
-            List< Result > trailerList = Utility.getTrailersFromDB( 
-                    cursor.getString( COLUMN_DETAIL_TRAILERS ) );
+            List< Result > trailersList =
+                    Utility.getTrailersFromDB( cursor.getString( COLUMN_DETAIL_TRAILERS ) );
 
-            // 0b1. instantiate the trailers adapter with the gotten trailers
+            mTrailersList = trailersList;
 
-            // 0b1a. create a list of trailer headers
+            // 0b2. instantiate the trailers adapter with the gotten trailers
 
-            String trailersHeaderTitle = getString( R.string.trailers_header_title );
+            TrailerAdapter trailerAdapter = new TrailerAdapter( getActivity(), trailersList, this );
 
-            List< String > trailersHeaderList = new ArrayList<>( 1 );
-            trailersHeaderList.add( trailersHeaderTitle );
+            // 0b3. the recycler
 
-            // 0b1b. get a hash map to store the trailer titles that will be children of the trailer 
-            // header
+            // 0b3a. find reference to it
 
-            HashMap< String, List< Result > > trailersChildMap =
-                    new HashMap<>( trailerList.size() );
+            RecyclerView trailerRecyclerView = mBinding.detailRvTrailers;
 
-            // 0b1c. put the titles of the trailers gotten from the db into the map
+            // 0b3b. use a linear layout manager
 
-            trailersChildMap.put( trailersHeaderTitle, trailerList );
+            trailerRecyclerView.setLayoutManager( new LinearLayoutManager( getActivity() ) );
 
-            // 0b1-last. instantiate the trailers adapter with the needed list and headers
+            // 0b3c. has fixed size
 
-            TrailersAdapter trailersAdapter = new TrailersAdapter( getActivity(), 
-                    trailersHeaderList, trailersChildMap, this );
+            trailerRecyclerView.setHasFixedSize( true );
 
-            // 0b2. use the trailers adapter to populate the trailers recycler
+            // 0b3d. use the trailers adapter
 
-            mBinding.detailElvTrailers.setAdapter( trailersAdapter );
+            trailerRecyclerView.setAdapter( trailerAdapter );
 
         } // end if there is a cursor and it has something
         
@@ -378,9 +381,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public void onLoaderReset( Loader< Cursor > loader ) { }
 
     @Override
-    public void onClick( long trailerPosition ) {
+    // begin onClick
+    public void onClick( int trailerPosition ) {
         // TODO: 3/30/17 fill this up
-    }
+    } // end onClick
 
     /* Other Methods */
 

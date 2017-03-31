@@ -41,8 +41,6 @@
 
         android:layout_height="match_parent"
 
-        android:fillViewport="true"
-
         >
 
         <RelativeLayout
@@ -230,25 +228,67 @@
 
                 />
 
-            <!-- expandable list view for the trailers -->
+            <!-- divider -->
 
-            <ExpandableListView
+            <View
+
+                android:layout_marginTop="@dimen/layout_padding"
 
                 android:layout_width="match_parent"
 
+                android:layout_height="1dp"
+
+                android:alpha="0.12"
+
+                android:background="@android:color/black"
+
+                android:layout_below="@id/detail_tv_synopsis"
+
+                android:id="@+id/main_v_divider_below_synopsis"
+
+                />
+
+            <!-- header to show the trailers are next -->
+
+            <TextView
+
+                android:id="@+id/detail_tv_trailers_header_title"
+
+                android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content"
+
+                android:gravity="center_vertical"
 
                 android:paddingStart="@dimen/layout_padding"
 
                 android:paddingEnd="@dimen/layout_padding"
 
-                android:layout_below="@id/detail_tv_synopsis"
+                android:layout_marginTop="@dimen/layout_padding"
+
+                android:layout_below="@id/main_v_divider_below_synopsis"
+
+                style="@style/TextAppearance.AppCompat.Title"
+
+                android:text="@string/trailers_header_title"
+
+                />
+
+            <!-- recycler for the trailers -->
+
+            <android.support.v7.widget.RecyclerView
+
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+
+                android:layout_below="@id/detail_tv_trailers_header_title"
 
                 android:layout_marginTop="@dimen/space_between_content_areas"
 
-                android:id="@+id/detail_elv_trailers"
-
-                android:layout_marginBottom="@dimen/layout_padding"
+                android:id="@+id/detail_rv_trailers"
 
                 />
 

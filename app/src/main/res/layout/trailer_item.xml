@@ -16,11 +16,15 @@
 
         android:layout_width="match_parent"
 
-        android:layout_height="wrap_content"
+        android:layout_height="?android:attr/listPreferredItemHeightSmall"
 
         tools:ignore="GradleDependency"
 
         android:id="@+id/trailer_item_cl_parent"
+
+        android:paddingStart="@dimen/layout_padding"
+
+        android:paddingEnd="@dimen/layout_padding"
 
         >
 
@@ -35,10 +39,6 @@
             android:layout_height="wrap_content"
 
             app:srcCompat="@drawable/ic_play_arrow_black_24dp"
-
-            android:layout_marginLeft="8dp"
-
-            android:layout_marginStart="8dp"
 
             app:layout_constraintLeft_toLeftOf="parent"
 
