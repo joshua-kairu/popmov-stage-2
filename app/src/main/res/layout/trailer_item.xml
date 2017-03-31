@@ -16,7 +16,7 @@
 
         android:layout_width="match_parent"
 
-        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+        android:layout_height="@dimen/listview_item_height"
 
         tools:ignore="GradleDependency"
 
@@ -25,6 +25,8 @@
         android:paddingStart="@dimen/layout_padding"
 
         android:paddingEnd="@dimen/layout_padding"
+
+        android:background="?android:attr/selectableItemBackground"
 
         >
 
@@ -85,4 +87,5 @@
             />
 
     </android.support.constraint.ConstraintLayout>
+
 </layout>
