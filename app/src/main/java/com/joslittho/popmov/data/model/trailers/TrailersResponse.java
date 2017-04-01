@@ -6,11 +6,11 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * A movie trailer, as defined by TMDB JSON. This contains the details of all trailers for a given
+ * The trailers response gotten from TMDB JSON. This contains the details of all trailers for a given
  * movie.
  */
-// begin class Trailer
-public class Trailer {
+// begin class TrailersResponse
+public class TrailersResponse {
 
     /* CONSTANTS */
     
@@ -32,14 +32,14 @@ public class Trailer {
     /**
      * No args constructor for use in serialization
      */
-    public Trailer() {
+    public TrailersResponse() {
     }
 
     /**
      * @param id
      * @param results
      */
-    public Trailer( int id, List< Result > results ) {
+    public TrailersResponse( int id, List< Result > results ) {
         super();
         this.id = id;
         this.results = results;
@@ -57,7 +57,7 @@ public class Trailer {
         this.id = id;
     }
 
-    public Trailer withId( int id ) {
+    public TrailersResponse withId( int id ) {
         this.id = id;
         return this;
     }
@@ -70,7 +70,7 @@ public class Trailer {
         this.results = results;
     }
 
-    public Trailer withResults( List< Result > results ) {
+    public TrailersResponse withResults( List< Result > results ) {
         this.results = results;
         return this;
     }
@@ -79,4 +79,4 @@ public class Trailer {
         
     /* Other Methods */
 
-} // end class Trailer
+} // end class TrailersResponse

@@ -24,7 +24,7 @@ import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.data.database.MoviesProvider;
 import com.joslittho.popmov.data.model.Movie;
 import com.joslittho.popmov.data.model.trailers.Result;
-import com.joslittho.popmov.data.model.trailers.Trailer;
+import com.joslittho.popmov.data.model.trailers.TrailersResponse;
 import com.joslittho.popmov.rest.ApiClient;
 import com.joslittho.popmov.rest.ApiInterface;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -703,16 +703,16 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
 
             // 1b3a. fetch trailers using movie id
 
-            Call< Trailer > call = apiService.getMovieTrailersResult(
+            Call< TrailersResponse > call = apiService.getMovieTrailersResult(
                     Integer.parseInt( String.valueOf( movieId ) ),
                     BuildConfig.THE_MOVIE_DB_API_KEY );
 
             // begin call.enqueue
-            call.enqueue( new Callback< Trailer >() {
+            call.enqueue( new Callback< TrailersResponse >() {
 
                 @Override
                 // begin onResponse
-                public void onResponse( Call< Trailer > call, Response< Trailer > response ) {
+                public void onResponse( Call< TrailersResponse > call, Response< TrailersResponse > response ) {
 
                     // 1b3b. convert fetched trailers into JSON
 
@@ -737,7 +737,7 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
                 @Override
                 // begin onFailure
                 // tells the user
-                public void onFailure( Call< Trailer > call, Throwable t ) {
+                public void onFailure( Call< TrailersResponse > call, Throwable t ) {
                     Toast.makeText( getContext(), R.string.message_error_fetching_trailers,
                             Toast.LENGTH_SHORT ).show();
                 } // end onFailure

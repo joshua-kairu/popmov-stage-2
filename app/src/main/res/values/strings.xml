@@ -37,7 +37,7 @@
     </string>
 
     <!-- accessibility text for the trailer play button.
-    It will read "Play" since the next thing to be read will be "Trailer x".
+    It will read "Play" since the next thing to be read will be "TrailersResponse x".
     So "Play trailer x" [CHAR LIMIT = 5] -->
     <string name="a11y_trailer_play">Play</string>
 
