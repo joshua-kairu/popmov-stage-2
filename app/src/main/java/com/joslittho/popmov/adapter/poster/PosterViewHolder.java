@@ -21,7 +21,7 @@
  *
  */
 
-package com.joslittho.popmov.adapter;
+package com.joslittho.popmov.adapter.poster;
 
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;

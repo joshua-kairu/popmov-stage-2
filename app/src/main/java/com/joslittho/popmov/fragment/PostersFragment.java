@@ -23,9 +23,7 @@
 
 package com.joslittho.popmov.fragment;
 
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -44,14 +42,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import com.joslittho.popmov.R;
-import com.joslittho.popmov.activity.DetailActivity;
-import com.joslittho.popmov.adapter.PosterAdapter;
-import com.joslittho.popmov.adapter.PosterAdapterOnClickHandler;
+import com.joslittho.popmov.adapter.poster.PosterAdapter;
+import com.joslittho.popmov.adapter.poster.PosterAdapterOnClickHandler;
 import com.joslittho.popmov.data.PosterCallback;
 import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.data.database.FavoritesTableColumns;

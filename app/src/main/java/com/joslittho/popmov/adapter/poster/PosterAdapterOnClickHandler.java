@@ -21,7 +21,7 @@
  *
  */
 
-package com.joslittho.popmov.adapter;
+package com.joslittho.popmov.adapter.poster;
 
 /**
  * Handler for click events in the {@link android.support.v7.widget.RecyclerView}
