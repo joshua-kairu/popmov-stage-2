@@ -79,14 +79,24 @@
 
     <!-- formatter for converting a trailer's YouTube key to a YouTube url.
     For example, if the key is NQu-153MnGQ, the generated url should be:
-    https://www.youtube.com/watch?v=NQu-153MnGQ [CHAR LIMIT = NONE]-->
+    https://www.youtube.com/watch?v=NQu-153MnGQ
+    [CHAR LIMIT = NONE]-->
     <string name="youtube_url_format" translatable="false">
         https://www.youtube.com/watch?v=<xliff:g id="trailer_key">%1$s</xliff:g>
     </string>
 
-    <!-- Expandable group header titles -->
+    <!-- formatter to create a message for sharing a movie's trailer.
+    For example, for the movie Finding Dory and the trailer key NQu-153MnGQ, the sharing message
+    should be:
+    Here is Finding Dory's trailer url: https://www.youtube.com/watch?v=NQu-153MnGQ
+    [CHAR LIMIT = NONE] -->
+    <string name="trailer_share_message_format">
+        Here is <xliff:g id="movie_name">%1$s</xliff:g>\'s trailer url: <xliff:g id="trailer_url">%2$s</xliff:g>
+    </string>
 
-    <!-- title for the trailers expandable group header [CHAR LIMIT = 10] -->
+    <!-- Group header titles -->
+
+    <!-- title for the trailers group header [CHAR LIMIT = 10] -->
     <string name="trailers_header_title">Trailers</string>
 
     <!-- Menus -->
@@ -96,6 +106,9 @@
 
     <!-- title for the refresh menu item [CHAR LIMIT = 10] -->
     <string name="action_refresh">Refresh</string>
+
+    <!-- title for the share action menu item [CHAR LIMIT = 10] -->
+    <string name="action_share">Share</string>
 
     <!-- Messages -->
 

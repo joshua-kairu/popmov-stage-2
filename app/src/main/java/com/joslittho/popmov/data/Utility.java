@@ -416,6 +416,36 @@ public class Utility {
 
     } // end method getYouTubeUrlFromKey
 
+    /**
+     * Helper method to generate a message for sharing out a movie's trailer url to another app.
+     *
+     * The message should read: Here is <movie name>'s trailer url: <trailer url>
+     *
+     * For example, for the movie Finding Dory and the trailer key NQu-153MnGQ, the sharing message
+     * should be: Here is Finding Dory's trailer url: https://www.youtube.com/watch?v=NQu-153MnGQ
+     *
+     * @param context Android context
+     * @param movieName The movie's name
+     * @param key The trailer's YouTube key
+     *
+     * @return A string containing the share message
+     * */
+    // begin method getShareMessage
+    public static String getShareMessage( Context context, String movieName, String key ) {
+
+        // 0. get the YouTube url
+        // 1. return the share message containing the url
+
+        // 0. get the YouTube url
+
+        String url = getYouTubeUrlFromKey( context, key );
+
+        // 1. return the share message containing the url
+
+        return context.getString( R.string.trailer_share_message_format, movieName, url );
+
+    } // end method getShareMessage
+
     /* INNER CLASSES */
 
 } // end class Utility

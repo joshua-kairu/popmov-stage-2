@@ -32,15 +32,21 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -55,8 +61,6 @@ import com.joslittho.popmov.data.model.Result;
 import com.joslittho.popmov.databinding.FragmentDetailBinding;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.joslittho.popmov.data.database.MovieTableColumns.*;
@@ -91,6 +95,15 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     // a list of individual trailers. Useful when a trailer is tapped
     private List< Result > mTrailersList;
+
+    /* Menus */
+
+    // ditto, needed when we need to change the contents of the share action provider
+    private Menu mOptionsMenu;
+
+    /* ShareActionProviders */
+
+    private ShareActionProvider mTrailerShareActionProvider; // ditto
 
     /* Uris */
 
@@ -150,6 +163,23 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     /* Overrides */
 
     @Override
+    // begin onCreate
+    public void onCreate( @Nullable Bundle savedInstanceState ) {
+
+        // 0. super stuff
+        // 1. register for the menu
+
+        // 0. super stuff
+
+        super.onCreate( savedInstanceState );
+
+        // 1. register for the menu
+
+        setHasOptionsMenu( true );
+
+    } // end onCreate
+
+    @Override
     // begin onCreateView
     public View onCreateView( LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState ) {
@@ -174,6 +204,33 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         return mBinding.getRoot();
 
     } // end onCreateView
+
+    @Override
+    // begin onCreateOptionsMenu
+    public void onCreateOptionsMenu( Menu menu, MenuInflater inflater ) {
+
+        // 0. super stuff
+        // 1. inflate the correct menu for this fragment
+        // 2. finish setting up the menu (by adding the share action provider)
+        // 3. store a reference to the menu
+
+        // 0. super stuff
+
+        super.onCreateOptionsMenu( menu, inflater );
+
+        // 1. inflate the correct menu for this fragment
+
+        inflater.inflate( R.menu.menu_fragment_detail, menu );
+
+        // 2. finish setting up the menu (by adding the share action provider)
+
+        updateShareActionProvider( menu );
+
+        // 3. store a reference to the menu
+
+        mOptionsMenu = menu;
+
+    } // end onCreateOptionsMenu
 
     @Override
     // begin onActivityCreated
@@ -240,6 +297,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         // 0b3b. use a linear layout manager
         // 0b3c. has fixed size
         // 0b3d. use the trailers adapter
+        // 0b4. update the share action provider with the latest trailer
 
         // 0. bind the needed details to their views
 
@@ -376,6 +434,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             trailerRecyclerView.setAdapter( trailerAdapter );
 
+            // 0b4. update the share action provider with the latest trailer
+
+            if ( mOptionsMenu != null ) {
+                updateShareActionProvider( mOptionsMenu );
+            }
+
         } // end if there is a cursor and it has something
         
     } // end onLoadFinished
@@ -453,6 +517,79 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     /* Other Methods */
 
+
+    /**
+     * Helper method to set up the {@link android.support.v7.widget.ShareActionProvider} that will
+     * let users share the url to the first trailer
+     *
+     * @param menu The menu
+     * */
+    // begin method updateShareActionProvider
+    private void updateShareActionProvider( Menu menu ) {
+
+        // 0. get the share menu item
+        // 1. set the share intent
+
+        // 0. get the share menu item
+
+        MenuItem menuItem = menu.findItem( R.id.action_share );
+
+        // 1. set the share intent
+
+        mTrailerShareActionProvider =
+                ( ShareActionProvider ) MenuItemCompat.getActionProvider( menuItem );
+
+        mTrailerShareActionProvider.setShareIntent( setTrailerShareIntent() );
+
+    } // end method updateShareActionProvider
+
+    /**
+     * Sets the {@link Intent} that will be used to share the url of the first trailer
+     *
+     * @return The share {@link Intent}
+     * */
+    // begin method setTrailerShareIntent
+    private Intent setTrailerShareIntent() {
+
+        // 0. create the intent for sharing
+        // 0a. should hold text
+        // 0b. should have the trailer in
+        // 0c. called activity should clear when we leave our app
+        // 1. return created intent
+
+        // 0. create the intent for sharing
+
+        Intent shareWeatherDetailIntent = new Intent( Intent.ACTION_SEND );
+
+        // 0a. should hold text
+
+        shareWeatherDetailIntent.setType( "text/plain" );
+
+        // 0b. should have the trailer in
+
+        String shareMessage = Utility.getShareMessage( getActivity(),
+                mBinding.detailTvTitle.getText().toString(), mTrailersList.get( 0 ).getKey() );
+
+        shareWeatherDetailIntent.putExtra( Intent.EXTRA_TEXT, shareMessage );
+
+        // 0c. called activity should clear when we leave our app
+
+        int necessaryFlag;
+
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+            necessaryFlag = Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
+        }
+        else {
+            necessaryFlag = Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET;
+        }
+
+        shareWeatherDetailIntent.addFlags( necessaryFlag );
+
+        // 1. return created intent
+
+        return shareWeatherDetailIntent;
+
+    } // end method setTrailerShareIntent
     /* statics */
 
     /* INNER CLASSES */
