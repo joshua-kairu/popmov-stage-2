@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * A result of searching for trailers. This contains the details for a single trailer.
  */
 // begin class Result
-public class Result implements Parcelable {
+public class Result {
 
     @SerializedName( "id" )
     @Expose
@@ -169,45 +169,5 @@ public class Result implements Parcelable {
         this.type = type;
         return this;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel( Parcel dest, int flags ) {
-        dest.writeString( this.id );
-        dest.writeString( this.iso6391 );
-        dest.writeString( this.iso31661 );
-        dest.writeString( this.key );
-        dest.writeString( this.name );
-        dest.writeString( this.site );
-        dest.writeInt( this.size );
-        dest.writeString( this.type );
-    }
-
-    protected Result( Parcel in ) {
-        this.id = in.readString();
-        this.iso6391 = in.readString();
-        this.iso31661 = in.readString();
-        this.key = in.readString();
-        this.name = in.readString();
-        this.site = in.readString();
-        this.size = in.readInt();
-        this.type = in.readString();
-    }
-
-    public static final Parcelable.Creator< Result > CREATOR = new Parcelable.Creator< Result >() {
-        @Override
-        public Result createFromParcel( Parcel source ) {
-            return new Result( source );
-        }
-
-        @Override
-        public Result[] newArray( int size ) {
-            return new Result[ size ];
-        }
-    };
 
 } // end class Result
