@@ -1,5 +1,6 @@
 package com.joslittho.popmov.rest;
 
+import com.joslittho.popmov.data.model.reviews.ReviewsResponse;
 import com.joslittho.popmov.data.model.trailers.TrailersResponse;
 
 import retrofit2.Call;
@@ -36,7 +37,7 @@ public interface ApiInterface {
      * @param apiKey The API key
      * */
     @GET( "movie/{id}/reviews" )
-    Call< TrailersResponse > getMovieReviewsResult( @Path( "id" ) int id,
-                                                    @Query( "api_key" ) String apiKey );
+    Call< ReviewsResponse > getMovieReviewsResult( @Path( "id" ) int id,
+                                                   @Query( "api_key" ) String apiKey );
 
 } // end interface ApiInterface

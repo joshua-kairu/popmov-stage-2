@@ -23,6 +23,7 @@ import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.data.database.MoviesProvider;
 import com.joslittho.popmov.data.model.Movie;
+import com.joslittho.popmov.data.model.reviews.ReviewsResponse;
 import com.joslittho.popmov.data.model.trailers.Result;
 import com.joslittho.popmov.data.model.trailers.TrailersResponse;
 import com.joslittho.popmov.rest.ApiClient;
@@ -616,6 +617,10 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
         // 1b3a. fetch trailers using movie id
         // 1b3b. convert fetched trailers into JSON
         // 1b3c. insert converted JSON to db
+        // 1b4. handle reviews asynchronously using retrofit
+        // 1b4a. fetch reviews using movie id
+        // 1b4b. convert fetched reviews into JSON
+        // 1b4c. insert converted JSON to db
         // 1b-last. add that object to the movie array
         // 2. initialize the ContentValues vectors where we will put the movie data
         // 3. for each fetched movie
@@ -696,23 +701,22 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
             double moviePopularity = currentMovieJsonObject.getDouble( MOVIE_POPULARITY );
 
             final Movie aMovie = new Movie( movieId, movieTitle, movieReleaseDate, movieSynopsis,
-                    movieUserRating, moviePopularity, moviePosterPath, false /* Not a favorite */,
-                    null );
+                    movieUserRating, moviePopularity, moviePosterPath, false /* Not a favorite */ );
 
             // 1b3. handle trailers asynchronously using retrofit
 
             // 1b3a. fetch trailers using movie id
 
-            Call< TrailersResponse > call = apiService.getMovieTrailersResult(
-                    Integer.parseInt( String.valueOf( movieId ) ),
-                    BuildConfig.THE_MOVIE_DB_API_KEY );
+            Call< TrailersResponse > trailersCall = apiService.getMovieTrailersResult(
+                    ( int ) movieId, BuildConfig.THE_MOVIE_DB_API_KEY );
 
-            // begin call.enqueue
-            call.enqueue( new Callback< TrailersResponse >() {
+            // begin trailersCall.enqueue
+            trailersCall.enqueue( new Callback< TrailersResponse >() {
 
                 @Override
                 // begin onResponse
-                public void onResponse( Call< TrailersResponse > call, Response< TrailersResponse > response ) {
+                public void onResponse( Call< TrailersResponse > call,
+                                        Response< TrailersResponse > response ) {
 
                     // 1b3b. convert fetched trailers into JSON
 
@@ -736,13 +740,63 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
 
                 @Override
                 // begin onFailure
-                // tells the user
+                // tells the user of failure
                 public void onFailure( Call< TrailersResponse > call, Throwable t ) {
+
                     Toast.makeText( getContext(), R.string.message_error_fetching_trailers,
                             Toast.LENGTH_SHORT ).show();
+
                 } // end onFailure
 
-            } ); // end call.enqueue
+            } ); // end trailersCall.enqueue
+
+            // 1b4. handle reviews asynchronously using retrofit
+
+            // 1b4a. fetch reviews using movie id
+
+            Call< ReviewsResponse > reviewsCall = apiService.getMovieReviewsResult(
+                    ( int ) movieId, BuildConfig.THE_MOVIE_DB_API_KEY );
+
+            // begin reviewsCall.enqueue
+            reviewsCall.enqueue( new Callback< ReviewsResponse >() {
+
+                @Override
+                // begin onResponse
+                public void onResponse( Call< ReviewsResponse > call,
+                                        Response< ReviewsResponse > response ) {
+
+                    // 1b4b. convert fetched reviews into JSON
+
+                    List< com.joslittho.popmov.data.model.reviews.Result > reviewsResults =
+                            response.body().getResults();
+
+                    String resultsString = new Gson().toJson( reviewsResults );
+
+                    // 1b4c. insert converted JSON to db
+
+                    long movieId = response.body().getId();
+
+                    ContentValues resultContentValues = new ContentValues();
+
+                    resultContentValues.put( MovieTableColumns.REVIEWS, resultsString );
+
+                    getContext().getContentResolver().update(
+                            MoviesProvider.MoviesUriHolder.withMovieId( movieId ),
+                            resultContentValues, null, null );
+
+                } // end onResponse
+
+                @Override
+                // begin onFailure
+                // tells the user of failure
+                public void onFailure( Call< ReviewsResponse > call, Throwable t ) {
+
+                    Toast.makeText( getContext(), R.string.message_error_fetching_reviews,
+                            Toast.LENGTH_SHORT ).show();
+
+                } // end onFailure
+
+            } ); // end reviewsCall.enqueue
 
             // 1b-last. add that object to the movie array
 
