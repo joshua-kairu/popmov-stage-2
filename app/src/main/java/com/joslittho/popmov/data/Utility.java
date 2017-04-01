@@ -445,6 +445,27 @@ public class Utility {
 
     } // end method getShareMessage
 
+    /**
+     * Helper method to extract reviews from the JSON stored in the db.
+     *
+     * @param reviewsJSONString The JSON string - gotten from the db - that contains the reviews
+     *
+     * @return A {@link List} of reviews as individual
+     * {@link com.joslittho.popmov.data.model.reviews.Result} objects
+     * */
+    // begin method getReviewsFromDB
+    public static List< com.joslittho.popmov.data.model.reviews.Result > getReviewsFromDB(
+            String reviewsJSONString ) {
+
+        // 0. gson convert and return the reviews
+
+        Type type = new TypeToken< List< com.joslittho.popmov.data.model.reviews.Result > >(){}
+                .getType();
+
+        return new Gson().fromJson( reviewsJSONString, type );
+
+    } // end method getReviewsFromDB
+
     /* INNER CLASSES */
 
 } // end class Utility

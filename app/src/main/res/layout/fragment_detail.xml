@@ -244,7 +244,7 @@
 
                 android:layout_below="@id/detail_tv_synopsis"
 
-                android:id="@+id/main_v_divider_below_synopsis"
+                android:id="@+id/detail_v_divider_below_synopsis"
 
                 />
 
@@ -266,11 +266,11 @@
 
                 android:layout_marginTop="@dimen/layout_padding"
 
-                android:layout_below="@id/main_v_divider_below_synopsis"
+                android:layout_below="@id/detail_v_divider_below_synopsis"
 
                 style="@style/TextAppearance.AppCompat.Title"
 
-                android:text="@string/trailers_header_title"
+                android:text="@string/detail_title_trailers"
 
                 />
 
@@ -289,6 +289,69 @@
                 android:layout_marginTop="@dimen/space_between_content_areas"
 
                 android:id="@+id/detail_rv_trailers"
+
+                />
+
+            <!-- divider -->
+
+            <View
+                android:layout_width="match_parent"
+
+                android:layout_height="1dp"
+
+                android:background="@android:color/black"
+
+                android:alpha="0.12"
+
+                android:layout_marginTop="@dimen/layout_padding"
+
+                android:id="@+id/detail_v_divider_below_trailers"
+
+                android:layout_below="@id/detail_rv_trailers"
+
+                />
+
+            <!-- header for reviews -->
+
+            <TextView
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="@dimen/layout_padding"
+
+                android:layout_marginStart="@dimen/layout_padding"
+
+                android:layout_marginLeft="@dimen/layout_padding"
+
+                style="@style/TextAppearance.AppCompat.Title"
+
+                android:text="@string/detail_title_reviews"
+
+                android:id="@+id/detail_tv_reviews_header_title"
+
+                android:layout_below="@id/detail_v_divider_below_trailers"
+
+                />
+
+            <!-- recycler for reviews -->
+
+            <android.support.v7.widget.RecyclerView
+
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="@dimen/space_between_content_areas"
+
+                android:layout_marginBottom="@dimen/layout_padding"
+
+                android:layout_below="@id/detail_tv_reviews_header_title"
+
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+                android:id="@+id/detail_rv_reviews"
 
                 />
 

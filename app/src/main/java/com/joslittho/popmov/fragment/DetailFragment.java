@@ -51,6 +51,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.joslittho.popmov.R;
+import com.joslittho.popmov.adapter.review.ReviewAdapter;
 import com.joslittho.popmov.adapter.trailer.TrailerAdapter;
 import com.joslittho.popmov.adapter.trailer.TrailerAdapterOnClickHandler;
 import com.joslittho.popmov.data.Utility;
@@ -298,6 +299,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         // 0b3c. has fixed size
         // 0b3d. use the trailers adapter
         // 0b4. update the share action provider with the latest trailer
+        // 0c. the reviews
+        // 0c0. get the reviews from db JSON
+        // 0c1. instantiate the reviews adapter with the gotten reviews
+        // 0c2. the recycler
+        // 0b2a. find reference to it
+        // 0b2b. use a linear layout manager
+        // 0b2c. has fixed size
+        // 0b2d. use the reviews adapter
 
         // 0. bind the needed details to their views
 
@@ -439,6 +448,35 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             if ( mOptionsMenu != null ) {
                 updateShareActionProvider( mOptionsMenu );
             }
+
+            // 0c. the reviews
+
+            // 0c0. get the reviews from db JSON
+
+            List< com.joslittho.popmov.data.model.reviews.Result > reviewsList =
+                    Utility.getReviewsFromDB( cursor.getString( COLUMN_DETAIL_REVIEWS ) );
+
+            // 0c1. instantiate the reviews adapter with the gotten reviews
+
+            ReviewAdapter reviewAdapter = new ReviewAdapter( reviewsList );
+
+            // 0c2. the recycler
+
+            // 0b2a. find reference to it
+
+            RecyclerView reviewRecyclerView = mBinding.detailRvReviews;
+
+            // 0b2b. use a linear layout manager
+
+            reviewRecyclerView.setLayoutManager( new LinearLayoutManager( getActivity() ) );
+
+            // 0b2c. has fixed size
+
+            reviewRecyclerView.setHasFixedSize( true );
+
+            // 0b2d. use the reviews adapter
+
+            reviewRecyclerView.setAdapter( reviewAdapter );
 
         } // end if there is a cursor and it has something
         

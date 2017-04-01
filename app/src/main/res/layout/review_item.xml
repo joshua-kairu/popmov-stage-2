@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- layout for an individual review item -->
+
+<layout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+
+    >
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+
+        tools:ignore="GradleDependency"
+
+        android:id="@+id/review_item_cl_parent"
+
+        android:background="?android:attr/selectableItemBackground"
+
+        >
+
+        <!-- text for the review -->
+
+        <TextView
+
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+
+            android:id="@+id/review_item_tv_content"
+
+            style="@style/TextAppearance.AppCompat.Body2"
+
+            tools:text="**Before Nemo, a long ago another child got lost in the open ocean...**"
+
+            android:padding="@dimen/layout_padding"
+
+            />
+
+        <!-- divider -->
+
+        <View
+
+            android:layout_width="match_parent"
+
+            android:layout_height="1dp"
+
+            android:alpha="0.12"
+
+            android:background="@android:color/black"
+
+            android:layout_below="@id/review_item_tv_content"
+
+            android:layout_marginStart="@dimen/layout_padding"
+
+            android:layout_marginEnd="@dimen/layout_padding"
+
+            />
+
+    </RelativeLayout>
+
+</layout>
