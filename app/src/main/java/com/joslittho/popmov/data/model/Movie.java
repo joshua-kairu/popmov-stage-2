@@ -23,8 +23,7 @@
 
 package com.joslittho.popmov.data.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.joslittho.popmov.data.model.trailers.Result;
 
 import java.util.List;
 

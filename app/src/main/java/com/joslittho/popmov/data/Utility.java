@@ -37,13 +37,12 @@ import com.joslittho.popmov.R;
 import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.data.database.MoviesProvider;
-import com.joslittho.popmov.data.model.Result;
+import com.joslittho.popmov.data.model.trailers.Result;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;

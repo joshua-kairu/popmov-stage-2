@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.joslittho.popmov.R;
-import com.joslittho.popmov.data.model.Result;
+import com.joslittho.popmov.data.model.trailers.Result;
 import com.joslittho.popmov.databinding.TrailerItemBinding;
 
 import java.util.List;

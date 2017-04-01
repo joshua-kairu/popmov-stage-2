@@ -1,4 +1,4 @@
-package com.joslittho.popmov.data.model;
+package com.joslittho.popmov.data.model.trailers;
 
 import android.os.Parcel;
 import android.os.Parcelable;

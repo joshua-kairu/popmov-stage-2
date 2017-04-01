@@ -57,7 +57,7 @@ import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.data.database.MoviesProvider.FavoritesUriHolder;
-import com.joslittho.popmov.data.model.Result;
+import com.joslittho.popmov.data.model.trailers.Result;
 import com.joslittho.popmov.databinding.FragmentDetailBinding;
 import com.squareup.picasso.Picasso;
 

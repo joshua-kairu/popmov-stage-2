@@ -1,4 +1,4 @@
-package com.joslittho.popmov.data.model;
+package com.joslittho.popmov.data.model.trailers;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
