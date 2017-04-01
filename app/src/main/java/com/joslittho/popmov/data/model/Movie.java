@@ -23,10 +23,6 @@
 
 package com.joslittho.popmov.data.model;
 
-import com.joslittho.popmov.data.model.trailers.Result;
-
-import java.util.List;
-
 /**
  * A movie, as defined by the TMDB JSON.
  * */
@@ -40,9 +36,6 @@ public class Movie {
     /* Strings */
         
     /* VARIABLES */
-
-    /** The trailers for this movie */
-    private List< Result > mTrailers; // ditto
 
     /* Primitives */
 
@@ -79,7 +72,7 @@ public class Movie {
 
     // begin default constructor
     public Movie( long id, String title, String releaseDate, String synopsis, double userRating,
-                  double popularity, String posterPath, boolean favorite, List trailers ) {
+                  double popularity, String posterPath, boolean favorite ) {
 
         // 0. initialize members
 
@@ -167,16 +160,6 @@ public class Movie {
 
     // setter for favorite
     public void setFavorite( boolean favorite ) { this.mFavorite = favorite; }
-
-    // getter for trailers
-    public List< Result > getTrailers() {
-        return mTrailers;
-    }
-
-    // setter for trailers
-    public void setTrailers( List< Result > trailers ) {
-        this.mTrailers = trailers;
-    }
 
     /* Overrides */
 
