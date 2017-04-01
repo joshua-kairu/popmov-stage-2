@@ -6,8 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * The trailers response gotten from TMDB JSON. This contains the details of all trailers for a given
- * movie.
+ * The trailers response gotten from TMDB JSON. This contains the details of all trailers for a
+ * given movie.
  */
 // begin class TrailersResponse
 public class TrailersResponse {
