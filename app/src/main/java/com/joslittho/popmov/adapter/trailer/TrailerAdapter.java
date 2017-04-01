@@ -1,4 +1,4 @@
-package com.joslittho.popmov.adapter;
+package com.joslittho.popmov.adapter.trailer;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;

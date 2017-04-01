@@ -21,16 +21,12 @@
  *
  */
 
-package com.joslittho.popmov.adapter;
+package com.joslittho.popmov.adapter.trailer;
 
-import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.joslittho.popmov.R;
-import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.databinding.TrailerItemBinding;
 
 /**

@@ -51,8 +51,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.joslittho.popmov.R;
-import com.joslittho.popmov.adapter.TrailerAdapter;
-import com.joslittho.popmov.adapter.TrailerAdapterOnClickHandler;
+import com.joslittho.popmov.adapter.trailer.TrailerAdapter;
+import com.joslittho.popmov.adapter.trailer.TrailerAdapterOnClickHandler;
 import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
