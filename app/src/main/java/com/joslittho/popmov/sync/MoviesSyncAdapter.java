@@ -615,12 +615,14 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
         // 1b2. create a movie object from it
         // 1b3. handle trailers asynchronously using retrofit
         // 1b3a. fetch trailers using movie id
-        // 1b3b. convert fetched trailers into JSON
-        // 1b3c. insert converted JSON to db
+        // 1b3b. if there are trailers
+        // 1b3b0. convert fetched trailers into JSON
+        // 1b3b1. insert converted JSON to db
         // 1b4. handle reviews asynchronously using retrofit
         // 1b4a. fetch reviews using movie id
-        // 1b4b. convert fetched reviews into JSON
-        // 1b4c. insert converted JSON to db
+        // 1b4b. if there are reviews
+        // 1b4b0. convert fetched reviews into JSON
+        // 1b4b1. insert converted JSON to db
         // 1b-last. add that object to the movie array
         // 2. initialize the ContentValues vectors where we will put the movie data
         // 3. for each fetched movie
@@ -718,23 +720,30 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
                 public void onResponse( Call< TrailersResponse > call,
                                         Response< TrailersResponse > response ) {
 
-                    // 1b3b. convert fetched trailers into JSON
+                    // 1b3b. if there are trailers
 
-                    List< Result > trailerResults = response.body().getResults();
+                    // begin if there is something in the response
+                    if ( response.body() != null ) {
 
-                    String resultsString = new Gson().toJson( trailerResults );
+                        // 1b3b0. convert fetched trailers into JSON
 
-                    // 1b3c. insert converted JSON to db
+                        List< Result > trailerResults = response.body().getResults();
 
-                    long movieId  = response.body().getId();
+                        String resultsString = new Gson().toJson( trailerResults );
 
-                    ContentValues trailerContentValues = new ContentValues();
+                        // 1b3b1. insert converted JSON to db
 
-                    trailerContentValues.put( MovieTableColumns.TRAILERS, resultsString );
+                        long movieId  = response.body().getId();
 
-                    getContext().getContentResolver().update(
-                            MoviesProvider.MoviesUriHolder.withMovieId( movieId ),
-                            trailerContentValues, null, null );
+                        ContentValues trailerContentValues = new ContentValues();
+
+                        trailerContentValues.put( MovieTableColumns.TRAILERS, resultsString );
+
+                        getContext().getContentResolver().update(
+                                MoviesProvider.MoviesUriHolder.withMovieId( movieId ),
+                                trailerContentValues, null, null );
+
+                    } // end if there is something in the response
 
                 } // end onResponse
 
@@ -765,24 +774,31 @@ public class MoviesSyncAdapter extends AbstractThreadedSyncAdapter {
                 public void onResponse( Call< ReviewsResponse > call,
                                         Response< ReviewsResponse > response ) {
 
-                    // 1b4b. convert fetched reviews into JSON
+                    // 1b4b. if there are reviews
+                    
+                    // begin if there is something in the response
+                    if ( response.body() != null ) {
 
-                    List< com.joslittho.popmov.data.model.reviews.Result > reviewsResults =
-                            response.body().getResults();
+                        // 1b4b0. convert fetched reviews into JSON
 
-                    String resultsString = new Gson().toJson( reviewsResults );
+                        List< com.joslittho.popmov.data.model.reviews.Result > reviewsResults =
+                                response.body().getResults();
 
-                    // 1b4c. insert converted JSON to db
+                        String resultsString = new Gson().toJson( reviewsResults );
 
-                    long movieId = response.body().getId();
+                        // 1b4b1. insert converted JSON to db
 
-                    ContentValues resultContentValues = new ContentValues();
+                        long movieId = response.body().getId();
 
-                    resultContentValues.put( MovieTableColumns.REVIEWS, resultsString );
+                        ContentValues resultContentValues = new ContentValues();
 
-                    getContext().getContentResolver().update(
-                            MoviesProvider.MoviesUriHolder.withMovieId( movieId ),
-                            resultContentValues, null, null );
+                        resultContentValues.put( MovieTableColumns.REVIEWS, resultsString );
+
+                        getContext().getContentResolver().update(
+                                MoviesProvider.MoviesUriHolder.withMovieId( movieId ),
+                                resultContentValues, null, null );
+
+                    } // end if there is something in the response
 
                 } // end onResponse
 
