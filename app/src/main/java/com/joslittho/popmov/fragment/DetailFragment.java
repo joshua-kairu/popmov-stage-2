@@ -232,7 +232,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         MenuItem shareMenuItem = menu.findItem( R.id.action_share );
 
         // begin if there are trailers
-        if ( ! mTrailersList.isEmpty() ) {
+        if ( mTrailersList != null && ! mTrailersList.isEmpty() ) {
 
             // 2a. show the share action provider if it's not yet shown
 
