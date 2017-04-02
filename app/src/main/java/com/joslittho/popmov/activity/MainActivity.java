@@ -199,8 +199,6 @@ public class MainActivity extends AppCompatActivity implements PosterCallback {
 
             startActivity( new Intent( this, SettingsActivity.class ) );
 
-            // TODO: 10/14/16 do the replacing for a tablet layout
-
             // 0last. return true
 
             return true;
