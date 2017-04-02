@@ -219,8 +219,6 @@ public class MainActivity extends AppCompatActivity implements PosterCallback {
         // 1. if the sort order has changed
         // 1a. tell the poster fragment so
 
-        // TODO: 4/2/17 get the detail fragment back on the screen
-
         // 0. super stuff
 
         super.onResume();
