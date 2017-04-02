@@ -35,6 +35,7 @@ import com.joslittho.popmov.R;
 import com.joslittho.popmov.data.PosterCallback;
 import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.databinding.ActivityMainBinding;
+import com.joslittho.popmov.fragment.DetailFragment;
 import com.joslittho.popmov.fragment.PostersFragment;
 import com.joslittho.popmov.sync.MoviesSyncAdapter;
 
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements PosterCallback {
     /* Integers */
     
     /* Strings */
-    
+
     /* VARIABLES */
 
     /* Primitives */
@@ -73,11 +74,19 @@ public class MainActivity extends AppCompatActivity implements PosterCallback {
         // 0. preliminaries
         // 0a. super things
         // 0b. store current sort order
+        // 0c. store the content uri from the intent
+        // this will have something if there was an intent to start the detail fragment with
+        // a movie's uri
         // 1. use the main activity layout
         // 2. the posters fragment is added in XML
         // 3. initialize the sync adapter
         // 4. if we are in two pane mode
         // 4a. set the two pane primitive to true
+        // 4b. if this is the first run
+        // we do not need to show the detail fragment since it will be empty
+        // 4c. else this is not the first run
+        // the user might have selected a movie so
+        // 4c0. put the detail fragment in the container using the content uri
         // 5. else we are not in two pane mode
         // 5a. set the two pane primitive to false
 
@@ -91,7 +100,11 @@ public class MainActivity extends AppCompatActivity implements PosterCallback {
 
         mCurrentSortOrder = Utility.getPreferredSortOrder( this );
 
-        // 0c. get main activity binding -> done when initializing layout
+        // 0c. store the content uri from the intent
+        // this will have something if there was an intent to start the detail fragment with
+        // a movie's uri
+
+        Uri contentUri = getIntent() != null ? getIntent().getData() : null;
 
         // 1. use the main activity layout
 
@@ -111,6 +124,28 @@ public class MainActivity extends AppCompatActivity implements PosterCallback {
             // 4a. set the two pane primitive to true
 
             mTwoPane = true;
+
+            // 4b. if this is the first run
+            // we do not need to show the detail fragment since it will be empty
+
+            // 4c. else this is not the first run
+            // the user might have selected a movie so
+            // 4c0. put the detail fragment in the container using the content uri
+
+            // begin if there is saved instance state
+            // meaning that this is not the first run
+            // usually happens during a rotation
+            if ( savedInstanceState != null ) {
+
+                Bundle bundle = new Bundle();
+
+                bundle.putParcelable( DetailFragment.KEY_MOVIE_URL, contentUri );
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace( R.id.detail_fl_container, DetailFragment.newInstance( bundle ) )
+                        .commit();
+
+            } // end if there is saved instance state
 
         } // end if there is the detail container
 
@@ -186,6 +221,8 @@ public class MainActivity extends AppCompatActivity implements PosterCallback {
         // 1. if the sort order has changed
         // 1a. tell the poster fragment so
 
+        // TODO: 4/2/17 get the detail fragment back on the screen
+
         // 0. super stuff
 
         super.onResume();
@@ -211,6 +248,9 @@ public class MainActivity extends AppCompatActivity implements PosterCallback {
     public void onPosterItemSelected( Uri movieUri ) {
 
         // 0. if we are in two pane
+        // 0a. replace the current detail fragment with one having the movie uri
+        // 0b. put the movie uri in the intent
+        // since the intent somehow persists during configuration changes (such as rotation)
         // 1. otherwise we are in one pane
         // 1a. start the detail activity
 
@@ -219,7 +259,20 @@ public class MainActivity extends AppCompatActivity implements PosterCallback {
         // begin if two pane
         if ( mTwoPane ) {
 
+            // 0a. replace the current detail fragment with one having the movie uri
 
+            Bundle bundle = new Bundle();
+
+            bundle.putParcelable( DetailFragment.KEY_MOVIE_URL, movieUri );
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace( R.id.detail_fl_container, DetailFragment.newInstance( bundle ) )
+                    .commit();
+
+            // 0b. put the movie uri in the intent
+            // since the intent somehow persists during configuration changes (such as rotation)
+
+            if ( getIntent() != null ) { getIntent().setData( movieUri ); }
 
         } // end if two pane
 
