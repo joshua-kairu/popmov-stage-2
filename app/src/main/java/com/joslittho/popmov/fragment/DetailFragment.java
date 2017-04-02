@@ -212,8 +212,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         // 0. super stuff
         // 1. inflate the correct menu for this fragment
-        // 2. finish setting up the menu (by adding the share action provider)
-        // 3. store a reference to the menu
+        // 2. if the movie has trailers
+        // 2a. show the share action provider if it's not yet shown
+        // 2b. finish setting up the menu (by adding the share action provider)
+        // 3. else the movie has no trailers
+        // 3a. hide the share action provider
+        // 4. store a reference to the menu
 
         // 0. super stuff
 
@@ -223,11 +227,37 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         inflater.inflate( R.menu.menu_fragment_detail, menu );
 
-        // 2. finish setting up the menu (by adding the share action provider)
+        // 2. if the movie has trailers
 
-        updateShareActionProvider( menu );
+        MenuItem shareMenuItem = menu.findItem( R.id.action_share );
 
-        // 3. store a reference to the menu
+        // begin if there are trailers
+        if ( ! mTrailersList.isEmpty() ) {
+
+            // 2a. show the share action provider if it's not yet shown
+
+            if ( ! shareMenuItem.isVisible() ) {
+                shareMenuItem.setVisible( true );
+            }
+
+            // 2b. finish setting up the menu (by adding the share action provider)
+
+            updateShareActionProvider( menu );
+
+        } // end if there are trailers
+
+        // 3. else the movie has no trailers
+
+        // begin else no trailers
+        else {
+
+            // 3a. hide the share action provider
+
+            shareMenuItem.setVisible( false );
+
+        } // end else no trailers
+
+        // 4. store a reference to the menu
 
         mOptionsMenu = menu;
 
@@ -298,7 +328,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         // 0b3b. use a linear layout manager
         // 0b3c. has fixed size
         // 0b3d. use the trailers adapter
-        // 0b4. update the share action provider with the latest trailer
+        // 0b4. if there are trailers, update the share action provider with the latest trailer
         // 0c. the reviews
         // 0c0. get the reviews from db JSON
         // 0c1. instantiate the reviews adapter with the gotten reviews
@@ -443,9 +473,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             trailerRecyclerView.setAdapter( trailerAdapter );
 
-            // 0b4. update the share action provider with the latest trailer
+            // 0b4. if there are trailers, update the share action provider with the latest trailer
 
-            if ( mOptionsMenu != null ) {
+            if ( mOptionsMenu != null && !mTrailersList.isEmpty() ) {
                 updateShareActionProvider( mOptionsMenu );
             }
 
