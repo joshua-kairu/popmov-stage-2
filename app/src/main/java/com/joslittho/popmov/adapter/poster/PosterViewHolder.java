@@ -24,11 +24,13 @@
 package com.joslittho.popmov.adapter.poster;
 
 import android.database.Cursor;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.joslittho.popmov.data.database.MovieTableColumns;
+import com.joslittho.popmov.databinding.GridItemPosterBinding;
 
 /**
  * {@link android.support.v7.widget.RecyclerView.ViewHolder} for the poster
@@ -55,20 +57,20 @@ class PosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickLi
     /* CONSTRUCTOR */
 
     // begin constructor
-    PosterViewHolder( View itemView, PosterAdapter posterAdapter ) {
+    PosterViewHolder( GridItemPosterBinding binding, PosterAdapter posterAdapter ) {
 
         // 0. super stuff
-        // 1. initialize local image view from parameter image view
+        // 1. initialize local image view
         // 2. initialize the host adapter
         // 3. this view holder should listen to clicks from the parameter view
 
         // 0. super stuff
 
-        super( itemView );
+        super( binding.gridFlContainer );
 
-        // 1. initialize local image view from parameter image view
+        // 1. initialize local image view
 
-        posterImageView = ( ImageView ) itemView;
+        posterImageView = binding.gridIvPoster;
 
         // 2. initialize the host adapter
 
@@ -100,6 +102,8 @@ class PosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickLi
         cursor.moveToPosition( getAdapterPosition() );
 
         long movieId = cursor.getLong( MovieTableColumns.COLUMN_MOVIE_ID );
+
+        posterImageView.setSelected( true );
 
         // 1. call the handler with the movie id
 

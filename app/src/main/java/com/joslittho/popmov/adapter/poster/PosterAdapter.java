@@ -125,15 +125,15 @@ public class PosterAdapter extends RecyclerView.Adapter< PosterViewHolder > {
             GridItemPosterBinding binding = DataBindingUtil.inflate( LayoutInflater.from( mContext ),
                     R.layout.grid_item_poster, parent, false );
 
-            ImageView imageView = binding.gridIvPoster;
+//            ImageView imageView = binding.gridIvPoster;
 
             // 0b. make the inflated view focusable
 
-            imageView.setFocusable( true );
+//            imageView.setFocusable( true );
 
             // 0b-last. return the inflated layout in a view holder
 
-            return new PosterViewHolder( imageView, this );
+            return new PosterViewHolder( binding, this );
 
         } // end if the parent view group is a recycler
 

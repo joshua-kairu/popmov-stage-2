@@ -114,9 +114,14 @@
 
     <dimen name="grid_item_spacing">1dp</dimen>
 
-    <dimen name="title_height">112dp</dimen>
+    <!-- width of the poster item poster_item_selector -->
+    <dimen name="poster_selector_width">10dp</dimen>
 
     <!-- Detail -->
+
+    <!-- height of the title -->
+
+    <dimen name="title_height">112dp</dimen>
 
     <!-- the layout size of the detail poster -->
     

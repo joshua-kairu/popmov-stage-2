@@ -33,22 +33,36 @@
 
     >
 
-    <ImageView
+    <FrameLayout
 
         android:layout_width="match_parent"
 
         android:layout_height="wrap_content"
 
-        android:id="@+id/grid_iv_poster"
+        android:id="@+id/grid_fl_container"
 
-        android:contentDescription="@null"
+        android:foreground="@drawable/poster_item_selector"
 
-        android:scaleType="centerCrop"
+        >
 
-        tools:src="@mipmap/ic_launcher"
+        <ImageView
 
-        android:adjustViewBounds="true"
+            android:layout_width="match_parent"
 
-        />
+            android:layout_height="match_parent"
+
+            android:id="@+id/grid_iv_poster"
+
+            android:contentDescription="@null"
+
+            android:scaleType="centerCrop"
+
+            tools:src="@mipmap/ic_launcher"
+
+            android:adjustViewBounds="true"
+
+            />
+
+    </FrameLayout>
 
 </layout>
