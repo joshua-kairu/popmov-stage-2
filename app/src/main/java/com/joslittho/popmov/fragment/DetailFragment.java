@@ -475,7 +475,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             // 0b4. if there are trailers, update the share action provider with the latest trailer
 
-            if ( mOptionsMenu != null && !mTrailersList.isEmpty() ) {
+            if ( mOptionsMenu != null && mTrailersList != null && !mTrailersList.isEmpty() ) {
                 updateShareActionProvider( mOptionsMenu );
             }
 
