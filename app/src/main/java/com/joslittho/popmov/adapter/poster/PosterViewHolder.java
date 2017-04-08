@@ -29,6 +29,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.joslittho.popmov.adapter.ItemChoiceManager;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.databinding.GridItemPosterBinding;
 
@@ -50,6 +51,10 @@ class PosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickLi
 
     final ImageView posterImageView; // ditto
 
+   /* ItemChoiceManagers */
+
+    private ItemChoiceManager mICM; // ditto
+
     /* PosterAdapters */
 
     private final PosterAdapter mHostPosterAdapter; // ditto
@@ -57,26 +62,35 @@ class PosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickLi
     /* CONSTRUCTOR */
 
     // begin constructor
-    PosterViewHolder( GridItemPosterBinding binding, PosterAdapter posterAdapter ) {
+    PosterViewHolder( GridItemPosterBinding binding, PosterAdapter posterAdapter,
+                      ItemChoiceManager itemChoiceManager ) {
 
         // 0. super stuff
-        // 1. initialize local image view
-        // 2. initialize the host adapter
-        // 3. this view holder should listen to clicks from the parameter view
+        // 1. initialize
+        // 1a. local image view
+        // 1b. the host adapter
+        // 1c. the item choice manager
+        // 2. this view holder should listen to clicks from the parameter view
 
         // 0. super stuff
 
         super( binding.gridFlContainer );
 
-        // 1. initialize local image view
+        // 1. initialize
+
+        // 1a. local image view
 
         posterImageView = binding.gridIvPoster;
 
-        // 2. initialize the host adapter
+        // 1b. the host adapter
 
         mHostPosterAdapter = posterAdapter;
 
-        // 3. this view holder should listen to clicks from the parameter view
+        // 1c. the item choice manager
+
+        mICM = itemChoiceManager;
+
+        // 2. this view holder should listen to clicks from the parameter view
 
         itemView.setOnClickListener( this );
 
@@ -94,6 +108,7 @@ class PosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickLi
 
         // 0. get the movie id from the adapter's current position using a cursor
         // 1. call the handler with the movie id
+        // 2. send the click to the item choice manager
 
         // 0. get the movie id from the adapter's current position using a cursor
 
@@ -103,11 +118,14 @@ class PosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickLi
 
         long movieId = cursor.getLong( MovieTableColumns.COLUMN_MOVIE_ID );
 
-        posterImageView.setSelected( true );
-
+        // TODO: 4/5/17 what about in phone mode? And persist the selection too
         // 1. call the handler with the movie id
 
         mHostPosterAdapter.mPosterAdapterOnClickHandler.onClick( movieId );
+
+        // 2. send the click to the item choice manager
+
+        mICM.onClick( this );
 
     } // end onClick
     

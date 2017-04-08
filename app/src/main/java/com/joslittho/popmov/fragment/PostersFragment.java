@@ -42,9 +42,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.TextView;
 
 import com.joslittho.popmov.R;
+import com.joslittho.popmov.adapter.ItemChoiceManager;
 import com.joslittho.popmov.adapter.poster.PosterAdapter;
 import com.joslittho.popmov.adapter.poster.PosterAdapterOnClickHandler;
 import com.joslittho.popmov.data.PosterCallback;
@@ -163,6 +165,8 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         // 2b. use a grid layout manager with screen-size-dependent columns
         // 2c. has fixed size
         // 2d. use the poster adapter
+        // 3. if there is saved state
+        // 3a. restore the adapter's saved state so that the tapped item persists
         // last. return the inflated view NOT THE INFLATED GRID VIEW SINCE
         // THE INFLATED GRID VIEW *WILL* HAVE A PARENT
 
@@ -172,7 +176,8 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         // 1. initialize the adapter
 
-        mPosterAdapter = new PosterAdapter( getActivity(), binding.mainTvEmpty, this );
+        mPosterAdapter = new PosterAdapter( getActivity(), binding.mainTvEmpty, this,
+                AbsListView.CHOICE_MODE_SINGLE );
 
         // 2. the recycler
 
@@ -193,6 +198,13 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         // 2d. use the poster adapter
 
         mPostersRecyclerView.setAdapter( mPosterAdapter );
+
+        // 3a. restore the adapter's saved state so that the tapped item persists
+
+        if ( savedInstanceState != null ) {
+            mPosterAdapter.onRestoreInstanceState( savedInstanceState );
+            // TODO: 4/8/17 scroll to selected position
+        }
 
         // last. return the inflated view NOT THE INFLATED GRID VIEW SINCE
         // THE INFLATED GRID VIEW *WILL* HAVE A PARENT
@@ -358,6 +370,23 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         posterCallbackListener.onPosterItemSelected( movieUri );
 
     } // end onClick
+
+    @Override
+    // begin onSaveInstanceState
+    public void onSaveInstanceState( Bundle outState ) {
+
+        // 0. tell adapter to save state of selected item
+        // 1. super stuff
+
+        // 0. tell adapter to save state of selected item
+
+        mPosterAdapter.onSaveInstanceState( outState );
+
+        // 1. super stuff
+
+        super.onSaveInstanceState( outState );
+
+    } // end onSaveInstanceState
 
     /* Other Methods */
 

@@ -2,11 +2,18 @@
 
 <!-- state list drawable for the poster -->
 
+<!-- most of this is copied from the Sunshine project -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- pressed -->
-    <item android:state_pressed="true" android:state_enabled="true"
-          android:drawable="@drawable/background_rectangle" />
+
+    <item android:state_activated="true" android:state_focused="false"                             android:drawable="@drawable/background_rectangle"/>
+
+    <!-- Even though these two point to the same resource, have two states so the drawable will invalidate itself when coming out of pressed state. -->
+    <item android:state_focused="true"  android:state_enabled="false" android:state_pressed="true" android:drawable="@android:color/transparent" />
+    <item android:state_focused="true"  android:state_enabled="false"                              android:drawable="@android:color/transparent" />
+    <item android:state_focused="true"                                android:state_pressed="true" android:drawable="@android:color/transparent" />
+    <item android:state_focused="false"                               android:state_pressed="true" android:drawable="@android:color/transparent" />
+    <item android:state_focused="true"                                                             android:drawable="@android:color/transparent" />
 
     <!-- default -->
     <item android:drawable="@android:color/transparent" />

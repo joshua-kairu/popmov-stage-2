@@ -26,6 +26,7 @@ package com.joslittho.popmov.adapter.poster;
 import android.content.Context;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.joslittho.popmov.R;
+import com.joslittho.popmov.adapter.ItemChoiceManager;
 import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.databinding.GridItemPosterBinding;
@@ -60,6 +62,10 @@ public class PosterAdapter extends RecyclerView.Adapter< PosterViewHolder > {
 
     private Cursor mCursor; // ditto
 
+    /* ItemChoiceManagers */
+
+    private ItemChoiceManager mICM; // ditto
+
     /* PosterAdapterOnClickHandlers */
 
     public final PosterAdapterOnClickHandler mPosterAdapterOnClickHandler; // ditto
@@ -76,13 +82,19 @@ public class PosterAdapter extends RecyclerView.Adapter< PosterViewHolder > {
      * @param context Android {@link Context}
      * @param emptyView The empty view
      * @param handler A {@link PosterAdapterOnClickHandler} to handle item clicks
+     * @param choiceMode The choice mode for the {@link RecyclerView}. One of
+     *                   {@link android.widget.AbsListView#CHOICE_MODE_NONE},
+     *                   {@link android.widget.AbsListView#CHOICE_MODE_SINGLE}, and
+     *                   {@link android.widget.AbsListView#CHOICE_MODE_MULTIPLE}.
      * */
     // begin constructor
-    public PosterAdapter( Context context, View emptyView, PosterAdapterOnClickHandler handler ) {
+    public PosterAdapter( Context context, View emptyView, PosterAdapterOnClickHandler handler,
+                          int choiceMode ) {
 
         // 0. initialize context
         // 1. initialize empty view
         // 2. initialize click handler
+        // 3. initialize item choice manager and set choice mode
 
         // 0. initialize context
 
@@ -95,6 +107,11 @@ public class PosterAdapter extends RecyclerView.Adapter< PosterViewHolder > {
         // 2. initialize click handler
 
         mPosterAdapterOnClickHandler = handler;
+
+        // 3. initialize item choice manager and set choice mode
+
+        mICM = new ItemChoiceManager( this );
+        mICM.setChoiceMode( choiceMode );
 
     } // end constructor
 
@@ -125,15 +142,13 @@ public class PosterAdapter extends RecyclerView.Adapter< PosterViewHolder > {
             GridItemPosterBinding binding = DataBindingUtil.inflate( LayoutInflater.from( mContext ),
                     R.layout.grid_item_poster, parent, false );
 
-//            ImageView imageView = binding.gridIvPoster;
-
             // 0b. make the inflated view focusable
 
-//            imageView.setFocusable( true );
+            // done in grid_item_poster XML
 
             // 0b-last. return the inflated layout in a view holder
 
-            return new PosterViewHolder( binding, this );
+            return new PosterViewHolder( binding, this, mICM );
 
         } // end if the parent view group is a recycler
 
@@ -154,6 +169,7 @@ public class PosterAdapter extends RecyclerView.Adapter< PosterViewHolder > {
         // 0b. read the poster path from the cursor
         // 0c. put the correct image into the image view
         // 0d. put the correct content description
+        // 0e. tell the item choice manager to bind view too
 
         // 0. if the cursor exists and has something
 
@@ -181,6 +197,10 @@ public class PosterAdapter extends RecyclerView.Adapter< PosterViewHolder > {
 
             holder.posterImageView
                     .setContentDescription( mContext.getString( R.string.a11y_grid_poster, title ) );
+
+            // 0e. tell the item choice manager to bind view too
+
+            mICM.onBindViewHolder( holder, position );
 
         } // end if there is non-empty cursor
 
@@ -220,6 +240,16 @@ public class PosterAdapter extends RecyclerView.Adapter< PosterViewHolder > {
         mEmptyView.setVisibility( getItemCount() == 0 ? View.VISIBLE : View.GONE );
 
     } // end method swapCursor
+
+    // onRestoreInstanceState
+    public void onRestoreInstanceState( Bundle savedInstanceState ) {
+        mICM.onRestoreInstanceState( savedInstanceState );
+    }
+
+    // onSaveInstanceState
+    public void onSaveInstanceState( Bundle outState ) {
+        mICM.onSaveInstanceState( outState );
+    }
 
     /* INNER CLASSES */
 

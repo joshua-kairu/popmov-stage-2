@@ -43,6 +43,8 @@
 
         android:foreground="@drawable/poster_item_selector"
 
+        android:focusable="true"
+
         >
 
         <ImageView
