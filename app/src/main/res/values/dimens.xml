@@ -115,7 +115,7 @@
     <dimen name="grid_item_spacing">1dp</dimen>
 
     <!-- width of the poster item poster_item_selector -->
-    <dimen name="poster_selector_width">10dp</dimen>
+    <dimen name="poster_selector_width">4dp</dimen>
 
     <!-- Detail -->
 
