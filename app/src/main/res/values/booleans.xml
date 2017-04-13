@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- booleans for phones -->
+
+<resources>
+
+    <!-- a phone is not a large screen device -->
+    <bool name="is_large_screen">false</bool>
+
+</resources>

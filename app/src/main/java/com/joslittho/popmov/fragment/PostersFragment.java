@@ -46,7 +46,6 @@ import android.widget.AbsListView;
 import android.widget.TextView;
 
 import com.joslittho.popmov.R;
-import com.joslittho.popmov.adapter.ItemChoiceManager;
 import com.joslittho.popmov.adapter.poster.PosterAdapter;
 import com.joslittho.popmov.adapter.poster.PosterAdapterOnClickHandler;
 import com.joslittho.popmov.data.PosterCallback;
@@ -54,6 +53,7 @@ import com.joslittho.popmov.data.Utility;
 import com.joslittho.popmov.data.database.FavoritesTableColumns;
 import com.joslittho.popmov.data.database.MovieTableColumns;
 import com.joslittho.popmov.data.database.MoviesProvider;
+import com.joslittho.popmov.databinding.ActivityMainBinding;
 import com.joslittho.popmov.databinding.FragmentPostersBinding;
 import com.joslittho.popmov.sync.MoviesSyncAdapter;
 
@@ -87,7 +87,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
     /* Fragment Posters Bindings */
 
-    private FragmentPostersBinding binding; // ditto
+    private FragmentPostersBinding mBinding; // ditto
 
     /* Poster Adapters */
 
@@ -160,6 +160,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         // 0. use the posters fragment layout
         // 1. initialize the adapter
+        // 1a. use a choice mode dependent on if we're on phone or tab
         // 2. the recycler
         // 2a. find reference to it
         // 2b. use a grid layout manager with screen-size-dependent columns
@@ -172,18 +173,24 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         // 0. use the posters fragment layout
 
-        binding = DataBindingUtil.inflate( inflater, R.layout.fragment_posters, container, false );
+        mBinding = DataBindingUtil.inflate( inflater, R.layout.fragment_posters, container, false );
 
         // 1. initialize the adapter
 
-        mPosterAdapter = new PosterAdapter( getActivity(), binding.mainTvEmpty, this,
-                AbsListView.CHOICE_MODE_SINGLE );
+        // 1a. use a choice mode dependent on if we're on phone or tab
+
+        // if we are on large screens we are in tab mode so use single choice mode
+        // if we are not on large screens we are in phone mode so use no choice mode
+        int choiceMode = ( getResources().getBoolean( R.bool.is_large_screen ) ) ?
+                AbsListView.CHOICE_MODE_SINGLE : AbsListView.CHOICE_MODE_NONE;
+
+        mPosterAdapter = new PosterAdapter( getActivity(), mBinding.mainTvEmpty, this, choiceMode );
 
         // 2. the recycler
 
         // 2a. find reference to it
 
-        RecyclerView mPostersRecyclerView = binding.mainRvPosters;
+        RecyclerView mPostersRecyclerView = mBinding.mainRvPosters;
 
         // 2b. use a grid layout manager with screen-size-dependent columns
 
@@ -209,7 +216,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
         // last. return the inflated view NOT THE INFLATED GRID VIEW SINCE
         // THE INFLATED GRID VIEW *WILL* HAVE A PARENT
 
-        return binding.getRoot();
+        return mBinding.getRoot();
 
     } // end onCreateView
 
@@ -430,7 +437,7 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
 
         // 0. get the empty view
 
-        TextView emptyTextView = binding.mainTvEmpty;
+        TextView emptyTextView = mBinding.mainTvEmpty;
 
         // 1. if the posters adapter has nothing
 

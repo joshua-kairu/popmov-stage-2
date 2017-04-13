@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- booleans for tabs -->
+
+<resources>
+
+    <!-- a tab is a large screen device -->
+    <bool name="is_large_screen">true</bool>
+
+</resources>
