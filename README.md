@@ -98,7 +98,7 @@ Below are the steps:
 		
 		3. Go to your Android Studio code.
 		4. Go the module's `build.gradle` file (for example `app/build.gradle`).
-		5. type the following inside the `android{...} section`.
+		5. type the following inside the `android{...}` section.
 			```
 			buildTypes.each {
         			it.buildConfigField 'String', 'REFERENCE_TO_API_KEY_IN_CODE', NameOfAPIKey
@@ -120,6 +120,15 @@ Below are the steps:
 ![TMDb Attribution Logo](https://www.themoviedb.org/assets/static_cache/9b3f9c24d9fd5f297ae433eb33d93514/images/v4/logos/408x161-powered-by-rectangle-green.png)
 
 **This product uses the TMDb API but is not endorsed or certified by TMDb.**
+
+* The following libraries were used to make this app, and we'd like to say thanks to all of their makers and users. :+1::
+	- [RxPermissions](https://github.com/tbruyelle/RxPermissions), for acquiring permissions in a [reactive](https://en.wikipedia.org/wiki/Reactive_programming) way.
+	- [Retrofit](https://github.com/square/retrofit), [RxJava](https://github.com/ReactiveX/RxJava), [Gson](https://github.com/google/gson), [RxAndroid](https://github.com/ReactiveX/RxAndroid), for fetching movie trailers and reviews painlessly.
+	- [ConstraintLayout](https://developer.android.com/training/constraint-layout/index.html) for laying out views simply.
+	- [Multidex](https://developer.android.com/studio/build/multidex.html), for 64K method support, brought about by :point_down:
+	- [Stetho](http://facebook.github.io/stetho/), for debugging the database. Really helped sort out issues with upgrade.
+	- [Schematic](https://github.com/SimonVT/schematic), for autogenerating [ContentProviders](https://developer.android.com/guide/topics/providers/content-providers.html).
+	- [The Android Support Library](https://developer.android.com/topic/libraries/support-library/index.html), because it is the Android support library.
 
 ## License :lock_with_ink_pen:
 
