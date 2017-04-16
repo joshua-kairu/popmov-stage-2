@@ -10,16 +10,16 @@
 
     >
 
-    <!-- refresh -->
+    <!--&lt;!&ndash; refresh &ndash;&gt;-->
 
-    <item
+    <!--<item-->
 
-        android:title="@string/action_refresh"
+        <!--android:title="@string/action_refresh"-->
 
-        android:id="@+id/action_refresh"
+        <!--android:id="@+id/action_refresh"-->
 
-        app:showAsAction="never"
+        <!--app:showAsAction="never"-->
 
-        />
+        <!--/>-->
 
 </menu>

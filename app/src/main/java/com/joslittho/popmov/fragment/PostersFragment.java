@@ -241,19 +241,19 @@ public class PostersFragment extends Fragment implements LoaderManager.LoaderCal
     // begin onOptionsItemSelected
     public boolean onOptionsItemSelected( MenuItem item ) {
 
-        // 0. if it's the refresh item selected
-        // 0a. update the movies
+//        // 0. if it's the refresh item selected
+//        // 0a. update the movies
         // 1. otherwise
         // 1a. do defaults
 
         // begin switching the item id
         switch ( item.getItemId() ) {
 
-            // 0. if it's the refresh item selected
-            // 0a. update the movies
+//            // 0. if it's the refresh item selected
+//            // 0a. update the movies
 
-            case R.id.action_refresh:
-                updateMovies(); return true;
+//            case R.id.action_refresh:
+//                updateMovies(); return true;
 
             // 1. otherwise
             // 1a. do defaults

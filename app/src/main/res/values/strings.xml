@@ -99,8 +99,8 @@
     <!-- title for the settings menu item [CHAR LIMIT = 10] -->
     <string name="action_settings">Settings</string>
 
-    <!-- title for the refresh menu item [CHAR LIMIT = 10] -->
-    <string name="action_refresh">Refresh</string>
+    <!--title for the refresh menu item [CHAR LIMIT = 10] -->
+    <!--<string name="action_refresh">Refresh</string>-->
 
     <!-- title for the share action menu item [CHAR LIMIT = 10] -->
     <string name="action_share">Share</string>
